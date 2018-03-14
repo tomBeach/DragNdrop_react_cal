@@ -1,0 +1,598 @@
+// ======= partials ======= //
+@import 'theme_colors';
+@import 'calendar2';
+
+// == This file has styles for high-level elements, sections and home page text
+// == dataBox is generic version of main data entry and display elements
+// == see styles_2 for static and scroll table styling
+// == general styling for form elements also here
+
+/* ======= general ======= */
+body {
+    margin: 0;
+    font-family: "Ariel", sans-serif;
+}
+div {
+    box-sizing: border-box;
+}
+table {
+    border-collapse: collapse;
+}
+i {
+    font-size: 0.8em;
+    font-style: italic;
+    color: $form_label;
+}
+#pageWrap {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+.hilite {
+    color: purple;
+}
+
+/* ======= ======= ======= SECTIONS ======= ======= ======= */
+/* ======= ======= ======= SECTIONS ======= ======= ======= */
+/* ======= ======= ======= SECTIONS ======= ======= ======= */
+
+/* ======= sections ======= */
+#sidebar, #menuBox, #contentBox {
+    margin: 0;
+    height:100vh;
+}
+#contentBox {
+    width: 95%;
+    background-color: $color_P_4;
+    min-width: 400px;
+}
+.clearfix::after {
+    display: table;
+    clear: both;
+    content: "";
+}
+
+/* ======= sidebar ======= */
+#sidebar {
+    width: 14%;
+    min-width: 140px;
+    height:100vh;
+    // background:url(/assets/images/forest_sidebar.jpg) no-repeat;
+    // background-size: cover;
+    z-index: -1;
+}
+#forest_sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height:100vh;
+    width: 14%;
+    min-width: 140px;
+}
+
+/* ======= messages ======= */
+#messages, #messagesWide {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+    width: 80%;
+    min-width: 680px;
+    margin: 20px auto;
+    margin-top: 20px;
+    background-color: $dataBox;
+}
+#messages {
+    width: 80%;
+}
+#messagesWide {
+    width: 95%;
+}
+.notice {
+    margin: 5px;
+    margin-left: 10px;
+    padding-top: 5px;
+    font-size: 1em;
+    line-height: 1.4em;
+    text-align: center;
+    vertical-align: middle;
+    color: $really_dark_green;
+    // overflow-x: scroll;
+}
+.alert {
+    display: none;
+}
+.errorMsg {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    width: 40%;
+    height: 100%;
+    text-align: right;
+    color: $bright_accent;
+}
+.errorList {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 50%;
+    height: 90%;
+    margin: 5px 0;
+    text-align: left;
+    font-size: 0.8em;
+    overflow-y: scroll;
+}
+
+/* ======= accent ======= */
+.titleBox, .title_stripe {
+    width: 90%;
+    height: 80px;
+    text-align: right;
+    border-bottom: solid 8px $title_stripe;
+}
+.title_stripe {
+    margin: 0;
+    margin-top: 16px;
+    width: 100%;
+}
+.subtitleBox {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height: 40px;
+    width: 80%;
+    min-width: 680px;
+    margin: 0 auto;
+}
+.sidebar_stripe {
+    position: fixed;
+    float: right;
+    top: 0;
+    left: 7%;
+    width: 40%;
+    clear: both;
+    z-index: 9;
+}
+
+/* ======= titles ======= */
+.titleBox > p > span:nth-of-type(1) {
+    margin: 0;
+    width: 100%;
+    font-family: 'Raleway', sans-serif;
+    font-size: 65px;
+    color: $really_dark_green;
+}
+.titleBox > p > span:nth-of-type(2), .titleBox > p > span:nth-of-type(3) {
+    margin: 0;
+    width: 100%;
+    font-family: 'Fira Sans', sans-serif;
+    font-size: 65px;
+    color: white;
+}
+.titleBox > p > span:nth-of-type(3) {
+    font-family: 'Raleway', sans-serif;
+    font-size: 60px;
+    color: $really_dark_green;
+}
+.subtitleBox {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.subtitleBox > div:nth-of-type(1) {
+    margin: 0;
+    margin-top: 5px;
+    width: 30%;
+    text-align: left;
+    font-family: 'Fira Sans', sans-serif;
+    font-size: 1em;
+    color: $form_label;
+}
+// .subtitleBox > div:nth-of-type(2) {
+//   width: 35%;
+// }
+.subtitleBox > div:nth-of-type(2) {
+    margin: 0;
+    width: 30%;
+    text-align: right;
+    font-family: 'Fira Sans', sans-serif;
+    font-size: 25px;
+    font-style: italic;
+    color: white;
+}
+.welcomeMsg {
+    width: 90%;
+    margin: 0 auto;
+    padding-top: 20%;
+    text-align: center;
+}
+.welcomeText {
+    width: 90%;
+    margin: 20px auto;
+    text-align: center;
+    color: $really_dark_green;
+}
+.subtitle {
+    display: inline-block;
+    width: 20%;
+}
+
+/* ======= ======= ======= DATABOX ======= ======= ======= */
+/* ======= ======= ======= DATABOX ======= ======= ======= */
+/* ======= ======= ======= DATABOX ======= ======= ======= */
+
+/* ======= general ======= */
+.dataBox {
+    width: 80%;
+    min-width: 680px;
+    height: 420px;
+    margin: 20px auto;
+    background-color: $dataBox;
+}
+.dataTitle {
+    width: 74%;
+    margin: 0 auto;
+    font-size: 1.8em;
+    text-align: center;
+    font-family: 'Raleway', sans-serif;
+    color: $dataText;
+}
+.dataRow {
+    height: 35px;
+}
+.dataRow_sm {
+    min-height: 30px;
+    margin: 0;
+    border-bottom: 2px solid $dataBox;
+}
+.dataRow_sm > p {
+    margin: 2px;
+}
+.dataRow_lg {
+    margin-bottom: 10px;
+    background-color: $dataRow_lg;
+}
+.homeTitle {
+    min-width: 620px;
+    text-align: left;
+}
+.homeTitle > span:nth-of-type(2) {
+    font-size: 0.8em;
+    color: $textAccent;
+}
+.fR_1 {
+    height: 60px;
+    padding-top: 20px;
+}
+.buttonRow {
+    width: 95%;
+    margin: 0 auto;
+    margin-top: 20px;
+    height: 40px;
+    padding-top: 10px;
+    text-align: center;
+    background-color: $label_accent;
+}
+.toggle_input {
+    display: none;
+}
+
+/* ======= entries ======= */
+.dataEntry, .authorEntry, .signinEntry, .selectEntry, .keywordEntry {
+    height: 20px;
+    width: 100px;
+    margin: 0 5px;
+    padding: 5px;
+    line-height: 20px;
+    font-size: 0.8em;
+    text-align: left;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.selectEntry, .keywordEntry {
+    float: left;
+    width: 120px;
+}
+.signinEntry {
+    width: 140px;
+}
+.areaEntry {
+    width: 90%;
+}
+.leftEntry {
+    margin-left: 30px;
+}
+.absTextEntry {
+  margin-top: 10px;
+  height: 120px;
+}
+.field_with_errors {
+    display: inline-block;
+    width: 140px;
+    margin: 0;
+    margin-left: 5px;
+    padding: 0;
+}
+.field_with_errors > .signinEntry {
+    margin: 0;
+    padding: 0;
+    border: solid 2px red;
+}
+
+/* ======= labels ======= */
+.dataLabel {
+    width: 20%;
+    margin: 10px 20px;
+    margin-top: 0;
+    padding: 2px 20px;
+    text-align: left;
+    color: $dataText;
+    background-color: $label_accent;
+}
+.radioLabel {
+    display: inline-block;
+    margin: 0 5px;
+}
+.secAuthor {
+    margin-top: 10px;
+}
+
+/* ======= ======= ======= FORMS ======= ======= ======= */
+/* ======= ======= ======= FORMS ======= ======= ======= */
+/* ======= ======= ======= FORMS ======= ======= ======= */
+
+.formLabel, .formLabel_sm, .formValue {
+    display: inline-block;
+    height: 100%;
+    padding: 8px;
+    font-size: 0.8em;
+}
+.formLabel, .formLabel_sm {
+    width: 29%;
+    text-align: right;
+    vertical-align: text-top;
+    color: $form_label;
+}
+.formLabel_sm {
+    width: 27%;
+}
+.formLabel > p {
+    margin: 2px 5px;
+}
+.formValue {
+    width: 65%;
+    text-align: left;
+    vertical-align: text-top;
+    color: black;
+}
+.formValue > p {
+    margin: 2px 5px;
+}
+.formValue > input[type=text], .formValue > input[type=email], .formValue > input[type=password] {
+    width: 140px;
+    height: 20px;
+    padding: 5px;
+    font-size: 0.8em;
+    line-height: 20px;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.formValue > input[type=checkbox] {
+    width: 20px;
+    height: 20px;
+    margin: 0 5px;
+    background-color: $hilite_green;
+}
+
+/* ======= buttons/links ======= */
+.formBtn, .formLink, .formLink_wide {
+    display: inline-block;
+    width: 140px;
+    height: 20px;
+    margin: 0 5px;
+    font-size: 0.8em;
+    text-align: center;
+    border-radius: 4px;
+    color: white;
+    border: solid 1px $brown;
+    box-sizing: border-box;
+}
+.formLink, .formLink_wide {
+    padding-top: 1px;
+    font-size: 0.8em;
+    text-decoration: none;
+    background-color: $button_orange;
+}
+.formLink_wide {
+    width: auto;
+    padding: 2px 10px 0 10px;
+}
+.formBtn_green {
+    background-color: $button_orange;
+}
+.formBtn_blue {
+    background-color: $button_orange;
+}
+.blankBtn {
+    display: inline-block;
+    height: 18px;
+    width: 120px;
+    padding-top: 2px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 0.8em;
+    border-radius: 4px;
+}
+.formBtn:hover, .formBtn_green:hover, .formBtn_blue:hover {
+    background-color: $med_green;
+    border: solid 1px $really_dark_green;
+}
+.formLink:hover, .formLink_wide:hover {
+    background-color: $med_green;
+    border: solid 1px $really_dark_green;
+}
+.formValue > input[type=submit]:hover {
+    background-color: $med_green;
+    border: solid 1px $really_dark_green;
+}
+.formValue > input[type=checkbox]:hover {
+    background-color: $med_green;
+    border: solid 1px $really_dark_green;
+}
+.button_to {
+    display: inline-block;
+    width: 100px;
+    margin-left: 5px;
+    margin-right: 50px;
+}
+
+/* ======= ======= ======= VIEWS ======= ======= ======= */
+/* ======= ======= ======= VIEWS ======= ======= ======= */
+/* ======= ======= ======= VIEWS ======= ======= ======= */
+
+/* ======= homepage ======= */
+.hR_1 {
+    height: 140px;
+    padding-top: 40px;
+}
+.hR_2 {
+    height: 280px;
+}
+.dataTitle > span:nth-of-type(1) {
+    color: $really_dark_green;
+}
+.sectionText, .sectionInfo {
+    width: 74%;
+    margin: 2px auto;
+    font-size: 1em;
+    text-align: left;
+}
+.sectionInfo {
+    width: 70%;
+    margin-top: 15px;
+    list-style-type: square;
+}
+.sectionInfo > li > span:nth-of-type(1) {
+    color: #05537a;
+}
+.sectionInfo > li:nth-of-type(4) > span:nth-of-type(2) {
+    color: #05537a;
+}
+
+/* ======= user views (devise/users) ======= */
+#newUserSpacer {
+    height: 35px;
+}
+#editUserSpacer {
+    height: 20px;
+}
+#newSessionSpacer {
+    height: 140px;
+}
+#showUserSpacer {
+    height: 140px;
+}
+#resetPswdSpacer {
+    height: 175px;
+}
+#showAuthorSpacer {
+    height: 180px;
+}
+#forgotPasswordSpacer {
+    height: 210px;
+}
+
+/* ======= admin views ======= */
+#roomsIndexSpacer {
+    height: 10px;
+}
+
+/* ======= ======= ======= MENU ======= ======= ======= */
+/* ======= ======= ======= MENU ======= ======= ======= */
+/* ======= ======= ======= MENU ======= ======= ======= */
+
+/* ======= menu ======= */
+#FSAT_logo {
+    height: 80px;
+    width: auto;
+    margin: 0 auto;
+    margin-top: -10px;
+    margin-right: 20px;
+}
+#menuBox {
+    width: 14%;
+    min-width: 180px;
+    background-color: $menuBox;
+}
+.menuGroup {
+    width: 90%;
+    margin: 10px auto;
+    text-align: right;
+}
+.menuLabel {
+    margin: 2px;
+    padding: 2px;
+    padding-left: 10px;
+    text-align: left;
+    color: $really_dark_green;
+    background-color: $menuLabel;
+}
+#menuBox > div:nth-of-type(2) > p:nth-of-type(1) {
+    margin-top: 10px;
+}
+.menuItem {
+    display: block;
+    height: 24px;
+    width: 90%;
+    margin: 10px;
+    margin-left: 10%;
+    padding-top: 3px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 0.9em;
+    color: white;
+    border-radius: 4px;
+    border: solid 1px $menuItemsBorder;
+    box-sizing: border-box;
+}
+.menuItem > a {
+    background-color: $hilite_green;
+}
+.menuItem:hover {
+    background-color: $med_green;
+    border: solid 1px $really_dark_green;
+}
+.menuLinks {
+    text-align: center;
+}
+.linkItem {
+    height: 14px;
+    width: 95%;
+    margin: 0 5px;
+    padding: 2px 4px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 0.8em;
+    color: white;
+    border-radius: 2px;
+    border: solid 1px $menuLabel;
+    box-sizing: border-box;
+}
+.linkItem:hover {
+    background-color: $med_green;
+    border: solid 1px $really_dark_green;
+}
+
+@media only screen and (max-width: 1175px) {
+    #contentBox {
+        // background-color: $really_dark_green;
+    }
+    // #titleBox {
+    //     width: 100%;
+    //     min-width: 680px;
+    //     margin-right: 10%;
+    // }
+}
