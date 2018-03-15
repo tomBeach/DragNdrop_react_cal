@@ -2,15 +2,17 @@
 import { ADD_DATES } from "../constants/action-types";
 import { ADD_TIMES } from "../constants/action-types";
 import { ADD_ROOMS } from "../constants/action-types";
+import { ADD_GRID_CELLS } from "../constants/action-types";
 
 const initialState = {
     dates: [],
     times: [],
-    rooms: []
+    rooms: [],
+    gridCells: []
 };
 
 const dataReducer = (state = initialState, action) => {
-    console.log("== dataReducer ==");
+    console.log("\n== dataReducer ==");
     console.log("state:", state);
     console.log("action:", action);
 
@@ -27,6 +29,9 @@ const dataReducer = (state = initialState, action) => {
         console.log("-- ADD_ROOMS --");
         return { ...state, rooms: [...state.rooms, action.payload] };
 
+        case ADD_GRID_CELLS:
+        console.log("-- ADD_GRID_CELLS --");
+        return { ...state, gridCells: [...state.gridCells, action.payload] };
 
         default:
         return state;

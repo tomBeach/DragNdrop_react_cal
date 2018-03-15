@@ -1,25 +1,32 @@
 // ======= src/js/components/Grid.js =======
 import React from 'react';
 import ReactDOM from 'react-dom'
+import store from "../store/index";
 import { connect } from "react-redux";
 import { addDates } from "../actions/index";
 import { addTimes } from "../actions/index";
 import { addRooms } from "../actions/index";
-// import Day from './Day';
+import { addGridCells } from "../actions/index";
+import Day from './Day';
 import Date from './Date';
 // import Dragger from './Dragger';
 import RoomTime from './RoomTime';
-// import SessionCell from './SessionCell';
+import SessionCell from './SessionCell';
 
-// ======= Store =======
+console.log("store:", store);
+
+// ======= ======= ======= Store ======= ======= =======
+// ======= ======= ======= Store ======= ======= =======
+// ======= ======= ======= Store ======= ======= =======
+
 const mapStateToProps = (state) => {
     console.log("== mapStateToProps ==")
     console.log("state:", state);
-    console.log("state.dates:", state.dates);
     return {
         dates: state.dates,
         times: state.times,
-        rooms: state.rooms
+        rooms: state.rooms,
+        gridCells: state.gridCells
     };
 }
 const mapDispatchToProps = (dispatch) => {
@@ -27,13 +34,14 @@ const mapDispatchToProps = (dispatch) => {
     return {
         addDates: dates => dispatch(addDates(dates)),
         addTimes: times => dispatch(addTimes(times)),
-        addRooms: rooms => dispatch(addRooms(rooms))
+        addRooms: rooms => dispatch(addRooms(rooms)),
+        addGridCells: gridCells => dispatch(addGridCells(gridCells))
     }
 }
 
-// ======= ======= ======= grid ======= ======= =======
-// ======= ======= ======= grid ======= ======= =======
-// ======= ======= ======= grid ======= ======= =======
+// ======= ======= ======= component ======= ======= =======
+// ======= ======= ======= component ======= ======= =======
+// ======= ======= ======= component ======= ======= =======
 
 // ======= Grid =======
 class Grid extends React.Component {
@@ -42,9 +50,10 @@ class Grid extends React.Component {
         console.log("props:", props);
         super(props);
         this.state = {
-            dates: [],
-            times: [],
-            rooms: []
+            dates: props.dates,
+            times: props.times,
+            rooms: props.rooms,
+            gridCells: props.gridCells
         };
     }
 
@@ -62,42 +71,54 @@ class Grid extends React.Component {
         this.props.addRooms(rooms);
     }
 
+    componentWillReceiveProps(nextProps) {
+        console.log("== Grid: componentWillReceiveProps ==");
+        console.log("  nextProps:", nextProps);
+
+        let storeData = store.getState();
+        console.log("  +++++++ storeData:", storeData);
+
+        // if ((this.state.times != newTimes) && (this.state.rooms != newRooms)) {
+            let roomTimes = this.makeRoomTimes(storeData);
+            let gridCells = this.makeGridCells(storeData);
+            console.log("  gridCells:", gridCells);
+            console.log("  this.props:", this.props);
+            this.props.addGridCells(gridCells);
+        // }
+
+        // this.setState({
+        //     dates: nextProps.dates,
+        //     times: nextProps.times,
+        //     rooms: nextProps.rooms,
+        //     gridCells: nextProps.gridCells
+        // });
+    }
+
     componentDidUpdate() {
         console.log("== Grid: componentDidUpdate ==");
         console.log("  this.props:", this.props);
         console.log("  this.state:", this.state);
 
-        let roomTimes, dateHeaders;
-        let grid = this;
-        let newDates = this.props.dates[0];
-        let newTimes = this.props.times[0];
-        let newRooms = this.props.rooms[0];
-
-        if ((this.state.times != newTimes) && (this.state.rooms != newRooms)) {
-            roomTimes = grid.makeRoomTimes(newRooms, newTimes);
-        }
-
-        if (this.state.dates != newDates) {
-            dateHeaders = grid.makeDateHeaders(newDates);
-            console.log("  dateHeaders:", dateHeaders);
-            this.setState({
-                dates: newDates,
-                dateHeaders: dateHeaders
-            });
-        }
-        if (this.state.times != newTimes) {
-            this.setState({
-                times: newTimes,
-                roomTimes: roomTimes
-            });
-        }
-        if (this.state.rooms != newRooms) {
-            this.setState({
-                rooms: newRooms
-            });
-        }
+        // if (this.state.dates != newDates) {
+        //     dateHeaders = grid.makeDateHeaders(newDates);
+        //     console.log("  dateHeaders:", dateHeaders);
+        //     this.setState({
+        //         dates: newDates,
+        //         dateHeaders: dateHeaders
+        //     });
+        // }
+        // if (this.state.times != newTimes) {
+        //     this.setState({
+        //         times: newTimes,
+        //         roomTimes: roomTimes
+        //     });
+        // }
+        // if (this.state.rooms != newRooms) {
+        //     this.setState({
+        //         rooms: newRooms
+        //     });
+        // }
     }
-
 
     // ======= ======= ======= dates ======= ======= =======
     // ======= ======= ======= dates ======= ======= =======
@@ -123,8 +144,10 @@ class Grid extends React.Component {
     // ======= ======= ======= times ======= ======= =======
     // ======= ======= ======= times ======= ======= =======
 
-    makeRoomTimes(rooms, times) {
+    makeRoomTimes(storeData) {
         console.log("== Grid: makeRoomTimes ==");
+
+        let rooms = storeData.rooms[0];
         let roomTimesArray = rooms.map((roomname, r) => {
             return (
                 <div
@@ -135,15 +158,17 @@ class Grid extends React.Component {
                         text={roomname}
                         className={"roomCell"}
                     />
-                    {this.makeTimeslots(r, times)}
+                    {this.makeTimeslots(r, storeData)}
                 </div>
             )
         });
         return roomTimesArray;
     }
 
-    makeTimeslots(r, times) {
+    makeTimeslots(r, storeData) {
         console.log("== Grid: makeTimeslots ==");
+
+        let times = storeData.times[0];
         let timeslotsArray = times.map((timeslot, t) => {
             var timeslot = this.convertTimes(timeslot);
             var timeslotKey = r.toString() + t.toString();
@@ -172,12 +197,129 @@ class Grid extends React.Component {
             return hour + ":" + min + ampm;
     }
 
+    // ======= ======= ======= grid ======= ======= =======
+    // ======= ======= ======= grid ======= ======= =======
+    // ======= ======= ======= grid ======= ======= =======
+
+    makeGridCells(storeData) {
+        console.log("== Grid:makeGridCells ==");
+
+        // == cell data management variables (used by all grid building methods below)
+        let cellDataObj = {};
+        let cellDataObjArray = [];
+
+        // == make cells for currently scheduling sessions
+        this.makeSessionCells(cellDataObj);
+
+        // == add roomCells (spacers) and emptyCells then add to cellDataObj
+        this.makeDayColumns(storeData, cellDataObj, cellDataObjArray);
+
+        let cellComponents = this.makeCellComponents(cellDataObj, cellDataObjArray);
+        console.log("cellComponents:", cellComponents);
+
+        // STORE ON STORE
+
+        return cellComponents;
+    }
+
+    makeSessionCells(cellDataObj) {
+        console.log("== Grid:makeSessionCells ==");
+        // == for database data only
+        // let sessionDataArray = databaserecords.map((session, s) => {
+        //     let nextRoom = parseInt(session.room_id);
+        //     let nextCol = parseInt(session.session_start.substring(8,10)) - 1;
+        //     let nextRow = parseInt(session.session_start.substring(11,13)) - 7 + ((nextRoom-1) * 9);
+        //     let rowCol = nextRow.toString() + "_" + nextCol.toString();
+        //     let title = session.session_title.split(" (")[0];
+        //     let id = session.session_id;
+        //     cellDataObj[rowCol] = { id:null, addr:rowCol, cellType:"sessionCell", sessionData:session }
+        // });
+    }
+
+    makeDayColumns(storeData, cellDataObj, cellDataObjArray) {
+        console.log("== Grid:makeDayColumns ==");
+        let cellCount = 0;
+        let dayDataArray = storeData.dates[0].map((date, d) => {
+            let nextCol = d + 1;
+            cellDataObjArray[d] = [];
+            let roomDataArray = storeData.rooms[0].map((room, r) => {
+                cellCount++;
+                let nextRow = 1 + (r * 9);
+                let roomId = nextRow + "_" + nextCol;
+                cellDataObjArray[d].push(roomId);
+                cellDataObj[roomId] = { id:null, addr:roomId, cellType:"roomCell" };
+                let emptyDataArray = storeData.times[0].map((time, t) => {
+                    cellCount++;
+                    let nextRow = (t + 2) + (r * 9);
+                    let nextCellId = nextRow + "_" + nextCol;
+                    cellDataObjArray[d].push(nextCellId);
+                    if (!cellDataObj[nextCellId]) {
+                        cellDataObj[nextCellId] = { id:null, addr:nextCellId, cellType:"emptyCell", sessionData:null };
+                    }
+                });
+            });
+        });
+    }
+
+    makeCellComponents(cellDataObj, cellDataObjArray) {
+        console.log("== Grid:makeCellComponents ==");
+        var text, color, className, sessionData, title;
+        let dayComponentsArray = cellDataObjArray.map((dayCells, d) => {
+            let cellComponentsArray = dayCells.map((cellId, c) => {
+                let cellData = cellDataObj[cellId];
+                if (cellData.sessionData) {
+                    title = cellData.sessionData.session_title
+                } else {
+                    title = null
+                }
+                if (cellData.cellType === "sessionCell") {
+                    sessionData = cellData.sessionData;
+                    className = "sessionCell";
+                    color = "white";
+                    text = title;
+                } else if (cellData.cellType === "roomCell") {
+                    sessionData = null;
+                    className = "roomCell";
+                    color = "a1aaa8";
+                    text = "";
+                } else {
+                    sessionData = null;
+                    className = "emptyCell";
+                    color = "#b1b9b7";
+                    text = "";
+                }
+                return (
+                    <SessionCell
+                        id={cellId}
+                        key={"cell_" + d + c}
+                        ref={cellId}
+                        text={text}
+                        className={"cell " + className}
+                        // sessionData={sessionData}
+                        // locateDragger={this.locateDragger}
+                    />
+                );
+            });
+            return(
+                <Day
+                    id={"day_" + d}
+                    key={"day_" + d}
+                    ref={"day_" + d}
+                    cells={cellComponentsArray}
+                />
+            )
+        });
+        return dayComponentsArray;
+    }
+
+
     // ======= ======= ======= render ======= ======= =======
     // ======= ======= ======= render ======= ======= =======
     // ======= ======= ======= render ======= ======= =======
 
     render() {
         console.log("== Grid: render ==");
+        let gridCells = null;
         let roomTimes = null;
         let dateHeaders = null;
         if (this.state.dateHeaders) {
@@ -187,6 +329,10 @@ class Grid extends React.Component {
         if (this.state.roomTimes) {
             console.log("+++ roomTimes +++");
             roomTimes = this.state.roomTimes;
+        }
+        if (this.state.gridCells) {
+            console.log("+++ gridCells +++");
+            gridCells = this.state.gridCells;
         }
         return (
             <div
@@ -206,11 +352,27 @@ class Grid extends React.Component {
                         ref={"roomTimes"}>
                         {roomTimes}
                     </div>
-                    {/* {dragger}
-                    {gridCells} */}
+                    {/* {dragger} */}
+                    {gridCells}
                 </div>
             </div>
         )
     }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(Grid)
+export default connect(mapStateToProps, mapDispatchToProps)(Grid);
+
+// import { LOREM_IPSUM } from "../constants/action-types";
+//
+// let sessionTitles;
+// function sessionNameSeeds(lorem) {
+//     console.log("== sessionNameSeeds ==")
+//     sessionTitles = [];
+//     for (var i = 0; i < 80; i++) {
+//         let startChar = i * lorem.length/80;
+//         let endChar = (i * lorem.length/80) + lorem.length/80;
+//         let nextTitle = lorem.substring(startChar, endChar);
+//         sessionTitles.push(nextTitle);
+//     }
+// }
+// sessionNameSeeds(LOREM_IPSUM);
+// // console.log("sessionTitles:", sessionTitles);

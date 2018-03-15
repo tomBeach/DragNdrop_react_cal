@@ -2,6 +2,7 @@
 import { ADD_DATES } from "../constants/action-types";
 import { ADD_TIMES } from "../constants/action-types";
 import { ADD_ROOMS } from "../constants/action-types";
+import { ADD_GRID_CELLS } from "../constants/action-types";
 
 export const addDates = (dates) => {
     console.log("== actions: addDates ==");
@@ -22,6 +23,13 @@ export const addRooms = (rooms) => {
     return {
         type: "ADD_ROOMS",
         payload: rooms
+    }
+}
+export const addGridCells = (gridCells) => {
+    console.log("== actions: addGridCells ==");
+    return {
+        type: "ADD_GRID_CELLS",
+        payload: gridCells
     }
 }
 
