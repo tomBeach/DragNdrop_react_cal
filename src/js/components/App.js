@@ -23,7 +23,7 @@ const App = () => (
     <div id="contentBox">
         <div id="yield" className="section" data-state="default">
             <div>
-                <h2 className="dataTitle">Calendar</h2>
+                <h2 className="dataTitle">Calendar 4</h2>
                 <Grid
                     dates={dates}
                     times={times}

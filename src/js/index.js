@@ -8,13 +8,6 @@ import App from "./components/App";
 
 require('../../sass/styles.scss');
 
-// ======= testing =======
-// import { addDates } from "./actions/index";
-// console.log("\n+++++++ +++++++1 store.getState():", store.getState());
-// store.dispatch(addDates('1956-01-21'));
-// store.dispatch(addDates('1967-05-06'));
-// console.log("\n+++++++ +++++++2 store.getState():", store.getState());
-
 render(
     <Provider store={store}>
         <App />

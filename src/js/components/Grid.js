@@ -39,13 +39,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     console.log("\n +++++++ +++++++ == mapDispatchToProps ==")
     console.log("\nownProps:", ownProps);
     console.log("\naddDates:", addDates);
-    // addDates(ownProps.dates);
     return {
-        addDates: dates => dispatch(addDates(ownProps.dates))
-        // addDates: dates => dispatch(addDates(ownProps.dates)),
-        // addTimes: times => dispatch(addTimes(ownProps.times)),
-        // addRooms: rooms => dispatch(addRooms(ownProps.rooms)),
-        // addSessions: sessions => dispatch(addSessions(ownProps.sessions))
+        addDates: dates => dispatch(addDates(ownProps.dates)),
+        addTimes: times => dispatch(addTimes(ownProps.times)),
+        addRooms: rooms => dispatch(addRooms(ownProps.rooms)),
+        addSessions: sessions => dispatch(addSessions(ownProps.sessions))
         // addGridCells: gridCells => dispatch(addGridCells(gridCells))
     }
 }
@@ -74,6 +72,11 @@ class Grid extends React.Component {
         console.log("\n +++++++ +++++++ == Grid: componentDidMount ==");
         console.log("  this.props:", this.props);
         console.log("  this.state:", this.state);
+
+        this.props.addDates(this.state.dates);
+        this.props.addTimes(this.state.times);
+        this.props.addRooms(this.state.rooms);
+        this.props.addSessions(this.state.sessions);
 
         // let dates = this.props.addDates(this.state.dates);
         // let rooms = this.props.addRooms(this.state.rooms);
