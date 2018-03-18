@@ -3,18 +3,9 @@ import { ADD_TIMES } from "../constants/action-types";
 import { ADD_DATES } from "../constants/action-types";
 import { ADD_ROOMS } from "../constants/action-types";
 import { ADD_SESSIONS } from "../constants/action-types";
-import { UPDATE_CELLS } from "../constants/action-types";
 import { ADD_GRID_CELLS } from "../constants/action-types";
 
-// == example:
-// export const ADD_TODO = 'ADD_TODO'
-//
-// export const addTodo = (text) => {
-//     console.log("== actions: addTodo ==");
-//     return {
-//         type: ADD_TODO,
-//         text }
-// }
+import { UPDATE_CELLS } from "../constants/action-types";
  
 export const addDates = (dates) => {
     console.log("== actions: addDates ==");
@@ -52,3 +43,15 @@ export const addGridCells = () => {
         payload: null
     }
 }
+
+
+
+// == example:
+// export const ADD_TODO = 'ADD_TODO'
+//
+// export const addTodo = (text) => {
+//     console.log("== actions: addTodo ==");
+//     return {
+//         type: ADD_TODO,
+//         text }
+// }

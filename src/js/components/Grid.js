@@ -22,29 +22,22 @@ import SessionCell from "./SessionCell";
 // ======= ======= ======= Store ======= ======= =======
 
 const mapStateToProps = (state, ownProps) => {
-    console.log("== mapStateToProps ==")
-    console.log("\nstate:", state);
-    console.log("\nownProps:", ownProps);
+    console.log("\n== mapStateToProps ==")
+    console.log("state:", state);
     return {
-        dates: state.dates,
-        times: state.times,
-        rooms: state.rooms,
-        sessions: state.sessions,
-        gridCells: state.gridCells
-        // cellData: state.cellDataObj,
-        // cellIdsArray: _.keys(state.cellData.articlesById)
+        dates: ownProps.dates,
+        times: ownProps.times,
+        rooms: ownProps.rooms,
+        sessions: ownProps.sessions,
     };
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
-    console.log("\n +++++++ +++++++ == mapDispatchToProps ==")
-    console.log("\nownProps:", ownProps);
-    console.log("\naddDates:", addDates);
+    console.log("\n == mapDispatchToProps ==")
     return {
         addDates: dates => dispatch(addDates(ownProps.dates)),
         addTimes: times => dispatch(addTimes(ownProps.times)),
         addRooms: rooms => dispatch(addRooms(ownProps.rooms)),
         addSessions: sessions => dispatch(addSessions(ownProps.sessions))
-        // addGridCells: gridCells => dispatch(addGridCells(gridCells))
     }
 }
 
@@ -68,26 +61,10 @@ class Grid extends React.Component {
         };
     }
 
-    componentDidMount() {
+    componentDidMount(props) {
         console.log("\n +++++++ +++++++ == Grid: componentDidMount ==");
         console.log("  this.props:", this.props);
         console.log("  this.state:", this.state);
-
-        this.props.addDates(this.state.dates);
-        this.props.addTimes(this.state.times);
-        this.props.addRooms(this.state.rooms);
-        this.props.addSessions(this.state.sessions);
-
-        // let dates = this.props.addDates(this.state.dates);
-        // let rooms = this.props.addRooms(this.state.rooms);
-        // let times = this.props.addTimes(this.state.times);
-        // let sessions = this.props.addSessions(this.state.sessions);
-        //
-        // let roomTimes = this.makeRoomTimes(rooms, times);
-        // let gridCells = this.makeGridCells(dates, rooms, times);
-        // console.log("  gridCells:", gridCells);
-        // console.log("  this.props:", this.props);
-        // this.props.addGridCells(gridCells);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -96,7 +73,7 @@ class Grid extends React.Component {
     }
 
     componentDidUpdate() {
-        console.log("== Grid: componentDidUpdate ==");
+        console.log("\n +++++++ +++++++ == Grid: componentDidUpdate ==");
         console.log("  this.props:", this.props);
         console.log("  this.state:", this.state);
     }
@@ -299,37 +276,21 @@ class Grid extends React.Component {
 
     render() {
         console.log("== Grid: render ==");
-        console.log("this.props.gridCells:", this.props.gridCells);
-        if (this.state.hasErrored) {
-            return <p>Sorry! There was an error rendering the grid</p>;
-        }
-        if (this.state.isLoading) {
-            return <p>Loading…</p>;
-        }
-        if (!this.props.gridCells) {
-            return <p>Loading cell data...</p>;
+        console.log("this.state.gridCells:", this.state.gridCells);
+
+        let dateHeaders, roomTimes, gridCells;
+
+        if (!this.state.gridCells) {
+            console.log("+++ gridCells +++");
+            dateHeaders = this.makeDateHeaders(this.state.dates);
+            roomTimes = this.makeRoomTimes(this.state.rooms, this.state.times);
+            gridCells = this.makeGridCells(this.state.dates, this.state.rooms, this.state.times);
+        } else {
+            roomTimes = null;
+            dateHeaders = null;
+            gridCells = null;
         }
 
-        let rooms = null;
-        let dates = null;
-        let sessions = null;
-        let gridCells = null;
-        if (this.props.dates) {
-            console.log("+++ dates +++");
-            dates = this.props.dates;
-        }
-        if (this.props.rooms) {
-            console.log("+++ rooms +++");
-            rooms = this.props.rooms;
-        }
-        if (this.props.sessions) {
-            console.log("+++ sessions +++");
-            sessions = this.props.sessions;
-        }
-        if (this.props.gridCells) {
-            // console.log("+++ gridCells +++");
-            // gridCells = this.props.gridCells;
-        }
         return (
             <div
                 id={"grid"}
@@ -338,7 +299,7 @@ class Grid extends React.Component {
                     id={"dates"}
                     ref={"dates"}>
                     <div id="cornerCell"></div>
-                    {dates}
+                    {dateHeaders}
                 </div>
                 <div
                     id={"sessions"}
@@ -346,7 +307,7 @@ class Grid extends React.Component {
                     <div
                         id={"rooms"}
                         ref={"rooms"}>
-                        {rooms}
+                        {roomTimes}
                     </div>
                     {/* {dragger} */}
                     {gridCells}
