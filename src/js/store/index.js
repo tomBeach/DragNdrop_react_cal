@@ -1,5 +1,5 @@
 // ======= src/js/store/index.js =======
 import { createStore } from "redux";
-import dataReducer from "../reducers/index";
-const store = createStore(dataReducer);
+import dataReducers from "../reducers/index";
+const store = createStore(dataReducers);
 export default store;

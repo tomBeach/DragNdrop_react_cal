@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom'
+import autoBind from 'react-autobind';
 // import SessionInfo from './SessionInfo';
 // import SessionClear from './SessionClear';
 
@@ -9,6 +10,7 @@ class SessionCell extends React.Component {
         // console.log("\n== SessionCell:constructor ==");
         super(props);
         // console.log("props:", props);
+        autoBind(this);
         this.state = {
             id: props.id,
             text: props.text,
@@ -16,7 +18,6 @@ class SessionCell extends React.Component {
             sessionData: props.sessionData,
             highlighted: false
         }
-        this.toggleHilite = this.toggleHilite.bind(this);
     }
 
     componentWillMount() {

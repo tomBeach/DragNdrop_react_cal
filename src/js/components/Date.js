@@ -8,7 +8,7 @@ class Date extends React.Component {
         super(props);
         console.log("props:", props);
         this.state = {
-            text: undefined
+            text: props.text
         }
     }
 

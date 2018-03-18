@@ -1,0 +1,214 @@
+// ======= application state tree structure =======
+
+{
+    dates: [],
+    times: [],
+    rooms: [],
+    sessions: [],
+    roomtimes: [],
+    gridCells: [
+        {
+            1_1: {
+                addr:"1_1",
+                cellType:"sessionCell",
+                x:100,
+                y:100,
+                w:100,
+                h:22,
+                sessionData: {
+                    id: 1,
+                    seq: 1,
+                    title: "Session Title"
+                }
+            }
+        },
+        { ... }
+    ]
+}
+
+======= data flow =======
+• call an actiuon (e.g. store.dispatch(addDates))
+    - can be called from anywhere in app (e.g. components, XHR callbacks, at scheduled intervals...)
+    - examples
+
+    { type: 'LIKE_ARTICLE', articleId: 42 }
+    { type: 'FETCH_USER_SUCCESS', response: { id: 3, name: 'Mary' } }
+    { type: 'ADD_TODO', text: 'Read the Redux docs.' }
+
+• The Redux store calls the reducer function you gave it.
+    - store will pass two arguments to the reducer
+        the current state tree
+        the action
+    - a reducer is a pure function: it only *computes* the next state
+
+• The root reducer may combine the output of multiple reducers into a single state tree.
+    - When you emit an action, combined reducers returned by combineReducers() will call both reducers
+    - it combines both sets of results into a single state tree
+
+• The Redux store saves the complete state tree returned by the root reducer
+    - This new tree is now the next state of your app
+    - every listener registered with store.subscribe(listener) will now be invoked
+    - listeners may call store.getState() to get the current state
+
+======= dispatching actions =======
+• container components can dispatch actions
+• a function called mapDispatchToProps() can also dispatch actions
+    - receives the dispatch() method
+    - returns callback props that are injected into the presentational component
+    - example:
+
+    const mapDispatchToProps = dispatch => {
+        return {
+            onTodoClick: id => {
+                dispatch(toggleTodo(id))
+            }
+        }
+    }
+
+
+
+
+======= reducers =======
+• A reducer is a pure function that takes the previous state and an action, and returns the next state.
+    (previousState, action) => newState
+
+• start by specifying the initial state (first time through Redux will call the reducer with an undefined state)
+    const initialState = {
+        dates: [],
+        times: [],
+        rooms: [],
+        sessions: [],
+        roomtimes: [],
+        gridCells: []
+    };
+
+• Syntax for copying current state and adding next state:
+    (previousState, action) => newState
+    return { ...state, ...newState }
+    return { ...state, times: [...state.times, action.payload] };   // times value of state becomes value of action.payload
+
+• All actions required:
+    ADD_TIMES
+    ADD_DATES
+    ADD_ROOMS
+    ADD_SESSIONS
+    ADD_ROOTIMES
+    ADD_GRID_CELLS
+    UPDATE_GRID_CELLS
+
+• Reducer structure:
+    const rawDataReducer = (state = initialState, action) => {
+        console.log("\n== rawDataReducer ==");
+        switch (action.type) {
+            case ADD_TIMES:
+                console.log("-- ADD_TIMES --");
+                return { ...state, times: [...state.times, action.payload] };
+            }
+            ...
+        }
+    export default rawDataReducer;
+
+• splitting reducers to handle only changing parts of state:
+    function reducer(state = {}, action) {
+        return {
+            a: doSomethingWithA(state.a, action),
+            b: processB(state.b, action),
+            c: c(state.c, action)
+        }
+    }
+
+• Example Actions:
+    export const ADD_TODO = 'ADD_TODO'
+    export const TOGGLE_TODO = 'TOGGLE_TODO'
+    export const SET_VISIBILITY_FILTER = 'SET_VISIBILITY_FILTER'
+     
+    export const VisibilityFilters = {
+        SHOW_ALL: 'SHOW_ALL',
+        SHOW_COMPLETED: 'SHOW_COMPLETED',
+        SHOW_ACTIVE: 'SHOW_ACTIVE'
+    }
+    export function addTodo(text) {
+        return {
+            type: ADD_TODO,
+            text }
+    }
+    export function toggleTodo(index) {
+        return {
+            type: TOGGLE_TODO,
+            index }
+    }     
+    export function setVisibilityFilter(filter) {
+        return {
+            type: SET_VISIBILITY_FILTER,
+            filter }
+    }
+
+• Example reducers:
+    import { combineReducers } from 'redux'
+    import { ADD_TODO, TOGGLE_TODO, SET_VISIBILITY_FILTER, VisibilityFilters } from './actions'
+    const { SHOW_ALL } = VisibilityFilters
+     
+    function visibilityFilter(state = SHOW_ALL, action) {
+      switch (action.type) {
+        case SET_VISIBILITY_FILTER:
+          return action.filter
+        default:
+          return state
+      }
+    }
+     
+    function todos(state = [], action) {
+      switch (action.type) {
+        case ADD_TODO:
+          return [
+            ...state,
+            {
+              text: action.text,
+              completed: false
+            }
+          ]
+        case TOGGLE_TODO:
+          return state.map((todo, index) => {
+            if (index === action.index) {
+              return Object.assign({}, todo, {
+                completed: !todo.completed
+              })
+            }
+            return todo
+          })
+        default:
+          return state
+      }
+    }
+     
+    const todoApp = combineReducers({
+      visibilityFilter,
+      todos
+    })
+     
+    export default todoApp;
+
+• Calendar reducers:
+
+    const addData = (state = initialState, action) => {
+        console.log("\n== addData ==");
+        console.log("state:", state);
+        console.log("action:", action);
+
+        switch (action.type) {
+            case ADD_TIMES:
+            console.log("-- ADD_TIMES --");
+            return { ...state, times: [...state.times, action.payload] };
+
+            case ADD_DATES:
+            console.log("-- ADD_DATES --");
+            return { ...state, dates: [...state.dates, action.payload] };
+
+            case ADD_ROOMS:
+            console.log("-- ADD_ROOMS --");
+            return { ...state, rooms: [...state.rooms, action.payload] };
+            default:
+            return state;
+        }
+    }
+    export default addData;

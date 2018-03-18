@@ -1,78 +1,54 @@
 // ======= src/js/actions/index.js =======
-import { ADD_DATES } from "../constants/action-types";
 import { ADD_TIMES } from "../constants/action-types";
+import { ADD_DATES } from "../constants/action-types";
 import { ADD_ROOMS } from "../constants/action-types";
+import { ADD_SESSIONS } from "../constants/action-types";
+import { UPDATE_CELLS } from "../constants/action-types";
 import { ADD_GRID_CELLS } from "../constants/action-types";
 
+// == example:
+// export const ADD_TODO = 'ADD_TODO'
+//
+// export const addTodo = (text) => {
+//     console.log("== actions: addTodo ==");
+//     return {
+//         type: ADD_TODO,
+//         text }
+// }
+ 
 export const addDates = (dates) => {
     console.log("== actions: addDates ==");
+    console.log("dates:", dates);
     return {
-        type: "ADD_DATES",
+        type: ADD_DATES,
         payload: dates
     }
 }
 export const addTimes = (times) => {
     console.log("== actions: addTimes ==");
     return {
-        type: "ADD_TIMES",
+        type: ADD_TIMES,
         payload: times
     }
 }
 export const addRooms = (rooms) => {
     console.log("== actions: addRooms ==");
     return {
-        type: "ADD_ROOMS",
+        type: ADD_ROOMS,
         payload: rooms
     }
 }
-export const addGridCells = (gridCells) => {
-    console.log("== actions: addGridCells ==");
+export const addSessions = (sessions) => {
+    console.log("== actions: addSessions ==");
     return {
-        type: "ADD_GRID_CELLS",
-        payload: gridCells
+        type: ADD_SESSIONS,
+        payload: sessions
     }
 }
-
-
-
-
-
-
-
-// import { ADD_ARTICLE } from "../constants/action-types";
-// import { ADD_DATES } from "../constants/action-types";
-//
-// export const addDates = dates => {
-//     console.log("== actions:addDates ==");
-//     console.log("  dates:", dates);
-//     let datesObj = {
-//         type: ADD_DATES,
-//         payload: dates
-//     };
-//     return datesObj;
-// };
-//
-// export const addArticle = article => {
-//     console.log("== actions:addArticle ==");
-//     console.log("  article:", article);
-//     let articleObj = {
-//         type: ADD_ARTICLE,
-//         payload: article
-//     };
-//     return articleObj;
-// };
-
-
-// function articleAction() {
-//     console.log("== articleAction ==");
-//     let articleObj = {
-//         type: ADD_ARTICLE,
-//         payload: article
-//     }
-//     console.log("articleObj:", articleObj);
-//     return articleObj;
-// }
-// let article = articleAction();
-// console.log("article:", article);
-//
-// export article;
+export const addGridCells = () => {
+    console.log("== actions: addGridCells ==");
+    return {
+        type: ADD_GRID_CELLS,
+        payload: null
+    }
+}
