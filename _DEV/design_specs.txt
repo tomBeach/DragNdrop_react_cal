@@ -1,3 +1,57 @@
+// ======= database data structures ========
+sessionData = {
+    session_id:1,
+    room_id: 1,
+    session_title: "session_title_1",
+    session_start: "2018-10-02 09:00:00",
+    room_name: "R100",
+    sequences: [
+        { seq: 1, abs: 11, title: "abs_title_1" },
+        { seq: 2, abs: 22, title: "abs_title_2" },
+        { seq: 3, abs: 33, title: "abs_title_3" }
+    ]
+}
+@calendar_data = [dates, room_names, timeslots, session_seq_array]
+
+
+// ======= session data structures ========
+cellDataObj.1_1 = { id:null, addr:"1_1", cellType:"emptyCell", sessionData:null }
+
+
+// ======= combined data structures ========
+cellDataObj.1_1 =
+{
+    id: null,
+    addr: "1_1",
+    cellType: "sessionCell",
+    sessionData: {
+        session_id:1,
+        room_id: 1,
+        session_title: "session_title_1",
+        session_start: "2018-10-02 09:00:00",
+        room_name: "R100",
+        sequences: [
+            { seq: 1, abs: 11, title: "abs_title_1" },
+            { seq: 2, abs: 22, title: "abs_title_2" },
+            { seq: 3, abs: 33, title: "abs_title_3" }
+        ]
+    }
+}
+cellDataObj.1_1 = { id: null, addr: "1_1", cellType: "sessionCell", sessionData: sessionData }
+sessionData = {
+    session_id:1,
+    room_id: 1,
+    session_title: "session_title_1",
+    session_start: "2018-10-02 09:00:00",
+    room_name: "R100",
+    sequences: [
+        { seq: 1, abs: 11, title: "abs_title_1" },
+        { seq: 2, abs: 22, title: "abs_title_2" },
+        { seq: 3, abs: 33, title: "abs_title_3" }
+    ]
+}
+
+
 // ======= application state tree structure =======
 
 {

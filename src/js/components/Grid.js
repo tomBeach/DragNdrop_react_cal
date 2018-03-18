@@ -157,7 +157,7 @@ class Grid extends React.Component {
     // ======= ======= ======= grid ======= ======= =======
     // ======= ======= ======= grid ======= ======= =======
 
-    makeGridCells(dates, rooms, times) {
+    makeGridCells(dates, rooms, times, sessions) {
         console.log("== Grid:makeGridCells ==");
 
         // == cell data management variables (used by all grid building methods below)
@@ -165,7 +165,7 @@ class Grid extends React.Component {
         let cellDataObjArray = [];
 
         // == make cells for currently scheduling sessions
-        this.makeSessionCells(cellDataObj);
+        this.makeSessionCells(sessions, cellDataObj);
 
         // == add roomCells (spacers) and emptyCells then add to cellDataObj
         this.makeDayColumns(dates, rooms, times, cellDataObj, cellDataObjArray);
@@ -179,18 +179,18 @@ class Grid extends React.Component {
         return cellComponents;
     }
 
-    makeSessionCells(cellDataObj) {
+    makeSessionCells(sessions, cellDataObj) {
         console.log("== Grid:makeSessionCells ==");
-        // == for database data only
-        // let sessionDataArray = databaserecords.map((session, s) => {
-        //     let nextRoom = parseInt(session.room_id);
-        //     let nextCol = parseInt(session.session_start.substring(8,10)) - 1;
-        //     let nextRow = parseInt(session.session_start.substring(11,13)) - 7 + ((nextRoom-1) * 9);
-        //     let rowCol = nextRow.toString() + "_" + nextCol.toString();
-        //     let title = session.session_title.split(" (")[0];
-        //     let id = session.session_id;
-        //     cellDataObj[rowCol] = { id:null, addr:rowCol, cellType:"sessionCell", sessionData:session }
-        // });
+        console.log("sessions:", sessions);
+        let sessionDataArray = sessions.map((session, s) => {
+            let nextRoom = parseInt(session.room_id);
+            let nextCol = parseInt(session.session_start.substring(8,10)) - 1;
+            let nextRow = parseInt(session.session_start.substring(11,13)) - 7 + ((nextRoom-1) * 9);
+            let rowCol = nextRow.toString() + "_" + nextCol.toString();
+            let title = session.session_title.split(" (")[0];
+            let id = session.session_id;
+            cellDataObj[rowCol] = { id:null, addr:rowCol, cellType:"sessionCell", sessionData:session }
+        });
     }
 
     makeDayColumns(dates, rooms, times, cellDataObj, cellDataObjArray) {
@@ -284,7 +284,7 @@ class Grid extends React.Component {
             console.log("+++ gridCells +++");
             dateHeaders = this.makeDateHeaders(this.state.dates);
             roomTimes = this.makeRoomTimes(this.state.rooms, this.state.times);
-            gridCells = this.makeGridCells(this.state.dates, this.state.rooms, this.state.times);
+            gridCells = this.makeGridCells(this.state.dates, this.state.rooms, this.state.times, this.state.sessions);
         } else {
             roomTimes = null;
             dateHeaders = null;
