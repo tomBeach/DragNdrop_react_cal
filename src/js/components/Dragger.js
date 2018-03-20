@@ -71,9 +71,19 @@ class Dragger extends React.Component {
 
     render() {
         let dragX, dragY, dragW, dragH, dragStyle;
-        let dragStates = store.getState().dragStates;
+        let dragStates = store.getState().dragStates[0];
         console.log("dragStates:", dragStates);
-        if (dragStates) {
+
+        function isEmpty(obj) {
+            for(var key in obj) {
+                return !obj.hasOwnProperty(key);
+            }
+            return true;
+        }
+        let dragStates_empty = isEmpty(dragStates);
+        console.log("dragStates_empty:", dragStates_empty);
+
+        if (!dragStates_empty) {
             dragX = parseInt(dragStates.dragXY.x);
             dragY = parseInt(dragStates.dragXY.y);
             dragW = parseInt(dragStates.dragWH.w);

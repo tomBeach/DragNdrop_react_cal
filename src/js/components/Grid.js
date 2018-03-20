@@ -183,15 +183,13 @@ class Grid extends React.Component {
         console.log("dragStates:", dragStates);
 
         // == add DOM-dependent data to store
-        // store.dispatch(addDragStates(dragStates));
+        store.dispatch(addDragStates(dragStates));
         store.dispatch(addCellData(cellDataStore));
-        // let checkDragStates = store.getState().dragStates;
-        // console.log("checkDragStates:", checkDragStates);
-        //
-        // // == create dragger, boundaries and behaviors
-        // document.getElementById("sessions").addEventListener('scroll', this.detectGridScroll);
-        //
-        // // == trigger dragger render
+
+        // == create dragger, boundaries and behaviors
+        document.getElementById("sessions").addEventListener('scroll', this.detectGridScroll);
+
+        // == trigger dragger render
         console.log("+++ SETTING STATES +++");
         this.setState({
             draggerId: "dragger1"
@@ -423,12 +421,25 @@ class Grid extends React.Component {
     makeDragger() {
         console.log("+++++++ == Grid:makeDragger == +++++++ ");
 
+        let startCellId, targetCellId;
         let dragXY, dragWH, gridWH, gridXY, startCellData, text, draggerId;
+        let cellDataStore = store.getState().cellDataObj[0];
         let dragStates = store.getState().dragStates;
+        // let dragStates = { key: "prop"};
         console.log("dragStates:", dragStates);
 
+        function isEmpty(obj) {
+            for(var key in obj) {
+                return !obj.hasOwnProperty(key);
+            }
+            return true;
+        }
+        let dragStates_empty = isEmpty(dragStates);
+        console.log("dragStates_empty:", dragStates_empty);
+
         // == get dragger location data
-        if (dragStates) {
+        if (!dragStates_empty) {
+            console.log("store.getState():", store.getState());
             startCellId = store.getState().startCellId[0];
             targetCellId = store.getState().targetCellId[0];
             cellDataStore = store.getState().cellDataObj[0];

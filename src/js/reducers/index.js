@@ -16,7 +16,7 @@ const initialState = {
     rooms: [],
     sessions: [],
     cellDataObj: "",
-    dragStates: null,
+    dragStates: {},
     startCellId: "",
     targetCellId: "",
     draggerId: "initDragger"
@@ -63,6 +63,7 @@ const initDataReducer = (state, action) => {
 
         case ADD_DRAGSTATES:
         console.log("-- ADD_DRAGSTATES --");
+        // debugger;
         console.log("action.payload:", action.payload);
         return { ...state, dragStates: [...state.dragStates, action.payload] };
 
