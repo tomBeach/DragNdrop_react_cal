@@ -15,11 +15,10 @@ const initialState = {
     times: [],
     rooms: [],
     sessions: [],
-    cellDataObj: "",
-    dragStates: {},
     startCellId: "",
     targetCellId: "",
-    draggerId: "initDragger"
+    dragStates: {},
+    cellDataObj: ""
 };
 
 const initDataReducer = (state, action) => {

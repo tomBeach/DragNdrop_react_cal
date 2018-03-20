@@ -79,6 +79,110 @@ sessionData = {
     ]
 }
 
+
+======= component data storage =======
+<Provider
+    store={store}>
+    <App />
+</Provider>
+
+// == add database data for dates, times, rooms, sessions; init start/target cells
+App (
+    <Grid
+        dates=          {dates}
+        times=          {times}
+        rooms=          {rooms}
+        sessions=       {sessions}
+        startCellId=    {"2_1"}
+        targetCellId=   {"2_1"}
+        dragStates=     {dragStates}
+        cellDataObj=    {null}
+    />
+)
+
+// == data required for moving dragger within boundaries
+let dragStates = {
+    gridXYWH:       { x:0, y:0, w:0, h:0 },
+    dragXYWH:       { x:0, y:0, w:0, h:0 },
+    mouseXY:        { x:0, y:0 },
+    relXY:          { x:0, y:0 },
+    dragging:       false,
+    scrolling:      false,
+    scrollStart:    0
+};
+
+<Dragger
+    id:             props.id,                   // init: "initDragger", active: "dragger1"
+    text:           props.text,                 // session_title
+    startCellId:    props.startCellId,          // "2_1"
+    targetCellId:   props.targetCellId,         // "2_1"
+    startCellData:  props.startCellData,        // init: null, active: cellDataObj("2_1")
+    gridXYWH:       { x:0, y:0, w:0, h:0 },     // from store
+    dragXYWH:       { x:0, y:0, w:0, h:0 },     // from store
+    mouseXY:        { x:0, y:0 },               // from store
+    relXY:          { x:0, y:0 },               // from store
+    dragging:       false,                      // from store
+    scrolling:      false,                      // from store
+    scrollStart:    0                           // from store
+/>
+
+
+======= component data storage (original) =======
+<Provider store={store}>
+    <App />
+</Provider>,
+
+const App = () => (
+    <div>
+        <Grid
+            dates=          {dates}
+            times=          {times}
+            rooms=          {rooms}
+            sessions=       {sessions}
+            dragStates=     {null}
+            cellDataObj=    {null}
+            startCellId=    {"2_1"}
+            targetCellId=   {"2_1"}
+        />
+    </div>
+);
+
+let dragStates = {
+    gridXY:         { x:0, y:0 },
+    gridWH:         {w:0, h:0 },
+    dragXY:         { x:0, y:0 },
+    dragWH:         { w:0, h:0 },
+    mouseXY:        { x:0, y:0 },
+    relXY:          { x:0, y:0 },
+    scrollStart:    0,
+    dragging:       false,
+    scrolling:      false
+};
+
+<Dragger
+    id:             props.id,
+    text:           props.text,
+    timeslots:      props.timeslots,
+    roomnames:      props.roomnames,
+    scrollStart:    0,
+    dragging:       false,
+    scrolling:      false,
+    cellDataObj:    null,
+    cellIdsArray:   null,
+    startCellId:    props.startCellId,
+    targetCellId:   props.targetCellId,
+    startCellData:  props.startCellData,
+    gridxy:         props.gridxy,
+    gridwh:         props.gridwh,
+    dragxy:         props.dragxy,
+    dragwh:         props.dragwh,
+    mousexy:        { x:0, y:0 },
+    relXY:          { x:0, y:0 }
+/>
+
+
+
+
 ======= data flow =======
 • call an action (e.g. store.dispatch(addDates))
     - can be called from anywhere in app (e.g. components, XHR callbacks, at scheduled intervals...)

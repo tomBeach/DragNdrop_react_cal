@@ -35,11 +35,10 @@ const mapStateToProps = (state, ownProps) => {
         times: ownProps.times,
         rooms: ownProps.rooms,
         sessions: ownProps.sessions,
-        dragStates: ownProps.dragStates,
-        cellDataObj: ownProps.cellDataObj,
         startCellId: ownProps.startCellId,
         targetCellId: ownProps.targetCellId,
-        draggerId: ownProps.draggerId
+        dragStates: ownProps.dragStates,
+        cellDataObj: ownProps.cellDataObj
     };
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -50,10 +49,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         addTimes: times => dispatch(addTimes(ownProps.times)),
         addRooms: rooms => dispatch(addRooms(ownProps.rooms)),
         addSessions: sessions => dispatch(addSessions(ownProps.sessions)),
-        addDragStates: dragStates => dispatch(addDragStates(ownProps.dragStates)),
-        addCellData: cellDataObj => dispatch(addCellData(ownProps.cellDataObj)),
         setStartId: startCellId => dispatch(setStartId(ownProps.startCellId)),
-        setTargetId: targetCellId => dispatch(setTargetId(ownProps.targetCellId))
+        setTargetId: targetCellId => dispatch(setTargetId(ownProps.targetCellId)),
+        addDragStates: dragStates => dispatch(addDragStates(ownProps.dragStates)),
+        addCellData: cellDataObj => dispatch(addCellData(ownProps.cellDataObj))
     }
 }
 
@@ -73,11 +72,10 @@ class Grid extends React.Component {
             times: props.times,
             rooms: props.rooms,
             sessions: props.sessions,
-            dragStates: props.dragStates,
-            cellDataObj: props.cellDataObj,
             startCellId: props.startCellId,
             targetCellId: props.targetCellId,
-            draggerId: props.draggerId
+            dragStates: props.dragStates,
+            cellDataObj: props.cellDataObj
         };
     }
 
@@ -100,8 +98,8 @@ class Grid extends React.Component {
             store.dispatch(addSessions(this.props.sessions));
             store.dispatch(setStartId(this.props.startCellId));
             store.dispatch(setTargetId(this.props.targetCellId))
+            this.updateCellData();      // modifies cellDataObj with position data
         }
-        this.updateCellData();
     }
 
     // ======= ======= ======= cellData ======= ======= =======
@@ -116,8 +114,6 @@ class Grid extends React.Component {
         // == get cell data objects from store
         let cellDataStore = store.getState().cellDataObj[0];
         let startCellId = store.getState().startCellId;
-        console.log("startCellId:", startCellId);
-        console.log("cellDataStore:", cellDataStore);
 
         // == get cell location data from mounted cell components
         let dayCells = ReactDOM.findDOMNode(this.refs.day_0);
@@ -169,16 +165,13 @@ class Grid extends React.Component {
         let gridH = sessionsR.height - timeR.height - 5;    // limit to bottom drag when added to gridH
         // let dragStates = "dragStates";
         let dragStates = {
-            text: { x:anchorR.left + timeR.width, y:anchorR.top + timeR.height },
-            gridXY: { x:timeR.left, y:timeR.top },
-            gridWH: { x:gridL, y:gridT, w:gridW, h:sessionsR.height },
-            dragXY: { x:timeR.width + 6, y:anchorR.height + 3 },
-            dragWH: { w:anchorR.width, h:anchorR.height },
+            gridXYWH: { x:gridL, y:gridT, w:gridW, h:sessionsR.height },
+            dragXYWH: { x:timeR.width + 6, y:anchorR.height + 3, w:anchorR.width, h:anchorR.height },
             mouseXY: { x:0, y:0 },
             relXY: { x:0, y:0 },
             scrollStart: 0,
-            dragging: false,
-            scrolling: false
+            scrolling: false,
+            dragging: false
         };
         console.log("dragStates:", dragStates);
 
@@ -421,8 +414,8 @@ class Grid extends React.Component {
     makeDragger() {
         console.log("+++++++ == Grid:makeDragger == +++++++ ");
 
-        let startCellId, targetCellId;
-        let dragXY, dragWH, gridWH, gridXY, startCellData, text, draggerId;
+        let draggerId, startCellId, targetCellId;
+        let dragXYWH, gridXYWH, mouseXY, relXY, startCellData, text;
         let cellDataStore = store.getState().cellDataObj[0];
         let dragStates = store.getState().dragStates;
         // let dragStates = { key: "prop"};
@@ -436,18 +429,17 @@ class Grid extends React.Component {
         }
         let dragStates_empty = isEmpty(dragStates);
         console.log("dragStates_empty:", dragStates_empty);
+        console.log("store.getState():", store.getState());
 
         // == get dragger location data
         if (!dragStates_empty) {
-            console.log("store.getState():", store.getState());
+            draggerId = "dragger1";
+            text = "dragger1";
             startCellId = store.getState().startCellId[0];
             targetCellId = store.getState().targetCellId[0];
             cellDataStore = store.getState().cellDataObj[0];
-            dragXY = dragStates.dragXY;
-            dragWH = dragStates.dragWH;
-            gridWH = dragStates.gridWH;
-            gridXY = dragStates.gridXY;
-            draggerId = "dragger1";
+            dragXYWH = dragStates.dragXYWH;
+            gridXYWH = dragStates.gridXYWH;
 
             // == get session data for startCell (for temp storage while dragging)
             cellDataStore[startCellId]
@@ -460,9 +452,15 @@ class Grid extends React.Component {
                 : text = null;
 
         } else {
-            startCellData = null;
             draggerId = "initDragger";
             text = "initDragger";
+            startCellId = "2_1";
+            targetCellId = "2_1";
+            startCellData = null;
+            dragXYWH = { x:0, y:0, w:0, h:0 };
+            gridXYWH = { x:0, y:0, w:0, h:0 };
+            mouseXY = { x:0, y:0 };
+            relXY = { x:0, y:0 };
         }
         console.log("startCellData:", startCellData);
         console.log("draggerId:", draggerId);
@@ -475,6 +473,8 @@ class Grid extends React.Component {
                 ref={draggerId}
                 text={text}
                 startCellData={startCellData}
+                gridXYWH={gridXYWH}
+                dragXYWH={dragXYWH}
             />
         )
     }
