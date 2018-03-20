@@ -16,9 +16,10 @@ const initialState = {
     rooms: [],
     sessions: [],
     cellDataObj: "",
-    dragStates: "",
+    dragStates: null,
     startCellId: "",
-    targetCellId: ""
+    targetCellId: "",
+    draggerId: "initDragger"
 };
 
 const initDataReducer = (state, action) => {

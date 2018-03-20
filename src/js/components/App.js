@@ -44,9 +44,10 @@ const App = () => (
                     times={times}
                     rooms={rooms}
                     sessions={sessions}
+                    dragStates={null}
                     cellDataObj={null}
-                    startCellId={"1_1"}
-                    targetCellId={"1_1"}
+                    startCellId={"2_1"}
+                    targetCellId={"2_1"}
                 />
             </div>
         </div>

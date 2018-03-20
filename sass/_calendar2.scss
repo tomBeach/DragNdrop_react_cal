@@ -114,8 +114,12 @@
     height: 480px;
     overflow-y: scroll;
 }
+#initDragger {
+    display: block;
+}
 #dragger1 {
     cursor: pointer;
+    display: block;
     position: absolute;
     // position: relative;
     margin: 0;

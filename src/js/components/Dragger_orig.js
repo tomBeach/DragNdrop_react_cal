@@ -536,21 +536,21 @@ class Dragger extends React.Component {
         // let relX = parseInt(this.state.relXY.x);
 
         return(
-            <div>
-                // id={this.props.id}
-                // gridxy={this.state.gridxy}
-                // dragxy={this.props.dragxy}
-                // dragwh={this.state.dragwh}
-                // style={{
-                    //         position: 'absolute',
-                    //         left: dragX + 'px',
-                    //         top: dragY + 'px',
-                    //         width: dragW + 'px',
-                    //         height: dragH + 'px'
-                    // }}
-                    // onMouseDown={(e) => this.onMouseDown(e)}>
-                    // <p>{this.state.text}</p>
-                    </div>
+            <div
+                id={this.props.id}
+                gridxy={this.state.gridxy}
+                dragxy={this.props.dragxy}
+                dragwh={this.state.dragwh}
+                style={{
+                    position: 'absolute',
+                    left: dragX + 'px',
+                    top: dragY + 'px',
+                    width: dragW + 'px',
+                    height: dragH + 'px'
+                }}
+                onMouseDown={(e) => this.onMouseDown(e)}>
+                <p>{this.state.text}</p>
+            </div>
                     )
     }
 }
