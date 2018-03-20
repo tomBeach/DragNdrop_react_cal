@@ -81,7 +81,7 @@ sessionData = {
 }
 
 ======= data flow =======
-• call an actiuon (e.g. store.dispatch(addDates))
+• call an action (e.g. store.dispatch(addDates))
     - can be called from anywhere in app (e.g. components, XHR callbacks, at scheduled intervals...)
     - examples
 
@@ -105,6 +105,7 @@ sessionData = {
     - listeners may call store.getState() to get the current state
 
 ======= dispatching actions =======
+• Actions are executed in a strict order, so no race conditions occur
 • container components can dispatch actions
 • a function called mapDispatchToProps() can also dispatch actions
     - receives the dispatch() method
@@ -119,12 +120,19 @@ sessionData = {
         }
     }
 
-
-
-
 ======= reducers =======
+• Create a new state, given the current state and an action
+• Can act on all or part of the state
+• Can be combined and reused
+• Centralize data mutations
 • A reducer is a pure function that takes the previous state and an action, and returns the next state.
     (previousState, action) => newState
+
+• multiple reducers can handle different sub-states
+    - example: content sub-state
+    - defined by contentReducer.js
+    - handles anything to do with app data associated with "content"
+    - the sideMenu sub-state handles anything to do with sideMenu functionality
 
 • start by specifying the initial state (first time through Redux will call the reducer with an undefined state)
     const initialState = {
@@ -147,12 +155,12 @@ sessionData = {
     ADD_ROOMS
     ADD_SESSIONS
     ADD_ROOTIMES
-    ADD_GRID_CELLS
+    ADD_CELLDATA
     UPDATE_GRID_CELLS
 
 • Reducer structure:
-    const rawDataReducer = (state = initialState, action) => {
-        console.log("\n== rawDataReducer ==");
+    const initDataReducer = (state = initialState, action) => {
+        console.log("\n== initDataReducer ==");
         switch (action.type) {
             case ADD_TIMES:
                 console.log("-- ADD_TIMES --");
@@ -160,7 +168,7 @@ sessionData = {
             }
             ...
         }
-    export default rawDataReducer;
+    export default initDataReducer;
 
 • splitting reducers to handle only changing parts of state:
     function reducer(state = {}, action) {
@@ -266,3 +274,13 @@ sessionData = {
         }
     }
     export default addData;
+
+// ======= dependencies =======
+• Redux-Thunk enables work with async, functions, promises and other advanced features
+
+
+
+
+
+
+///

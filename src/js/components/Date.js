@@ -13,17 +13,15 @@ class Date extends React.Component {
     }
 
     componentWillMount() {
-        console.log("\n== Date:componentWillMount ==");
+        // console.log("\n== Date:componentWillMount ==");
         let text = this.props.text.substring(5, 10);
-        console.log("text:", text);
         this.setState({
             text: text
-
         })
     }
 
     render() {
-        console.log("\n== Date:render ==");
+        // console.log("\n== Date:render ==");
         return (
             <div
                 id={this.props.id}

@@ -44,7 +44,9 @@ const App = () => (
                     times={times}
                     rooms={rooms}
                     sessions={sessions}
-                    gridCells={null}
+                    cellDataObj={null}
+                    startCellId={"1_1"}
+                    targetCellId={"1_1"}
                 />
             </div>
         </div>

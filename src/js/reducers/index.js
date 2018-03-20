@@ -1,19 +1,34 @@
 // ======= src/js/reducers/index.js =======
 import { combineReducers } from 'redux'
-import { ADD_TIMES, ADD_DATES, ADD_ROOMS, ADD_SESSIONS, ADD_GRID_CELLS, UPDATE_CELLS } from "../constants/action-types";
+import { ADD_DATES } from "../constants/action-types";
+import { ADD_TIMES } from "../constants/action-types";
+import { ADD_ROOMS } from "../constants/action-types";
+import { ADD_SESSIONS } from "../constants/action-types";
+import { ADD_CELLDATA } from "../constants/action-types";
+import { ADD_DRAGSTATES } from "../constants/action-types";
+
+import { SET_START_ID } from "../constants/action-types";
+import { SET_TARGET_ID } from "../constants/action-types";
 
 const initialState = {
     dates: [],
     times: [],
     rooms: [],
     sessions: [],
-    gridCells: []
+    cellDataObj: "",
+    dragStates: "",
+    startCellId: "",
+    targetCellId: ""
 };
 
-const rawDataReducer = (state = initialState, action) => {
-    console.log("\n== rawDataReducer ==");
+const initDataReducer = (state, action) => {
+    console.log("\n== initDataReducer ==");
     console.log("state:", state);
     console.log("action:", action);
+
+    if (state === undefined) {
+        state = initialState;
+    }
 
     switch (action.type) {
         case ADD_DATES:
@@ -32,32 +47,32 @@ const rawDataReducer = (state = initialState, action) => {
         console.log("-- ADD_SESSIONS --");
         return { ...state, sessions: [...state.sessions, action.payload] };
 
-        case ADD_GRID_CELLS:
-        console.log("-- ADD_GRID_CELLS --");
-        return { ...state, gridCells: [...state.gridCells, action.payload] };
+        case SET_START_ID:
+        console.log("-- SET_START_ID --");
+        return { ...state, startCellId: [...state.startCellId, action.payload] };
+
+        case SET_TARGET_ID:
+        console.log("-- SET_TARGET_ID --");
+        return { ...state, targetCellId: [...state.targetCellId, action.payload] };
+
+        case ADD_CELLDATA:
+        console.log("-- ADD_CELLDATA --");
+        console.log("action.payload:", action.payload);
+        return { ...state, cellDataObj: [...state.cellDataObj, action.payload] };
+
+        case ADD_DRAGSTATES:
+        console.log("-- ADD_DRAGSTATES --");
+        console.log("action.payload:", action.payload);
+        return { ...state, dragStates: [...state.dragStates, action.payload] };
 
         default:
         return state;
     }
 }
 
-const updateCellsReducer = (state = initialState, action) => {
-    console.log("\n== updateCellsReducer ==");
-    console.log("state:", state);
-    console.log("action:", action);
+// const dataReducers = combineReducers({
+//     initDataReducer,
+//     updateCellsReducer
+// })
 
-    switch (action.type) {
-        case UPDATE_CELLS:
-        console.log("-- UPDATE_CELLS --");
-        return { ...state, gridCells: [...state.gridCells, action.payload] };
-        default:
-        return state;
-    }
-}
-
-const dataReducers = combineReducers({
-    rawDataReducer,
-    updateCellsReducer
-})
-
-export default dataReducers;
+export default initDataReducer;

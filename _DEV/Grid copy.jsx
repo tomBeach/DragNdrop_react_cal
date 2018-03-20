@@ -266,8 +266,8 @@ class Grid extends React.Component {
             let nextCol = parseInt(session.session_start.substring(8,10)) - 1;
             let nextRow = parseInt(session.session_start.substring(11,13)) - 7 + ((nextRoom-1) * 9);
             let rowCol = nextRow.toString() + "_" + nextCol.toString();
-            let title = session.session_title.split(" (")[0];
-            let id = session.session_id;
+            // let title = session.session_title.split(" (")[0];
+            // let id = session.session_id;
             cellDataObj[rowCol] = { id:null, addr:rowCol, cellType:"sessionCell", sessionData:session }
         });
         return sessionDataArray;
