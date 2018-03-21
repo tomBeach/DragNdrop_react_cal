@@ -1,42 +1,43 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { connect } from "react-redux";
 import store from "../store/index";
 
 // ======= ======= ======= DRAGGER ======= ======= =======
 // ======= ======= ======= DRAGGER ======= ======= =======
 // ======= ======= ======= DRAGGER ======= ======= =======
 
-const mapStateToProps = (state, ownProps) => {
-    console.log("\n == Dragger: mapStateToProps ==")
-    console.log("state:", state);
-    console.log("ownProps:", ownProps);
-    return {
-        draggerId: state.draggerId,
-        startCellId: state.startCellId,
-        targetCellId: state.targetCellId,
-        dragStates: state.dragStates,
-        cellDataObj: state.cellDataObj,
-        cellDaysArray: state.cellDaysArray
-    };
-}
-
 class Dragger extends React.Component {
     constructor(props) {
-        console.log("\n +++++++ == Dragger: constructor == +++++++");
+        console.log("== +++++++ Dragger:constructor +++++++ ==");
         super(props);
+        console.log("props:", props);
+        console.log("store.getState():", store.getState());
+        console.log("store.getState().startCellId:", store.getState().startCellId);
+
+        let startCellId = store.getState().startCellId[0];
+        let startCellData = store.getState().cellDataObj[0][startCellId];
+        let targetCellId = store.getState().targetCellId[0];
+        let cellDataObj = store.getState().cellDataObj[0];
+        let cellIdsArray = store.getState().cellIdsArray[0];
+        console.log("startCellId:", startCellId);
+
         this.state = {
-            draggerId: props.draggerId,
+            id: props.id,
             text: props.text,
-            scrollStart: 0,
+
+            startCellId: startCellId,
+            targetCellId: targetCellId,
+            startCellData: startCellData,
+            cellIdsArray: cellIdsArray,
+            cellDataObj: cellDataObj,
+
+            dragXYWH: props.dragXYWH,
+            gridXYWH: props.gridXYWH,
+            mouseXY: props.mouseXY,
+            relXY: props.relXY,
             dragging: false,
             scrolling: false,
-            startCellId: props.startCellId,
-            targetCellId: props.targetCellId,
-            startCellData: props.startCellData,
-            cellDataObj: null,
-            cellIdsArray: null,
-            dragStates: props.dragStates
+            scrollStart: 0
         };
         this.detectCellHover = this.detectCellHover.bind(this);
         this.locateDragger = this.locateDragger.bind(this);
@@ -46,31 +47,14 @@ class Dragger extends React.Component {
     }
 
     componentDidMount() {
-        console.log("\n +++++++ == Dragger: componentDidMount == +++++++");
-        console.log("this.state:", this.state);
+        // console.log("+++ Dragger:_DidMount");
+        // console.log("this.state:", this.state);
         document.removeEventListener('mouseup', this.onMouseUp);
-        let checkStore = store.getState();
-        let dragStates = store.getState().dragStates;
-        console.log("checkStore:", checkStore);
-        console.log("dragStates:", dragStates);
     }
 
     componentDidUpdate(prevProps, prevState) {
-        console.log("\n +++++++ == Dragger: componentDidUpdate == +++++++");
-        console.log("prevProps:", prevProps);
-        console.log("prevState:", prevState);
-
-        // let dragStates = store.getState().dragStates[0];
-        // console.log("dragStates:", dragStates);
-        // if (!dragStates) {
-        //     console.log("+++++++ UPDATING ID +++++++");
-        //     this.setState({
-        //         id: "dragger1"
-        //     })
-        // } else {
-        //     console.log("+++++++ dragStates +++++++");
-        // }
-
+        console.log("+++ Dragger:_DidUpdate ==");
+        console.log("this.state:", this.state);
         if (this.state.dragging && !prevState.dragging) {
             document.addEventListener('mousemove', this.onMouseMove);
             document.addEventListener('mouseup', this.onMouseUp);
@@ -78,21 +62,21 @@ class Dragger extends React.Component {
             document.removeEventListener('mousemove', this.onMouseMove);
             document.removeEventListener('mouseup', this.onMouseUp);
         }
-        // console.log("this.state.startCellId:", this.state.startCellId);
-        // console.log("store.getState().dragStates:", store.getState().dragStates);
-        // if (!this.state.startCellId) {
-        //     let startCellId = store.getState().startCellId[0];
-        //     console.log(" +++++++ NO START CELL ID +++++++");
-        //     this.setState({
-        //         startCellId: startCellId,
-        //         targetCellId: store.getState().targetCellId[0],
-        //         startCellData: store.getState().cellDataObj[0][startCellId],
-        //         cellIdsArray: store.getState().cellIdsArray[0],
-        //         cellDataObj: store.getState().cellDataObj[0],
-        //         dragXYWH: store.getState().dragStates[0].dragXYWH,
-        //         gridXYWH: store.getState().dragStates[0].gridXYWH
-        //     });
-        // }
+        console.log("this.state.startCellId:", this.state.startCellId);
+        console.log("store.getState().dragStates:", store.getState().dragStates);
+        if (!this.state.startCellId) {
+            let startCellId = store.getState().startCellId[0];
+            console.log(" +++++++ NO START CELL ID +++++++");
+            this.setState({
+                startCellId: startCellId,
+                targetCellId: store.getState().targetCellId[0],
+                startCellData: store.getState().cellDataObj[0][startCellId],
+                cellIdsArray: store.getState().cellIdsArray[0],
+                cellDataObj: store.getState().cellDataObj[0],
+                dragXYWH: store.getState().dragStates[0].dragXYWH,
+                gridXYWH: store.getState().dragStates[0].gridXYWH
+            });
+        }
     }
 
     // ======= ======= ======= JUMP ======= ======= =======
@@ -100,7 +84,7 @@ class Dragger extends React.Component {
     // ======= ======= ======= JUMP ======= ======= =======
 
     locateDragger(targetCellId) {
-        console.log("\n == Dragger:locateDragger ==");
+        console.log("\n== Dragger:locateDragger ==");
     }
 
     // ======= ======= ======= DRAG ======= ======= =======
@@ -108,7 +92,7 @@ class Dragger extends React.Component {
     // ======= ======= ======= DRAG ======= ======= =======
 
     scrollGridWindow() {
-        console.log("\n == Dragger:scrollGridWindow ==");
+        console.log("== Dragger:scrollGridWindow ==");
     }
 
     // ======= onMouseDown =======
@@ -161,7 +145,7 @@ class Dragger extends React.Component {
 
     // ======= onMouseMove =======
     onMouseMove(e) {
-        // console.log("\n == Dragger:onMouseMove ==");
+        // console.log("== Dragger:onMouseMove ==");
         // console.log("this.state:", this.state);
         if (!this.state.dragging) return
 
@@ -235,11 +219,11 @@ class Dragger extends React.Component {
 
     // ======= ======= ======= end drag ======= ======= =======
     onMouseUp(e) {
-        console.log("\n == Dragger:onMouseUp ==");
+        console.log("\n\n== Dragger:onMouseUp ==");
     }
 
     dropDragger(e) {
-        console.log("\n == Dragger:dropDragger ==");
+        console.log("== Dragger:dropDragger ==");
     }
 
     // ======= ======= ======= RENDER ======= ======= =======
@@ -247,24 +231,34 @@ class Dragger extends React.Component {
     // ======= ======= ======= RENDER ======= ======= =======
 
     render() {
-        console.log("\n == Dragger:render ==");
+        console.log("== Dragger:render ==");
         console.log("this.state:", this.state);
-        console.log("this.props:", this.props);
+        console.log("this.props.id:", this.props.id);
+        console.log("this.state.gridXYWH:", this.state.gridXYWH);
+        console.log("this.state.dragXYWH:", this.state.dragXYWH);
+        let dragX, dragY, dragW, dragH, dragStyle;
 
-        let draggerIds = store.getState().draggerId;
-        let draggerId = draggerIds[draggerIds.length - 1];
-        console.log("draggerId:", draggerId);
+        dragX = parseInt(this.state.dragXYWH.x);
+        dragY = parseInt(this.state.dragXYWH.y);
+        dragW = parseInt(this.state.dragXYWH.w);
+        dragH = parseInt(this.state.dragXYWH.h);
+        dragStyle = {
+            position: 'absolute',
+            left: dragX + 'px',
+            top: dragY + 'px',
+            width: dragW + 'px',
+            height: dragH + 'px'
+        }
 
         return(
             <div
-                id={draggerId}
-                style={this.props.styles}
+                id={this.props.id}
+                style={dragStyle}
                 onMouseDown={(e) => this.onMouseDown(e)}>
-                <p>{this.props.text}</p>
+                <p>{this.state.text}</p>
             </div>
         )
     }
 }
 
-// export default Dragger;
-export default connect(mapStateToProps)(Dragger);
+export default Dragger;

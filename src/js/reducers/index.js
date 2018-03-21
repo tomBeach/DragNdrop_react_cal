@@ -10,6 +10,7 @@ import { ADD_DRAGSTATES } from "../constants/action-types";
 
 import { SET_START_ID } from "../constants/action-types";
 import { SET_TARGET_ID } from "../constants/action-types";
+import { SET_DRAGGER_ID } from "../constants/action-types";
 
 const initialState = {
     dates: [],
@@ -18,6 +19,7 @@ const initialState = {
     sessions: [],
     startCellId: "",
     targetCellId: "",
+    draggerId: "",
     dragStates: {},
     cellDataObj: "",
     cellIdsArray: ""
@@ -49,14 +51,6 @@ const initDataReducer = (state, action) => {
         // console.log("-- ADD_SESSIONS --");
         return { ...state, sessions: [...state.sessions, action.payload] };
 
-        case SET_START_ID:
-        // console.log("-- SET_START_ID --");
-        return { ...state, startCellId: [...state.startCellId, action.payload] };
-
-        case SET_TARGET_ID:
-        // console.log("-- SET_TARGET_ID --");
-        return { ...state, targetCellId: [...state.targetCellId, action.payload] };
-
         case ADD_CELLDATA:
         // console.log("-- ADD_CELLDATA --");
         // console.log("action.payload:", action.payload);
@@ -71,6 +65,18 @@ const initDataReducer = (state, action) => {
         // console.log("-- ADD_DRAGSTATES --");
         // console.log("action.payload:", action.payload);
         return { ...state, dragStates: [...state.dragStates, action.payload] };
+
+        case SET_START_ID:
+        // console.log("-- SET_START_ID --");
+        return { ...state, startCellId: [...state.startCellId, action.payload] };
+
+        case SET_TARGET_ID:
+        // console.log("-- SET_TARGET_ID --");
+        return { ...state, targetCellId: [...state.targetCellId, action.payload] };
+
+        case SET_DRAGGER_ID:
+        // console.log("-- SET_DRAGGER_ID --");
+        return { ...state, draggerId: [...state.draggerId, action.payload] };
 
         default:
         return state;

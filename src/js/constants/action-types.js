@@ -9,3 +9,4 @@ export const ADD_DRAGSTATES = "ADD_DRAGSTATES";
 
 export const SET_START_ID = "SET_START_ID";
 export const SET_TARGET_ID = "SET_TARGET_ID";
+export const SET_DRAGGER_ID = "SET_DRAGGER_ID";

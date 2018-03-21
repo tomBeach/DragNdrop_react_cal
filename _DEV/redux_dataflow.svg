@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="720"
+   height="405"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.5 r10040"
+   sodipodi:docname="redux_dataflow.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.5950617"
+     inkscape:cx="334.88509"
+     inkscape:cy="215.35151"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     width="720px"
+     inkscape:window-width="1440"
+     inkscape:window-height="851"
+     inkscape:window-x="0"
+     inkscape:window-y="1"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-647.36218)">
+    <rect
+       style="fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:1.62775826px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="rect2985"
+       width="120.08653"
+       height="275.80081"
+       x="860.07947"
+       y="574.94055" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3035"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="translate(-27.857142,751.64789)"><flowRegion
+         id="flowRegion3037"><rect
+           id="rect3039"
+           width="35.714283"
+           height="24.285723"
+           x="77.85714"
+           y="117.85714" /></flowRegion><flowPara
+         id="flowPara3041"
+         style="font-size:16px">page</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3043"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="translate(-28.571428,752.36218)"><flowRegion
+         id="flowRegion3045"><rect
+           id="rect3047"
+           width="35.714283"
+           height="24.285723"
+           x="77.85714"
+           y="117.85714" /></flowRegion><flowPara
+         id="flowPara3049"
+         style="font-size:16px">page</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3051"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="translate(439.56348,444.39004)"><flowRegion
+         id="flowRegion3053"><rect
+           id="rect3055"
+           width="47.142857"
+           height="24.285728"
+           x="77.85714"
+           y="117.85714" /></flowRegion><flowPara
+         id="flowPara3057"
+         style="font-size:16px">page</flowPara></flowRoot>    <rect
+       y="529.73254"
+       x="754.15167"
+       height="27.71829"
+       width="81.289719"
+       id="rect3059"
+       style="fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:0.42456681px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot2987"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="translate(684.25748,413.59172)"><flowRegion
+         id="flowRegion2989"><rect
+           id="rect2991"
+           width="169.28572"
+           height="85"
+           x="77.85714"
+           y="117.85714" /></flowRegion><flowPara
+         id="flowPara2993"
+         style="font-size:16px">boxpath</flowPara></flowRoot>    <rect
+       style="fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:0.73722738px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="rect3061"
+       width="96.691338"
+       height="70.262772"
+       x="626.16785"
+       y="520.76898" />
+    <flowRoot
+       transform="translate(575.55645,405.18615)"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       id="flowRoot2995"
+       xml:space="preserve"><flowRegion
+         id="flowRegion2997"><rect
+           y="117.85714"
+           x="77.85714"
+           height="25.000008"
+           width="75"
+           id="rect2999" /></flowRegion><flowPara
+         style="font-size:16px"
+         id="flowPara3001">actor</flowPara></flowRoot>    <rect
+       style="fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:0.39903057px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="rect3063"
+       width="77.743828"
+       height="25.600969"
+       x="635.6416"
+       y="552.7428" />
+    <flowRoot
+       transform="translate(563.97442,436.61472)"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       id="flowRoot3065"
+       xml:space="preserve"><flowRegion
+         id="flowRegion3067"><rect
+           y="117.85714"
+           x="77.85714"
+           height="85"
+           width="169.28572"
+           id="rect3069" /></flowRegion><flowPara
+         style="font-size:16px"
+         id="flowPara3071">boxpath</flowPara></flowRoot>    <path
+       inkscape:connector-curvature="0"
+       id="path3959"
+       d="m 152.26274,545.14483 191.67931,0.0981 1.7914,0.002"
+       style="fill:#ff0000;stroke:#fb0000;stroke-width:2.95718455;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path3963"
+       d="m 430.86721,584.14422 97.19357,-62.41365 0.90836,-1.40256"
+       style="fill:#ff0000;stroke:#fb0000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <path
+       style="fill:none;stroke:#fb0000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
+       d="m 84.054727,577.46434 c -26.34129,-5.49761 -52.13752,-15.54988 -52.50895,-39.93741 -0.25479,-16.72911 20.21144,-29.58134 57.01673,-31.39034"
+       id="path3988"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="csc" />
+    <rect
+       style="fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:1.84401619px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="rect2985-7"
+       width="255.28824"
+       height="166.49786"
+       x="45.389919"
+       y="692.63495" />
+    <rect
+       style="fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:0.7892943px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="rect3061-1"
+       width="54.00769"
+       height="144.18904"
+       x="77.067375"
+       y="703.78937" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3051-2"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="translate(61.739518,643.96811)"><flowRegion
+         id="flowRegion3053-5"><rect
+           id="rect3055-1"
+           width="47.142857"
+           height="24.285728"
+           x="77.85714"
+           y="117.85714" /></flowRegion><flowPara
+         id="flowPara3057-2"
+         style="font-size:16px">roomCell</flowPara></flowRoot>    <g
+       id="g5290"
+       transform="translate(-3.8146973e-6,0)">
+      <rect
+         style="fill:#ececec;fill-rule:evenodd;stroke:#000000;stroke-width:0.23225893px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         id="rect3059-0"
+         width="43.865929"
+         height="15.371899"
+         x="82.13826"
+         y="708.63904" />
+      <flowRoot
+         transform="translate(8.4222946,594.73756)"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         id="flowRoot3051-5"
+         xml:space="preserve"><flowRegion
+           id="flowRegion3053-2"><rect
+             y="117.85714"
+             x="77.85714"
+             height="6.9966373"
+             width="35.616795"
+             id="rect3055-6" /></flowRegion><flowPara
+           style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;font-family:Sans;-inkscape-font-specification:Sans"
+           id="flowPara3057-9">roomCell</flowPara></flowRoot>    </g>
+    <g
+       id="g5283"
+       transform="translate(-3.8146973e-6,-1.0341187)">
+      <rect
+         style="fill:#cccccc;fill-rule:evenodd;stroke:#000000;stroke-width:0.23225893px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         id="rect3059-0-5"
+         width="43.865929"
+         height="15.371899"
+         x="82.13826"
+         y="729.32794" />
+      <flowRoot
+         transform="translate(7.6386032,614.84492)"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         id="flowRoot3051-5-0"
+         xml:space="preserve"><flowRegion
+           id="flowRegion3053-2-5"><rect
+             y="117.85714"
+             x="77.85714"
+             height="7.43994"
+             width="37.390034"
+             id="rect3055-6-5" /></flowRegion><flowPara
+           style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;font-family:Sans;-inkscape-font-specification:Sans"
+           id="flowPara3057-9-5">emptyCell</flowPara></flowRoot>    </g>
+    <g
+       id="g5276"
+       transform="translate(-3.8146973e-6,-2.0681763)">
+      <rect
+         style="fill:#e9afaf;fill-rule:evenodd;stroke:#000000;stroke-width:0.23225893px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         id="rect3059-0-2"
+         width="43.865929"
+         height="15.371899"
+         x="82.13826"
+         y="750.01678" />
+      <flowRoot
+         transform="translate(7.6415329,636.11531)"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         id="flowRoot3051-5-0-4"
+         xml:space="preserve"><flowRegion
+           id="flowRegion3053-2-5-2"><rect
+             y="117.85714"
+             x="77.85714"
+             height="7.43994"
+             width="37.390034"
+             id="rect3055-6-5-9" /></flowRegion><flowPara
+           style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;font-family:Sans;-inkscape-font-specification:Sans"
+           id="flowPara3057-9-5-0">sessionCell</flowPara></flowRoot>    </g>
+    <g
+       id="g5269"
+       transform="translate(-0.10661697,-1.7773743)">
+      <rect
+         style="fill:#cccccc;fill-rule:evenodd;stroke:#000000;stroke-width:0.23225893px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         id="rect3059-0-5-5"
+         width="43.865929"
+         height="15.371899"
+         x="82.244873"
+         y="769.38074" />
+      <flowRoot
+         transform="translate(7.7452261,654.89769)"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         id="flowRoot3051-5-0-8"
+         xml:space="preserve"><flowRegion
+           id="flowRegion3053-2-5-7"><rect
+             y="117.85714"
+             x="77.85714"
+             height="7.43994"
+             width="37.390034"
+             id="rect3055-6-5-5" /></flowRegion><flowPara
+           style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;font-family:Sans;-inkscape-font-specification:Sans"
+           id="flowPara3057-9-5-3">emptyCell</flowPara></flowRoot>    </g>
+    <g
+       transform="translate(-0.10661697,17.877415)"
+       id="g5269-9">
+      <rect
+         style="fill:#cccccc;fill-rule:evenodd;stroke:#000000;stroke-width:0.23225893px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         id="rect3059-0-5-5-5"
+         width="43.865929"
+         height="15.371899"
+         x="82.244873"
+         y="769.38074" />
+      <flowRoot
+         transform="translate(7.7452261,654.89769)"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         id="flowRoot3051-5-0-8-9"
+         xml:space="preserve"><flowRegion
+           id="flowRegion3053-2-5-7-4"><rect
+             y="117.85714"
+             x="77.85714"
+             height="7.43994"
+             width="37.390034"
+             id="rect3055-6-5-5-6" /></flowRegion><flowPara
+           style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;font-family:Sans;-inkscape-font-specification:Sans"
+           id="flowPara3057-9-5-3-2">emptyCell</flowPara></flowRoot>    </g>
+    <g
+       transform="translate(-0.10661697,37.532182)"
+       id="g5269-2">
+      <rect
+         style="fill:#cccccc;fill-rule:evenodd;stroke:#000000;stroke-width:0.23225893px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         id="rect3059-0-5-5-3"
+         width="43.865929"
+         height="15.371899"
+         x="82.244873"
+         y="769.38074" />
+      <flowRoot
+         transform="translate(7.7452261,654.89769)"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         id="flowRoot3051-5-0-8-0"
+         xml:space="preserve"><flowRegion
+           id="flowRegion3053-2-5-7-1"><rect
+             y="117.85714"
+             x="77.85714"
+             height="7.43994"
+             width="37.390034"
+             id="rect3055-6-5-5-8" /></flowRegion><flowPara
+           style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;font-family:Sans;-inkscape-font-specification:Sans"
+           id="flowPara3057-9-5-3-27">emptyCell</flowPara></flowRoot>    </g>
+    <g
+       transform="translate(-0.10661697,57.18698)"
+       id="g5269-99">
+      <rect
+         style="fill:#cccccc;fill-rule:evenodd;stroke:#000000;stroke-width:0.23225893px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         id="rect3059-0-5-5-2"
+         width="43.865929"
+         height="15.371899"
+         x="82.244873"
+         y="769.38074" />
+      <flowRoot
+         transform="translate(7.7452261,654.89769)"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         id="flowRoot3051-5-0-8-4"
+         xml:space="preserve"><flowRegion
+           id="flowRegion3053-2-5-7-9"><rect
+             y="117.85714"
+             x="77.85714"
+             height="7.43994"
+             width="37.390034"
+             id="rect3055-6-5-5-1" /></flowRegion><flowPara
+           style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;font-family:Sans;-inkscape-font-specification:Sans"
+           id="flowPara3057-9-5-3-0">emptyCell</flowPara></flowRoot>    </g>
+    <g
+       id="g6170"
+       transform="translate(-31.918319,86.888757)">
+      <rect
+         style="fill:none;stroke:#fa0000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         id="rect3059-0-28"
+         width="43.865929"
+         height="15.371899"
+         x="151.84454"
+         y="650.57367" />
+      <flowRoot
+         transform="translate(112.70676,522.48625)"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         id="flowRoot3051-5-6"
+         xml:space="preserve"><flowRegion
+           id="flowRegion3053-2-50"><rect
+             y="117.85714"
+             x="77.85714"
+             height="6.9966373"
+             width="35.616795"
+             id="rect3055-6-3" /></flowRegion><flowPara
+           style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;font-family:Sans;-inkscape-font-specification:Sans"
+           id="flowPara3057-9-3">dragger</flowPara></flowRoot>    </g>
+    <rect
+       y="658.10992"
+       x="45.450153"
+       height="15.371899"
+       width="43.865929"
+       id="rect3059-0-9"
+       style="fill:#ececec;fill-rule:evenodd;stroke:#000000;stroke-width:0.23225893px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3051-5-4"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="translate(249.68955,574.35352)"><flowRegion
+         id="flowRegion3053-2-0"><rect
+           id="rect3055-6-9"
+           width="160.18689"
+           height="10.543104"
+           x="77.85714"
+           y="117.85714" /></flowRegion><flowPara
+         id="flowPara3057-9-38"
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans">cellIdsArray = [&quot;1_1&quot;, &quot;2_1&quot;, &quot;3_1&quot;, &quot;4_1&quot;, ... ]  </flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3051-5-4-4"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="translate(249.17509,586.10116)"><flowRegion
+         id="flowRegion3053-2-0-9"><rect
+           id="rect3055-6-9-2"
+           width="132.25833"
+           height="300.91116"
+           x="77.85714"
+           y="117.85714" /></flowRegion><flowPara
+         id="flowPara3057-9-38-8"
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans">cellIDataObj = {</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6276">    1_1: {</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6280">        id: &quot;1&quot;,</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6282">        addr: &quot;1_1&quot;,</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6284">        cellType: &quot;roomCell&quot;,</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6286">        sessionData: null,</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6318">        x: 100</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6320">        y: 300</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6322">        w: 120</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6324">        h: 22</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6326">        className: &quot;cell roomCell&quot;</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6328">        cellComp: roomComponent</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6288">    },</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6290">    2_1: {</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6292">        id: &quot;2&quot;,</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6294">        addr: &quot;2_1&quot;,</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6296">        cellType: &quot;emptyCell&quot;,</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6298">        sessionData: null,</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6330">        x: 100</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6332">        y: 322</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6334">        w: 120</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6336">        h: 22</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6338">        className: &quot;cell emptyCell&quot;</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6340">        cellComp: roomComponent</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6300">    },</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6302">    3_1: {</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6304">        id: &quot;3&quot;,</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6306">        addr: &quot;3_1&quot;,</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6308">        cellType: &quot;sessionCell&quot;,</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6310">        sessionData: { ... },</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6342">        x: 100</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6344">        y: 344</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6346">        w: 120</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6348">        h: 22</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6350">        className: &quot;cell sessionCell&quot;</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6352">        cellComp: roomComponent</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6312">    }</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6314">    ...</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6316">}</flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6274">  </flowPara><flowPara
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="flowPara6278" /></flowRoot>  </g>
+</svg>

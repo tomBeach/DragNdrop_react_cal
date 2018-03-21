@@ -9,10 +9,10 @@ import { ADD_DRAGSTATES } from "../constants/action-types";
 
 import { SET_START_ID } from "../constants/action-types";
 import { SET_TARGET_ID } from "../constants/action-types";
+import { SET_DRAGGER_ID } from "../constants/action-types";
 
 export const addDates = (dates) => {
     // console.log("** actions: addDates **");
-    // console.log("dates:", dates);
     return {
         type: ADD_DATES,
         payload: dates
@@ -39,22 +39,8 @@ export const addSessions = (sessions) => {
         payload: sessions
     }
 }
-export const setStartId = (startCellId) => {
-    // console.log("** actions: setStartId **");
-    return {
-        type: SET_START_ID,
-        payload: startCellId
-    }
-}
-export const setTargetId = (targetCellId) => {
-    // console.log("** actions: setTargetId **");
-    return {
-        type: SET_TARGET_ID,
-        payload: targetCellId
-    }
-}
-export const addCellData = (cellDataObj) => {
-    // console.log("** actions: addCellData **");
+export const addCellDataObj = (cellDataObj) => {
+    console.log("** actions: addCellDataObj **");
     // console.log("   cellDataObj:", cellDataObj);
     return {
         type: ADD_CELLDATA,
@@ -62,7 +48,7 @@ export const addCellData = (cellDataObj) => {
     }
 }
 export const addCellIdsArray = (cellIdsArray) => {
-    // console.log("** actions: addCellIdsArray **");
+    console.log("** actions: addCellIdsArray **");
     // console.log("   cellIdsArray:", cellIdsArray);
     return {
         type: ADD_CELL_IDS_ARRAY,
@@ -70,10 +56,32 @@ export const addCellIdsArray = (cellIdsArray) => {
     }
 }
 export const addDragStates = (dragStates) => {
-    // console.log("** actions: addDragStates **");
+    console.log("** actions: addDragStates **");
     // console.log("   dragStates:", dragStates);
     return {
         type: ADD_DRAGSTATES,
         payload: dragStates
+    }
+}
+export const setStartId = (startCellId) => {
+    console.log("** actions: setStartId **");
+    return {
+        type: SET_START_ID,
+        payload: startCellId
+    }
+}
+export const setTargetId = (targetCellId) => {
+    console.log("** actions: setTargetId **");
+    return {
+        type: SET_TARGET_ID,
+        payload: targetCellId
+    }
+}
+export const setDraggerId = (draggerId) => {
+    console.log("** actions: setDraggerId **");
+    console.log("draggerId:", draggerId);
+    return {
+        type: SET_DRAGGER_ID,
+        payload: draggerId
     }
 }

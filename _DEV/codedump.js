@@ -35,7 +35,7 @@ import { addTimes } from "../actions/index";
 import { addDates } from "../actions/index";
 import { addRooms } from "../actions/index";
 import { addSessions } from "../actions/index";
-import { addCellData } from "../actions/index";
+import { addCellDataObj } from "../actions/index";
 
 import Day from "./Day";
 import Date from "./Date";
@@ -75,7 +75,7 @@ const mapDispatchToProps = (dispatch) => {
         // addDates: dates => dispatch(addDates(dates)),
         // addRooms: rooms => dispatch(addRooms(rooms)),
         // addSessions: sessions => dispatch(addSessions(sessions)),
-        // addCellData: gridCells => dispatch(addCellData(gridCells))
+        // addCellDataObj: gridCells => dispatch(addCellDataObj(gridCells))
         // getCellData() {
         //     dispatch(fetchCellData())
         // }
@@ -115,5 +115,5 @@ class Grid extends React.Component {
         let gridCells = this.makeGridCells(dates, rooms, times);
         console.log("  gridCells:", gridCells);
         console.log("  this.props:", this.props);
-        this.props.addCellData(gridCells);
+        this.props.addCellDataObj(gridCells);
     }
