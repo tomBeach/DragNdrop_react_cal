@@ -79,6 +79,15 @@ sessionData = {
     ]
 }
 
+dragStates = {
+    dragXYWH: {x: 92.828125, y: 25, w: 189.015625, h: 22},
+    gridXYWH: {x: 86.828125, y: 120, w: 791.46875, h: 480},
+    mouseXY: {x: 0, y: 0},
+    relXY: {x: 0, y: 0},
+    dragging: false,
+    scrolling: false,
+    scrollStart: 0
+}
 
 ======= component data storage =======
 <Provider

@@ -15,6 +15,7 @@ import { setStartId } from "../actions/index";
 import { setTargetId } from "../actions/index";
 import { addCellData } from "../actions/index";
 import { addDragStates } from "../actions/index";
+import { addCellIdsArray } from "../actions/index";
 
 import Day from "./Day";
 import Date from "./Date";
@@ -35,10 +36,12 @@ const mapStateToProps = (state, ownProps) => {
         times: ownProps.times,
         rooms: ownProps.rooms,
         sessions: ownProps.sessions,
+
         startCellId: ownProps.startCellId,
         targetCellId: ownProps.targetCellId,
         dragStates: ownProps.dragStates,
-        cellDataObj: ownProps.cellDataObj
+        cellDataObj: ownProps.cellDataObj,
+        cellIdsArray: ownProps.cellIdsArray
     };
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -49,9 +52,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         addTimes: times => dispatch(addTimes(ownProps.times)),
         addRooms: rooms => dispatch(addRooms(ownProps.rooms)),
         addSessions: sessions => dispatch(addSessions(ownProps.sessions)),
+
         setStartId: startCellId => dispatch(setStartId(ownProps.startCellId)),
         setTargetId: targetCellId => dispatch(setTargetId(ownProps.targetCellId)),
         addDragStates: dragStates => dispatch(addDragStates(ownProps.dragStates)),
+        addCellIdsArray: cellIdsArray => dispatch(addCellIdsArray(ownProps.cellIdsArray)),
         addCellData: cellDataObj => dispatch(addCellData(ownProps.cellDataObj))
     }
 }
@@ -75,14 +80,15 @@ class Grid extends React.Component {
             startCellId: props.startCellId,
             targetCellId: props.targetCellId,
             dragStates: props.dragStates,
-            cellDataObj: props.cellDataObj
+            cellDataObj: props.cellDataObj,
+            cellIdsArray: props.cellIdsArray
         };
     }
 
     componentDidMount(props) {
         console.log("\n== Grid: componentDidMount ==");
-        console.log("  this.props:", this.props);
-        console.log("  this.state:", this.state);
+        // console.log("  this.props:", this.props);
+        // console.log("  this.state:", this.state);
         console.log("  store.getState():", store.getState());
 
         React.Children.forEach(this.props.children, function(child) {
@@ -111,8 +117,10 @@ class Grid extends React.Component {
         console.log("this.state:", this.state);
         console.log("this.props:", this.props);
 
+        let cellIdsArray = [];
+
         // == get cell data objects from store
-        let cellDataStore = store.getState().cellDataObj[0];
+        let cellDataObj = store.getState().cellDataObj[0];
         let startCellId = store.getState().startCellId;
 
         // == get cell location data from mounted cell components
@@ -137,11 +145,14 @@ class Grid extends React.Component {
             for (var c = 0; c < nextDayCells.length; c++) {
                 let cell = nextDayCells[c];
                 let cellId = nextDayCells[c].id;
+                if (cellIdsArray.length === 0) {
+                    cellIdsArray.push(cellId);
+                }
                 if (cell.className.includes('cell')) {
                     cellCounter++;
                     let cellR = nextDayCells[c].getBoundingClientRect();
-                    if (cellDataStore[cellId]) {
-                        let cellData = cellDataStore[cellId];
+                    if (cellDataObj[cellId]) {
+                        let cellData = cellDataObj[cellId];
                         cellData.id = cellCounter;
                         cellData.x = cellR.left - anchorR.left + timeR.width;
                         cellData.y = cellR.top - anchorR.top + timeR.height;
@@ -153,9 +164,9 @@ class Grid extends React.Component {
                 }
             }
         }
-        console.log("cellDataStore[startCellId]:", cellDataStore[startCellId]);
-        let title = cellDataStore[startCellId].sessionData
-            ? cellDataStore[startCellId].sessionData.session_title
+        console.log("cellDataObj[startCellId]:", cellDataObj[startCellId]);
+        let title = cellDataObj[startCellId].sessionData
+            ? cellDataObj[startCellId].sessionData.session_title
             : null
             console.log("title:", title);
 
@@ -177,18 +188,20 @@ class Grid extends React.Component {
 
         // == add DOM-dependent data to store
         store.dispatch(addDragStates(dragStates));
-        store.dispatch(addCellData(cellDataStore));
+        store.dispatch(addCellData(cellDataObj));
+        store.dispatch(addCellIdsArray(cellIdsArray));
 
         // == create dragger, boundaries and behaviors
         document.getElementById("sessions").addEventListener('scroll', this.detectGridScroll);
 
-        // == trigger dragger render
+        // == trigger dragger render, store cell ids array
         console.log("+++ SETTING STATES +++");
         this.setState({
+            dragStates: dragStates,
             draggerId: "dragger1"
         })
 
-        // console.log("cellDataStore:", cellDataStore);
+        // console.log("cellDataObj:", cellDataObj);
     }
 
     // ======= ======= ======= dates ======= ======= =======
@@ -196,7 +209,7 @@ class Grid extends React.Component {
     // ======= ======= ======= dates ======= ======= =======
 
     makeDateHeaders(dates) {
-        console.log("== Grid: makeDateHeaders ==");
+        // console.log("== Grid: makeDateHeaders ==");
         let dateHeadersArray = dates.map((date, d) => {
             return(
                 <Date
@@ -214,7 +227,7 @@ class Grid extends React.Component {
     // ======= ======= ======= times ======= ======= =======
 
     makeRoomTimes(rooms, times) {
-        console.log("== Grid: makeRoomTimes ==");
+        // console.log("== Grid: makeRoomTimes ==");
 
         let roomTimesArray = rooms.map((roomname, r) => {
             return (
@@ -234,7 +247,7 @@ class Grid extends React.Component {
     }
 
     makeTimeslots(r, times) {
-        console.log("== Grid: makeTimeslots ==");
+        // console.log("== Grid: makeTimeslots ==");
 
         let timeslotsArray = times.map((timeslot, t) => {
             var timeslot = this.convertTimes(timeslot);
@@ -253,7 +266,7 @@ class Grid extends React.Component {
 
     // == set location of clicked session component (handleClick method)
     convertTimes(time) {
-        console.log("== Grid: convertTimes ==");
+        // console.log("== Grid: convertTimes ==");
             var ampm = "am";
             var hour = parseInt(time.split(":")[0]);
             var min = time.split(":")[1];
@@ -269,7 +282,7 @@ class Grid extends React.Component {
     // ======= ======= ======= grid ======= ======= ======= ======= ======= ======= grid ======= ======= =======
 
     makeGridCells(dates, rooms, times, sessions) {
-        console.log("\n== Grid:makeGridCells ==");
+        // console.log("\n== Grid:makeGridCells ==");
 
         // == cell data management variables (used by all grid building methods below)
         let cellDataObj = {};               // future storage object for element xywh and session data
@@ -295,7 +308,7 @@ class Grid extends React.Component {
 
     // ======= create grid cell for each scheduled session
     makeSessionCells(sessions, cellDataObj) {
-        console.log("== Grid:makeSessionCells ==");
+        // console.log("== Grid:makeSessionCells ==");
         let times = this.state.times;
         let timesCount = times.length + 1;      // number of daily timeslots (plus 1 for room label blank)
 
@@ -313,7 +326,7 @@ class Grid extends React.Component {
 
     // ======= create data objects for: each day => each room per day => each timeslot per room per day
     makeDayColumns(dates, rooms, times, cellDataObj, cellDataObjArray) {
-        console.log("== Grid:makeDayColumns ==");
+        // console.log("== Grid:makeDayColumns ==");
         let cellCount = 0;
 
         // == loop through days (dates)
@@ -347,7 +360,7 @@ class Grid extends React.Component {
 
     // ======= create react components for each cell location (via days/rooms/times counts)
     makeCellComponents(cellDataObj, cellDataObjArray) {
-        console.log("== Grid:makeCellComponents ==");
+        // console.log("== Grid:makeCellComponents ==");
         var text, color, className, sessionData, title;
 
         // == loop through days (nested arrays within cellDataObjArray)
@@ -414,13 +427,11 @@ class Grid extends React.Component {
     makeDragger() {
         console.log("+++++++ == Grid:makeDragger == +++++++ ");
 
-        let draggerId, startCellId, targetCellId;
+        let draggerId, startCellId, targetCellId, cellIdsArray, cellDataObj;
         let dragXYWH, gridXYWH, mouseXY, relXY, startCellData, text;
-        let cellDataStore = store.getState().cellDataObj[0];
         let dragStates = store.getState().dragStates;
-        // let dragStates = { key: "prop"};
-        console.log("dragStates:", dragStates);
 
+        // == determine if cell data is available
         function isEmpty(obj) {
             for(var key in obj) {
                 return !obj.hasOwnProperty(key);
@@ -428,43 +439,43 @@ class Grid extends React.Component {
             return true;
         }
         let dragStates_empty = isEmpty(dragStates);
-        console.log("dragStates_empty:", dragStates_empty);
-        console.log("store.getState():", store.getState());
 
         // == get dragger location data
         if (!dragStates_empty) {
             draggerId = "dragger1";
-            text = "dragger1";
             startCellId = store.getState().startCellId[0];
             targetCellId = store.getState().targetCellId[0];
-            cellDataStore = store.getState().cellDataObj[0];
+            cellDataObj = store.getState().cellDataObj[0];
+            cellIdsArray = store.getState().cellIdsArray[0];
             dragXYWH = dragStates.dragXYWH;
             gridXYWH = dragStates.gridXYWH;
 
             // == get session data for startCell (for temp storage while dragging)
-            cellDataStore[startCellId]
-                ? startCellData = cellDataStore[startCellId].sessionData
+            cellDataObj[startCellId]
+                ? startCellData = cellDataObj[startCellId].sessionData
                 : startCellData = null;
 
             // == get startCell session title (to set text of dragger component)
-            cellDataStore[startCellId].sessionData
-                ? text = cellDataStore[startCellId].sessionData.session_title
+            cellDataObj[startCellId].sessionData
+                ? text = cellDataObj[startCellId].sessionData.session_title
                 : text = null;
 
+        // == no cell location data; set initial values
         } else {
             draggerId = "initDragger";
-            text = "initDragger";
             startCellId = "2_1";
             targetCellId = "2_1";
-            startCellData = null;
+            cellDataObj = null;
+            cellIdsArray = null;
             dragXYWH = { x:0, y:0, w:0, h:0 };
             gridXYWH = { x:0, y:0, w:0, h:0 };
-            mouseXY = { x:0, y:0 };
-            relXY = { x:0, y:0 };
+            startCellData = null;
+            text = "initDragger";
         }
-        console.log("startCellData:", startCellData);
-        console.log("draggerId:", draggerId);
-        console.log("text:", text);
+
+        // == initialize for mouse position and click offset
+        mouseXY = { x:0, y:0 };
+        relXY = { x:0, y:0 };
 
         // == make dragger component
         return (
@@ -472,9 +483,15 @@ class Grid extends React.Component {
                 id={draggerId}
                 ref={draggerId}
                 text={text}
+                startCellId={startCellId}
+                targetCellId={targetCellId}
                 startCellData={startCellData}
+                cellDataObj={cellDataObj}
+                cellIdsArray={cellIdsArray}
                 gridXYWH={gridXYWH}
                 dragXYWH={dragXYWH}
+                mouseXY={mouseXY}
+                relXY={relXY}
             />
         )
     }

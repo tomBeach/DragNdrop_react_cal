@@ -4,9 +4,8 @@ import ReactDOM from 'react-dom'
 // ======= Date =======
 class Date extends React.Component {
     constructor(props) {
-        console.log("\n== Date:constructor ==");
+        // console.log("\n== Date:constructor ==");
         super(props);
-        console.log("props:", props);
         this.state = {
             text: props.text
         }

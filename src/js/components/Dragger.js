@@ -11,17 +11,33 @@ class Dragger extends React.Component {
         console.log("== +++++++ Dragger:constructor +++++++ ==");
         super(props);
         console.log("props:", props);
+        console.log("store.getState():", store.getState());
+        console.log("store.getState().startCellId:", store.getState().startCellId);
+
+        let startCellId = store.getState().startCellId[0];
+        let startCellData = store.getState().cellDataObj[0][startCellId];
+        let targetCellId = store.getState().targetCellId[0];
+        let cellDataObj = store.getState().cellDataObj[0];
+        let cellIdsArray = store.getState().cellIdsArray[0];
+        console.log("startCellId:", startCellId);
+
         this.state = {
             id: props.id,
             text: props.text,
-            startCellData: props.startCellData,
-            scrollStart: 0,
+
+            startCellId: startCellId,
+            targetCellId: targetCellId,
+            startCellData: startCellData,
+            cellIdsArray: cellIdsArray,
+            cellDataObj: cellDataObj,
+
+            dragXYWH: props.dragXYWH,
+            gridXYWH: props.gridXYWH,
+            mouseXY: props.mouseXY,
+            relXY: props.relXY,
             dragging: false,
             scrolling: false,
-            gridXYWH: props.gridXYWH,
-            dragXYWH: props.dragXYWH,
-            relXY: props.relXY,
-            mouseXY: props.mouseXY
+            scrollStart: 0
         };
         this.detectCellHover = this.detectCellHover.bind(this);
         this.locateDragger = this.locateDragger.bind(this);
@@ -31,7 +47,8 @@ class Dragger extends React.Component {
     }
 
     componentDidMount() {
-        console.log("+++ Dragger:_DidMount");
+        // console.log("+++ Dragger:_DidMount");
+        // console.log("this.state:", this.state);
         document.removeEventListener('mouseup', this.onMouseUp);
     }
 
@@ -44,6 +61,21 @@ class Dragger extends React.Component {
         } else if (!this.state.dragging && prevState.dragging) {
             document.removeEventListener('mousemove', this.onMouseMove);
             document.removeEventListener('mouseup', this.onMouseUp);
+        }
+        console.log("this.state.startCellId:", this.state.startCellId);
+        console.log("store.getState().dragStates:", store.getState().dragStates);
+        if (!this.state.startCellId) {
+            let startCellId = store.getState().startCellId[0];
+            console.log(" +++++++ NO START CELL ID +++++++");
+            this.setState({
+                startCellId: startCellId,
+                targetCellId: store.getState().targetCellId[0],
+                startCellData: store.getState().cellDataObj[0][startCellId],
+                cellIdsArray: store.getState().cellIdsArray[0],
+                cellDataObj: store.getState().cellDataObj[0],
+                dragXYWH: store.getState().dragStates[0].dragXYWH,
+                gridXYWH: store.getState().dragStates[0].gridXYWH
+            });
         }
     }
 
@@ -66,41 +98,46 @@ class Dragger extends React.Component {
     // ======= onMouseDown =======
     onMouseDown(e) {
         console.log("\n\n== Dragger:onMouseDown ==");
+        console.log("this.state:", this.state);
 
         let startCellId = store.getState().startCellId[0];
         let targetCellId = store.getState().targetCellId[0];
-        let cellDataStore = store.getState().cellDataObj[0];
-        // console.log("cellDataStore:", cellDataStore);
+        let cellDataObj = store.getState().cellDataObj[0];
+        let cellIdsArray = store.getState().cellIdsArray[0];
+        // console.log("cellDataObj:", cellDataObj);
 
         // == determine dragger location on DOM
         const dragger = ReactDOM.findDOMNode(this);
         let dragR = dragger.getBoundingClientRect();
-        let tempStartData = cellDataStore[startCellId];
+        let tempStartData = cellDataObj[startCellId];
         let title = tempStartData.sessionData
             ? tempStartData.sessionData.session_title
             : null
         let scrollStart = $('#sessions').scrollTop();
 
-        // == set drag position values on dragger
+        // == get drag values from store; set on dragger
         let dragStates = store.getState().dragStates[0];
         // console.log("dragStates:", dragStates);
 
         // == load location and start cell data onto dragger
         this.setState({
+            text: title,
             startCellData: tempStartData,
-            scrollStart: scrollStart,
-            dragging: true,
-            gridXYWH: dragStates.gridXYWH,
+            cellIdsArray: cellIdsArray,
+            cellDataObj: cellDataObj,
+
             dragXYWH: dragStates.dragXYWH,
-            relXY: {
-                x: e.pageX - dragR.left,
-                y: e.pageY - dragR.top
-            },
+            gridXYWH: dragStates.gridXYWH,
             mouseXY: {
                 x: e.pageX,
                 y: e.pageY
             },
-            text: title
+            relXY: {
+                x: e.pageX - dragR.left,
+                y: e.pageY - dragR.top
+            },
+            dragging: true,
+            scrollStart: scrollStart
         })
         e.stopPropagation();
         e.preventDefault();
@@ -108,7 +145,7 @@ class Dragger extends React.Component {
 
     // ======= onMouseMove =======
     onMouseMove(e) {
-        console.log("== Dragger:onMouseMove ==");
+        // console.log("== Dragger:onMouseMove ==");
         // console.log("this.state:", this.state);
         if (!this.state.dragging) return
 
@@ -116,15 +153,15 @@ class Dragger extends React.Component {
         let dragX = e.pageX - this.state.relXY.x - this.state.gridXYWH.x;
         let dragY = e.pageY - this.state.relXY.y - this.state.gridXYWH.y;
         let minL = this.state.gridXYWH.x - this.state.gridXYWH.x + 2;
-        let maxR = (this.state.gridXYWH.x + this.state.gridXYWH.w - this.state.dragXYWH.w) - this.state.gridXYWH.x - 2;
         let minT = this.state.gridXYWH.y - this.state.gridXYWH.y + 2;
+        let maxR = (this.state.gridXYWH.x + this.state.gridXYWH.w - this.state.dragXYWH.w) - this.state.gridXYWH.x - 2;
         let maxB = (this.state.gridXYWH.y + this.state.gridXYWH.h - this.state.dragXYWH.h) - this.state.gridXYWH.y - 2 - 20;
-        console.log("dragXY:", dragX, dragY);
-        // console.log("maxB:", maxB);
+
+        // == limit dragging to active grid rectangle
         if ((dragX > minL) && (dragX < maxR) && (dragY > minT) && (dragY < maxB)) {
             this.setState({
                 dragging: true,
-                dragXY: {
+                dragXYWH: {
                     x: dragX,
                     y: dragY
                 },
@@ -135,19 +172,21 @@ class Dragger extends React.Component {
             })
 
             // == check for dragger collision with grid cells
-            e.stopPropagation();
-            e.preventDefault();
-            this.detectCellHover(dragX, dragY);
+            // e.stopPropagation();
+            // e.preventDefault();
+            // this.detectCellHover(dragX, dragY);
+
         } else if (dragY < minT) {
-            this.scrollGridWindow(this.state.scrollStart, "down", dragY);
+            // this.scrollGridWindow(this.state.scrollStart, "down", dragY);
         } else if (dragY > maxB) {
-            this.scrollGridWindow(this.state.scrollStart, "up", dragY);
+            // this.scrollGridWindow(this.state.scrollStart, "up", dragY);
         }
     }
 
     // ======= ======= ======= target detection ======= ======= =======
-    detectCellHover() {
+    detectCellHover(dragX, dragY) {
         console.log("\n== Dragger:detectCellHover ==");
+        console.log("this.state.cellIdsArray[0].length:", this.state.cellIdsArray[0].length);
 
         // == scan all target cells for collision
         for (var i = 0; i < this.state.cellIdsArray.length; i++) {
@@ -193,46 +232,30 @@ class Dragger extends React.Component {
 
     render() {
         console.log("== Dragger:render ==");
+        console.log("this.state:", this.state);
+        console.log("this.props.id:", this.props.id);
+        console.log("this.state.gridXYWH:", this.state.gridXYWH);
+        console.log("this.state.dragXYWH:", this.state.dragXYWH);
         let dragX, dragY, dragW, dragH, dragStyle;
-        let dragStates = store.getState().dragStates[0];
-        console.log("dragStates:", dragStates);
 
-        function isEmpty(obj) {
-            for(var key in obj) {
-                return !obj.hasOwnProperty(key);
-            }
-            return true;
+        dragX = parseInt(this.state.dragXYWH.x);
+        dragY = parseInt(this.state.dragXYWH.y);
+        dragW = parseInt(this.state.dragXYWH.w);
+        dragH = parseInt(this.state.dragXYWH.h);
+        dragStyle = {
+            position: 'absolute',
+            left: dragX + 'px',
+            top: dragY + 'px',
+            width: dragW + 'px',
+            height: dragH + 'px'
         }
-        let dragStates_empty = isEmpty(dragStates);
-        console.log("dragStates_empty:", dragStates_empty);
 
-        if (!dragStates_empty) {
-            dragX = parseInt(dragStates.dragXYWH.x);
-            dragY = parseInt(dragStates.dragXYWH.y);
-            dragW = parseInt(dragStates.dragXYWH.w);
-            dragH = parseInt(dragStates.dragXYWH.h);
-            dragStyle = {
-                position: 'absolute',
-                left: dragX + 'px',
-                top: dragY + 'px',
-                width: dragW + 'px',
-                height: dragH + 'px'
-            }
-        } else {
-            dragStyle = {'color':'red'};
-        }
-        console.log("dragStyle:", dragStyle);
         return(
             <div
                 id={this.props.id}
-                text={this.props.text}
                 style={dragStyle}
                 onMouseDown={(e) => this.onMouseDown(e)}>
-                <p>{this.props.text}</p>
-                {/* id={this.props.id}
-                    style={{dragStyle}}
-                    onMouseDown={(e) => this.onMouseDown(e)}>
-                <p>{this.state.text}</p> */}
+                <p>{this.state.text}</p>
             </div>
         )
     }

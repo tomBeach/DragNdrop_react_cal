@@ -48,6 +48,7 @@ const App = () => (
                     targetCellId={"2_1"}
                     dragStates={null}
                     cellDataObj={null}
+                    cellIdsArray={null}
                 />
             </div>
         </div>
