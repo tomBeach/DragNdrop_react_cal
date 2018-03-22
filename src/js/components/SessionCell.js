@@ -7,9 +7,9 @@ import autoBind from 'react-autobind';
 // ======= SessionCell =======
 class SessionCell extends React.Component {
     constructor(props) {
-        // console.log("\n== SessionCell:constructor ==");
+        console.log("\n== SessionCell:constructor ==");
         super(props);
-        // console.log("props:", props);
+        console.log("props:", props);
         autoBind(this);
         this.state = {
             id: props.id,
@@ -18,35 +18,7 @@ class SessionCell extends React.Component {
             sessionData: props.sessionData,
             highlighted: false
         }
-    }
-
-    componentWillMount() {
-        // console.log("\n++++++ SessionCell:_willMOUNT");
-    }
-
-    componentDidMount() {
-        // console.log("\n\n+++ SessionCell:_didMOUNT");
-    }
-
-    componentWillReceiveProps(nextProps) {
-        // console.log("+++ SessionCell:_willReceivePROPS");
-        // console.log("nextProps:", nextProps);
-    }
-
-    componentWillUpdate(nextProps, nextState) {
-        // console.log("+++ SessionCell:_WillUPDATE ==");
-        // console.log("nextProps:", nextProps);
-        // console.log("nextState:", nextState);
-        // console.log("this.props:", this.props);
-        // console.log("this.state:", this.state);
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        // console.log("+++ SessionCell:_DidUPDATE");
-        // console.log("prevProps:", prevProps);
-        // console.log("prevState:", prevState);
-        // console.log("this.props:", this.props);
-        // console.log("this.state:", this.state);
+        this.locateDragger = this.locateDragger.bind(this);
     }
 
     // ======= ======= ======= cell methods ======= ======= =======
@@ -101,7 +73,7 @@ class SessionCell extends React.Component {
 
     // ======= ======= ======= JUMP ======= ======= =======
     locateDragger(e) {
-        // console.log("== SessionCell:locateDragger ==");
+        console.log("== SessionCell:locateDragger ==");
         this.props.locateDragger(this.state.id);
     }
 
@@ -118,8 +90,8 @@ class SessionCell extends React.Component {
                 ref={this.saveRef}
                 className={this.state.className}
                 style={{
-                    className: this.state.className
-                    // backgroundColor: bgColor
+                    className: this.state.className,
+                    backgroundColor: bgColor
                 }}
                 onClick={(e) => this.locateDragger(e)}
                 onMouseEnter={(e) => this.toggleHilite(e)}

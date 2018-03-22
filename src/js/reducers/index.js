@@ -26,9 +26,9 @@ const initialState = {
 };
 
 const initDataReducer = (state, action) => {
-    // console.log("\n== initDataReducer ==");
-    // console.log("state:", state);
-    // console.log("action:", action);
+    console.log("\n== initDataReducer ==");
+    console.log("state:", state);
+    console.log("action:", action);
 
     if (state === undefined) {
         state = initialState;

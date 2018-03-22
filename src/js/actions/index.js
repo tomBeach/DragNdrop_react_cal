@@ -79,7 +79,7 @@ export const setTargetId = (targetCellId) => {
 }
 export const setDraggerId = (draggerId) => {
     console.log("** actions: setDraggerId **");
-    console.log("draggerId:", draggerId);
+    // console.log("draggerId:", draggerId);
     return {
         type: SET_DRAGGER_ID,
         payload: draggerId

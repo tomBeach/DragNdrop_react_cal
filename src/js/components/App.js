@@ -25,19 +25,20 @@ class App extends React.Component {
         super(props);
         autoBind(this);
         this.state = {
-            dates: props.dates,
+            dates: props.dates,                 // database
             times: props.times,
             rooms: props.rooms,
             sessions: props.sessions,
-            draggerId: props.draggerId,
+
+            draggerId: props.draggerId,         // cells
             startCellId: props.startCellId,
             targetCellId: props.targetCellId,
-            dragStates: props.dragStates,
-            cellDataObj: props.cellDataObj,
+
+            cellDataObj: props.cellDataObj,     // cell interactions
             cellIdsArray: props.cellIdsArray
         };
 
-        // == add remote deatabase data to store
+        // == add remote database data to store
         store.dispatch(addDates(props.dates));
         store.dispatch(addTimes(props.times));
         store.dispatch(addRooms(props.rooms));
@@ -53,6 +54,7 @@ class App extends React.Component {
         console.log("\n == App: componentDidMount ==");
     }
 
+
     render() {
         console.log("\n == App: render ==");
         return (
@@ -67,5 +69,12 @@ class App extends React.Component {
         )
     }
 }
+
+function showState() {
+    console.log("\n == App: showState ==");
+    const state = store.getState();
+    console.log("state:", state);
+}
+store.subscribe(showState);
 
 export default App;

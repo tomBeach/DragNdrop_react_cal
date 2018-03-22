@@ -190,9 +190,18 @@ let dragStates = {
 />
 
 
-
-
 ======= data flow =======
+• Provider
+    - properties specified for Provider are automatically available to components in the Provider component
+    - example:
+    <Provider store={store}>
+        <App />
+    </Provider>,
+
+• ownProps
+    - represents any props passed to our component
+    - has a params attribute
+
 • call an action (e.g. store.dispatch(addDates))
     - can be called from anywhere in app (e.g. components, XHR callbacks, at scheduled intervals...)
     - examples
@@ -216,6 +225,7 @@ let dragStates = {
     - every listener registered with store.subscribe(listener) will now be invoked
     - listeners may call store.getState() to get the current state
 
+
 ======= dispatching actions =======
 • Actions are executed in a strict order, so no race conditions occur
 • container components can dispatch actions
@@ -231,6 +241,7 @@ let dragStates = {
             }
         }
     }
+
 
 ======= reducers =======
 • Create a new state, given the current state and an action

@@ -47,21 +47,15 @@ class Grid extends React.Component {
         // == add cellDataObj to store
         store.dispatch(addCellDataObj(this.cellDataObj));
 
+        // == check if positional data has been added to store
         let dragStates = store.getState().dragStates[0];
         if (dragStates == null) {
-            this.updateCellData();      // adds position data to cellDataObj
+            this.updateCellData();      // adds position data
         }
-
-        // == testing
-        let checkStore = store.getState();
-        console.log("checkStore:", checkStore);
     }
 
     componentDidUpdate(prevProps, prevState) {
         console.log("\n == Grid: componentDidUpdate ==");
-        console.log("prevProps:", prevProps);
-        console.log("prevState:", prevState);
-        console.log("this.state:", this.state);
     }
 
     // ======= ======= ======= cellData ======= ======= =======
@@ -69,7 +63,9 @@ class Grid extends React.Component {
     // ======= ======= ======= cellData ======= ======= =======
 
     updateCellData() {
-        console.log("\n +++++++ == Grid: updateCellData +++++++ ==");
+        console.log("\n +++++++ == Grid: updateCellData == +++++++ ");
+        console.log(" +++++++ == Grid: updateCellData == +++++++ ");
+        console.log(" +++++++ == Grid: updateCellData == +++++++ ");
 
         // == get cell data objects from store
         let cellDataObj = store.getState().cellDataObj[0];
@@ -84,7 +80,7 @@ class Grid extends React.Component {
         let sessionsGrid = ReactDOM.findDOMNode(this.refs.sessions);
         let sessionsR = sessionsGrid.getBoundingClientRect();
 
-        // == get arrays of cell components per day
+        // == get array of cell components for each day
         let dayColumns = this.refs.sessions.childNodes;
         let cellCounter = 0;
 
@@ -125,22 +121,30 @@ class Grid extends React.Component {
         let gridH = sessionsR.height - timeR.height - 5;    // limit to bottom drag when added to gridH
 
         let dragStates = {
-            gridXYWH: { x:gridL, y:gridT, w:gridW, h:sessionsR.height },
-            dragXYWH: { x:timeR.width + 6, y:anchorR.height + 3, w:anchorR.width, h:anchorR.height },
+            gridXYWH: { x:gridL, y:gridT, w:gridW, h:gridH },
+            dragXYWH: { x:timeR.width + 5, y:anchorR.height + 3, w:anchorR.width, h:anchorR.height },
             mouseXY: { x:0, y:0 },
             relXY: { x:0, y:0 },
             scrollStart: 0,
             scrolling: false,
             dragging: false
         };
+        // console.log("dragStates:", dragStates);
 
-        // == add current position data to store
-        store.dispatch(setDraggerId("dragger1"));
-        store.dispatch(addDragStates(dragStates));
+        // == add updated position data to store
         store.dispatch(addCellIdsArray(this.cellIdsArray));
+        store.dispatch(addDragStates(dragStates));
+        store.dispatch(setDraggerId("dragger1"));
 
-        // == create dragger, boundaries and behaviors
+        // == check for scroll behavior
         document.getElementById("sessions").addEventListener('scroll', this.detectGridScroll);
+    }
+
+    locateDragger(targetCellId) {
+        console.log("== Grid::locateDragger ==");
+        console.log("....dragger1:", this.refs['dragger1'].getWrappedInstance());
+        let dragger = this.refs['dragger1'].getWrappedInstance();
+        dragger.locateDragger(targetCellId);
     }
 
     // ======= ======= ======= dates ======= ======= =======
@@ -333,7 +337,7 @@ class Grid extends React.Component {
                         text={text}
                         className={"cell " + className}
                         sessionData={sessionData}
-                        // locateDragger={this.locateDragger}
+                        locateDragger={this.locateDragger}
                     />
                 );
             });
@@ -357,38 +361,9 @@ class Grid extends React.Component {
 
     makeDragger() {
         console.log("\n +++++++ == Grid: makeDragger == +++++++ ");
-
-        let dragStates = store.getState().dragStates[0];
-        let cellDataObj = store.getState().cellDataObj[0];
-        let cellIdsArray = store.getState().cellIdsArray[0];
-
-        // == initialize text and id
-        let draggerId = "initDragger";
-        let text = "initDragger";
-
-        // == initialize styles
-        let dragStyles = {
-            position: 'absolute',
-            display: 'block',
-            left: '10px',
-            top: '10px',
-            width: '10px',
-            height: '10px'
-        }
-
-        // == make dragger component
         return (
             <Dragger
-                id={draggerId}
-                ref={draggerId}
-                styles={dragStyles}
-                text={text}
-                dragStates={dragStates}
-                cellDataObj={cellDataObj}
-                cellIdsArray={cellIdsArray}
-                // dragStates={this.dragStates}
-                // cellDataObj={this.cellDataObj}
-                // cellIdsArray={this.cellIdsArray}
+                ref={"dragger1"}
             />
         )
     }
@@ -438,26 +413,35 @@ class Grid extends React.Component {
     }
 }
 
-// ======= ======= ======= Store ======= ======= =======
-// ======= ======= ======= Store ======= ======= =======
-// ======= ======= ======= Store ======= ======= =======
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-    console.log("\n  == mapDispatchToProps ==")
-    console.log("ownProps:", ownProps);
-    return {
-        addDates: dates => dispatch(addDates(ownProps.dates)),
-        addTimes: times => dispatch(addTimes(ownProps.times)),
-        addRooms: rooms => dispatch(addRooms(ownProps.rooms)),
-        addSessions: sessions => dispatch(addSessions(ownProps.sessions)),
-
-        setStartId: startCellId => dispatch(setStartId(ownProps.startCellId)),
-        setTargetId: targetCellId => dispatch(setTargetId(ownProps.targetCellId)),
-        addDragStates: dragStates => dispatch(addDragStates(ownProps.dragStates)),
-        addCellIdsArray: cellDaysArray => dispatch(addCellIdsArray(ownProps.cellDaysArray)),
-        addCellDataObj: cellDataObj => dispatch(addCellDataObj(ownProps.cellDataObj))
-    }
+// == check state after updates
+function showState() {
+    console.log("\n == Grid: showState ==");
+    const state = store.getState();
+    console.log("state:", state);
 }
+store.subscribe(showState);
 
 export default Grid;
 // export default connect(mapStateToProps, mapDispatchToProps)(Grid);
+
+// ======= ======= ======= Store ======= ======= =======
+// ======= ======= ======= Store ======= ======= =======
+// ======= ======= ======= Store ======= ======= =======
+
+// const mapDispatchToProps = (dispatch, ownProps) => {
+//     console.log("\n  == mapDispatchToProps ==")
+//     console.log("ownProps:", ownProps);
+//     return {
+//         addDates: dates => dispatch(addDates(ownProps.dates)),
+//         addTimes: times => dispatch(addTimes(ownProps.times)),
+//         addRooms: rooms => dispatch(addRooms(ownProps.rooms)),
+//         addSessions: sessions => dispatch(addSessions(ownProps.sessions)),
+//
+//         setStartId: startCellId => dispatch(setStartId(ownProps.startCellId)),
+//         setTargetId: targetCellId => dispatch(setTargetId(ownProps.targetCellId)),
+//         setDraggerId: targetCellId => dispatch(setDraggerId(ownProps.draggerId)),
+//         addDragStates: dragStates => dispatch(addDragStates(ownProps.dragStates)),
+//         addCellIdsArray: cellDaysArray => dispatch(addCellIdsArray(ownProps.cellDaysArray)),
+//         addCellDataObj: cellDataObj => dispatch(addCellDataObj(ownProps.cellDataObj))
+//     }
+// }
