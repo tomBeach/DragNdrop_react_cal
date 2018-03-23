@@ -9,6 +9,7 @@ class SessionCell extends React.Component {
     constructor(props) {
         // console.log("\n == SessionCell:constructor ==");
         super(props);
+        // console.log("props:", props);
         autoBind(this);
         this.state = {
             id: props.id,
@@ -90,7 +91,7 @@ class SessionCell extends React.Component {
                 ref={this.saveRef}
                 className={this.state.className}
                 style={{
-                    className: this.state.className,
+                    class: this.state.className,
                     backgroundColor: bgColor
                 }}
                 onClick={(e) => this.locateDragger(e)}

@@ -2,39 +2,21 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import autoBind from "react-autobind";
-import store from "../store/index";
-
-import { addDates } from "../actions/index";
-import { addTimes } from "../actions/index";
-import { addRooms } from "../actions/index";
-import { addSessions } from "../actions/index";
-import { setStartId } from "../actions/index";
-import { setTargetId } from "../actions/index";
-import { setDraggerId } from "../actions/index";
-import { addCellDataObj } from "../actions/index";
-import { addDragStates } from "../actions/index";
-import { addCellIdsArray } from "../actions/index";
-
 import Grid from "./Grid";
 
 // ======= App =======
 class App extends React.Component {
     constructor(props) {
         console.log("\n == App: constructor ==");
-        // console.log("props:", props);
+        console.log("props:", props);
         super(props);
         autoBind(this);
-
-        // == add remote database data to store
-        store.dispatch(addDates(props.dates));
-        store.dispatch(addTimes(props.times));
-        store.dispatch(addRooms(props.rooms));
-        store.dispatch(addSessions(props.sessions));
-
-        // == add DOM-dependent data to store
-        store.dispatch(setStartId(props.startCellId));
-        store.dispatch(setTargetId(props.targetCellId));
-        store.dispatch(setDraggerId(props.draggerId));
+        this.state = {
+            dates: props.dates,
+            times: props.times,
+            rooms: props.rooms,
+            sessions: props.sessions
+        }
     }
 
     componentDidMount(props) {
@@ -49,7 +31,12 @@ class App extends React.Component {
                 <div id="yield" className="section" data-state="default">
                     <div>
                         <h2 className="dataTitle">Calendar 4</h2>
-                        <Grid />
+                        <Grid
+                            dates={this.state.dates}
+                            times={this.state.times}
+                            rooms={this.state.rooms}
+                            sessions={this.state.sessions}
+                        />
                     </div>
                 </div>
             </div>

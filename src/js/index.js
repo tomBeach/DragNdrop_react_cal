@@ -1,9 +1,7 @@
 // ======= src/js/index.js =======
 import React from "react";
-import { render } from "react-dom";
-import { Provider } from "react-redux";
+import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types';
-import store from "./store/index";
 import App from "./components/App";
 
 require('../../sass/styles.scss');
@@ -39,19 +37,12 @@ const sessions = [
 ];
 const data = [times, dates, rooms, sessions];
 
-render(
-    <Provider store={store}>
-        <App
-            dates={dates}
-            times={times}
-            rooms={rooms}
-            sessions={sessions}
-            draggerId={"initDragger"}
-            startCellId={"2_1"}
-            targetCellId={"2_1"}
-            // cellDataObj={null}
-            // cellIdsArray={null}
-        />
-    </Provider>,
-    document.getElementById("app")
+ReactDOM.render(
+    <App
+        dates={dates}
+        times={times}
+        rooms={rooms}
+        sessions={sessions}
+    />,
+    document.getElementById('app')
 );

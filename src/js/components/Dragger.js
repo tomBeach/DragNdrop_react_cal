@@ -1,31 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { connect } from "react-redux";
-import store from "../store/index";
-import { setStartId } from "../actions/index";
-import { setTargetId } from "../actions/index";
-import { addDragStates } from "../actions/index";
-import { addCellDataObj } from "../actions/index";
 
 // ======= ======= ======= DRAGGER ======= ======= =======
 // ======= ======= ======= DRAGGER ======= ======= =======
 // ======= ======= ======= DRAGGER ======= ======= =======
 
-// const mapStateToProps = (state, ownProps) => {
-//     console.log("\n +++++++ == Dragger: mapStateToProps == +++++++ ")
-//     console.log("state:", state);
-//     return {
-//         draggerId: state.draggerId,         // cell data
-//         startCellId: state.startCellId,
-//         targetCellId: state.targetCellId,
-//
-//         dragStates: state.dragStates,       // position data
-//         cellDataObj: state.cellDataObj,
-//         cellIdsArray: state.cellIdsArray
-//     };
-// }
-
-class DraggerRedux extends React.Component {
+class Dragger extends React.Component {
     constructor(props) {
         console.log("\n +++++++ == Dragger: constructor == +++++++");
         super(props);
@@ -35,14 +15,13 @@ class DraggerRedux extends React.Component {
             startCellId: props.startCellId,
             targetCellId: props.targetCellId,
 
-            dragStates: props.dragStates,       // position data
             cellDataObj: props.cellDataObj,
             cellIdsArray: props.cellIdsArray,
 
-            gridXYWH: props.dragStates.gridXYWH,
-            dragXYWH: props.dragStates.dragXYWH,
-            mouseXY: props.dragStates.mouseXY,
-            relXY: props.dragStates.relXY,
+            gridXYWH: props.gridXYWH,
+            dragXYWH: props.dragXYWH,
+            mouseXY: props.mouseXY,
+            relXY: props.relXY,
 
             text: null,
             dragging: false,
@@ -64,34 +43,27 @@ class DraggerRedux extends React.Component {
 
     componentWillReceiveProps(props) {
         console.log("\n +++++++ == Dragger: componentWillReceiveProps == +++++++");
+        console.log("props:", props);
+        this.setState({
+            // startCellId: props.startCellId,
+            // targetCellId: props.targetCellId,
 
-        // this.setState({
-        //     draggerId: props.draggerId[props.draggerId.length - 1],         // cell data
-        //     startCellId: props.startCellId[props.startCellId.length - 1],
-        //     targetCellId: props.targetCellId[props.targetCellId.length - 1],
-        //
-        //     dragStates: props.dragStates[props.dragStates.length - 1],       // position data
-        //     cellDataObj: props.cellDataObj[props.cellDataObj.length - 1],
-        //     cellIdsArray: props.cellIdsArray[props.cellIdsArray.length - 1],
-        //
-        //     gridXYWH: props.dragStates[props.dragStates.length - 1].gridXYWH,
-        //     dragXYWH: props.dragStates[props.dragStates.length - 1].dragXYWH,
-        //     mouseXY: props.dragStates[props.dragStates.length - 1].mouseXY,
-        //     relXY: props.dragStates[props.dragStates.length - 1].relXY
-        // })
+            cellDataObj: props.cellDataObj,
+            cellIdsArray: props.cellIdsArray,
+
+            gridXYWH: props.gridXYWH,
+            dragXYWH: props.dragXYWH,
+            mouseXY: props.mouseXY,
+            relXY: props.relXY,
+
+            text: props.text
+        })
     }
 
     componentDidUpdate(prevProps, prevState) {
         console.log("\n +++++++ == Dragger: componentDidUpdate == +++++++");
         // console.log("this.state:", this.state);
         // console.log("prevState:", prevState);
-
-        // if (this.state.startCellId != prevState.startCellId) {
-        //     store.dispatch(setStartId(this.state.startCellId));
-        //     store.dispatch(setTargetId(this.state.targetCellId));
-        //     store.dispatch(addCellDataObj(this.state.cellDataObj));
-        //     console.log("store.getState():", store.getState());
-        // }
 
         if (this.state.dragging && !prevState.dragging) {
             document.addEventListener('mousemove', this.onMouseMove);
@@ -110,16 +82,12 @@ class DraggerRedux extends React.Component {
         console.log("\n == Dragger:locateDragger ==");
 
         let targetCellData = this.state.cellDataObj[targetCellId];
+        console.log("targetCellData:", targetCellData);
         let dragX = targetCellData.x;   // + col * pxOffsetX
         let dragY = targetCellData.y;   // + row * pxOffsetY
         let title = this.state.cellDataObj[targetCellId].sessionData
             ? this.state.cellDataObj[targetCellId].sessionData.session_title
             : null
-
-        // == update new startCellId/targetCellId to previous targetCellId
-        // store.dispatch(setStartId(targetCellId));
-        // store.dispatch(setTargetId(targetCellId));
-        // store.dispatch(addDragStates(targetCellId));
 
         this.setState({
             dragXYWH: {
@@ -576,11 +544,22 @@ class DraggerRedux extends React.Component {
         console.log("\n == Dragger:render ==");
         console.log("this.state.dragXYWH:", this.state.dragXYWH);
 
+        function isEmptyObject(obj) {
+            console.log("\n == isEmptyObject ==");
+            for (var key in obj) {
+                return false;
+            }
+                return true;
+        }
+
+        let initStatus = isEmptyObject(this.state.cellDataObj);
+        console.log("initStatus:", initStatus);
+
         // == initialize text and id
         let text, cellType, dragStyles, dragXYWH;
         let id = this.state.draggerId;
         let startCellId = this.state.startCellId;
-        if (id === "dragger1") {
+        if (!initStatus) {
             cellType = this.state.cellDataObj[startCellId].cellType;
             if (cellType === "sessionCell") {
                 text = this.state.cellDataObj[startCellId].sessionData.session_title;
@@ -613,13 +592,4 @@ class DraggerRedux extends React.Component {
     }
 }
 
-// function showState() {
-//     console.log("\n == Dragger: showState ==");
-//     const state = store.getState();
-//     console.log("state:", state);
-// }
-// store.subscribe(showState);
-
-// const Dragger = connect(mapStateToProps, null, null, { withRef: true })(DraggerRedux);
-// export default Dragger;
-export default DraggerRedux;
+export default Dragger;
