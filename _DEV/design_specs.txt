@@ -198,6 +198,9 @@ let dragStates = {
         <App />
     </Provider>,
 
+• componentWillReceiveProps()
+    - called when props are passed to the Component instance
+
 • ownProps
     - represents any props passed to our component
     - has a params attribute

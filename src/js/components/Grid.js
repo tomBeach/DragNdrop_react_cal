@@ -48,14 +48,14 @@ class Grid extends React.Component {
         store.dispatch(addCellDataObj(this.cellDataObj));
 
         // == check if positional data has been added to store
-        let dragStates = store.getState().dragStates[0];
-        if (dragStates == null) {
+        let draggerId = store.getState().draggerId[0];
+        if (draggerId == "initDragger") {
             this.updateCellData();      // adds position data
         }
     }
 
     componentDidUpdate(prevProps, prevState) {
-        console.log("\n == Grid: componentDidUpdate ==");
+        // console.log("\n == Grid: componentDidUpdate ==");
     }
 
     // ======= ======= ======= cellData ======= ======= =======
@@ -141,8 +141,7 @@ class Grid extends React.Component {
     }
 
     locateDragger(targetCellId) {
-        console.log("== Grid::locateDragger ==");
-        console.log("....dragger1:", this.refs['dragger1'].getWrappedInstance());
+        console.log(" == Grid::locateDragger ==");
         let dragger = this.refs['dragger1'].getWrappedInstance();
         dragger.locateDragger(targetCellId);
     }
@@ -361,9 +360,28 @@ class Grid extends React.Component {
 
     makeDragger() {
         console.log("\n +++++++ == Grid: makeDragger == +++++++ ");
+        let defaultState = store.getState();
+        console.log("defaultState:", defaultState);
         return (
             <Dragger
                 ref={"dragger1"}
+                draggerId={defaultState.draggerId[0]}         // cell data
+                startCellId={defaultState.startCellId[0]}
+                targetCellId={defaultState.targetCellId[0]}
+
+                dragStates={defaultState.dragStates[0]}       // position data
+                cellDataObj={defaultState.cellDataObj[0]}
+                cellIdsArray={defaultState.cellIdsArray[0]}
+
+                gridXYWH={defaultState.dragStates.gridXYWH[0]}
+                dragXYWH={defaultState.dragStates.dragXYWH[0]}
+                mouseXY={defaultState.dragStates.mouseXY[0]}
+                relXY={defaultState.dragStates.relXY[0]}
+
+                text={null}
+                dragging={false}
+                scrolling={false}
+                scrollStart={0}
             />
         )
     }
@@ -381,7 +399,7 @@ class Grid extends React.Component {
         let times = checkStore.times[0];
         let sessions = checkStore.sessions[0];
 
-        let dateHeaders, roomTimes, gridCells, dragStates, dragger;
+        let dateHeaders, roomTimes, gridCells, dragger;
         dateHeaders = this.makeDateHeaders(dates);
         roomTimes = this.makeRoomTimes(rooms, times);
         gridCells = this.makeGridCells(dates, rooms, times, sessions);
@@ -414,12 +432,12 @@ class Grid extends React.Component {
 }
 
 // == check state after updates
-function showState() {
-    console.log("\n == Grid: showState ==");
-    const state = store.getState();
-    console.log("state:", state);
-}
-store.subscribe(showState);
+// function showState() {
+//     console.log("\n == Grid: showState ==");
+//     const state = store.getState();
+//     console.log("state:", state);
+// }
+// store.subscribe(showState);
 
 export default Grid;
 // export default connect(mapStateToProps, mapDispatchToProps)(Grid);

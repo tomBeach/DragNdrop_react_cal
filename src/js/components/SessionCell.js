@@ -7,9 +7,8 @@ import autoBind from 'react-autobind';
 // ======= SessionCell =======
 class SessionCell extends React.Component {
     constructor(props) {
-        console.log("\n== SessionCell:constructor ==");
+        // console.log("\n == SessionCell:constructor ==");
         super(props);
-        console.log("props:", props);
         autoBind(this);
         this.state = {
             id: props.id,
@@ -26,7 +25,7 @@ class SessionCell extends React.Component {
     // ======= ======= ======= cell methods ======= ======= =======
 
     showSessionDetails(showHide, sessionData) {
-        console.log("\n== SessionCell:showSessionDetails ==");
+        // console.log("\n == SessionCell:showSessionDetails ==");
 
         // if (this.state.sessionData) {
         //     if (showHide == "show") {
@@ -59,7 +58,7 @@ class SessionCell extends React.Component {
     }
 
     toggleHilite(e) {
-        // console.log("\n== toggleHilite ==");
+        // console.log("\n == toggleHilite ==");
         e.preventDefault();
         if (this.state.className == "cell sessionCell") {
             this.setState({highlighted: !this.state.highlighted});
@@ -73,13 +72,14 @@ class SessionCell extends React.Component {
 
     // ======= ======= ======= JUMP ======= ======= =======
     locateDragger(e) {
-        console.log("== SessionCell:locateDragger ==");
+        console.log(" == SessionCell:locateDragger ==");
+        console.log("this.state.id:", this.state.id);
         this.props.locateDragger(this.state.id);
     }
 
     // ======= ======= ======= RENDER ======= ======= =======
     render() {
-        // console.log("\n== SessionCell:render ==");
+        // console.log("\n == SessionCell:render ==");
         let bgColor = this.state.highlighted
             ? "thistle"
             : this.state.color;

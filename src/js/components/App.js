@@ -21,22 +21,9 @@ import Grid from "./Grid";
 class App extends React.Component {
     constructor(props) {
         console.log("\n == App: constructor ==");
-        console.log("props:", props);
+        // console.log("props:", props);
         super(props);
         autoBind(this);
-        this.state = {
-            dates: props.dates,                 // database
-            times: props.times,
-            rooms: props.rooms,
-            sessions: props.sessions,
-
-            draggerId: props.draggerId,         // cells
-            startCellId: props.startCellId,
-            targetCellId: props.targetCellId,
-
-            cellDataObj: props.cellDataObj,     // cell interactions
-            cellIdsArray: props.cellIdsArray
-        };
 
         // == add remote database data to store
         store.dispatch(addDates(props.dates));
@@ -70,11 +57,11 @@ class App extends React.Component {
     }
 }
 
-function showState() {
-    console.log("\n == App: showState ==");
-    const state = store.getState();
-    console.log("state:", state);
-}
-store.subscribe(showState);
+// function showState() {
+//     console.log("\n == App: showState ==");
+//     const state = store.getState();
+//     console.log("state:", state);
+// }
+// store.subscribe(showState);
 
 export default App;

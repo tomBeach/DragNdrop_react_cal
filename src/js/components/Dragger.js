@@ -2,42 +2,47 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from "react-redux";
 import store from "../store/index";
+import { setStartId } from "../actions/index";
+import { setTargetId } from "../actions/index";
+import { addDragStates } from "../actions/index";
+import { addCellDataObj } from "../actions/index";
 
 // ======= ======= ======= DRAGGER ======= ======= =======
 // ======= ======= ======= DRAGGER ======= ======= =======
 // ======= ======= ======= DRAGGER ======= ======= =======
 
-const mapStateToProps = (state, ownProps) => {
-    console.log("\n +++++++ == Dragger: mapStateToProps == +++++++ ")
-    console.log("store.getState():", store.getState());
-    console.log("ownProps:", ownProps);
-    return {
-        draggerId: state.draggerId,         // cell data
-        startCellId: state.startCellId,
-        targetCellId: state.targetCellId,
-
-        dragStates: state.dragStates,       // position data
-        cellDataObj: state.cellDataObj,
-        cellIdsArray: state.cellIdsArray
-    };
-}
+// const mapStateToProps = (state, ownProps) => {
+//     console.log("\n +++++++ == Dragger: mapStateToProps == +++++++ ")
+//     console.log("state:", state);
+//     return {
+//         draggerId: state.draggerId,         // cell data
+//         startCellId: state.startCellId,
+//         targetCellId: state.targetCellId,
+//
+//         dragStates: state.dragStates,       // position data
+//         cellDataObj: state.cellDataObj,
+//         cellIdsArray: state.cellIdsArray
+//     };
+// }
 
 class DraggerRedux extends React.Component {
     constructor(props) {
         console.log("\n +++++++ == Dragger: constructor == +++++++");
         super(props);
+        console.log("props:", props);
         this.state = {
-            draggerId: null,
-            startCellId: null,
-            targetCellId: null,
+            draggerId: props.draggerId,         // cell data
+            startCellId: props.startCellId,
+            targetCellId: props.targetCellId,
 
-            cellDataObj: null,
-            cellIdsArray: null,
+            dragStates: props.dragStates,       // position data
+            cellDataObj: props.cellDataObj,
+            cellIdsArray: props.cellIdsArray,
 
-            gridXYWH: null,
-            dragXYWH: null,
-            mouseXY: null,
-            relXY: null,
+            gridXYWH: props.dragStates.gridXYWH,
+            dragXYWH: props.dragStates.dragXYWH,
+            mouseXY: props.dragStates.mouseXY,
+            relXY: props.dragStates.relXY,
 
             text: null,
             dragging: false,
@@ -53,38 +58,41 @@ class DraggerRedux extends React.Component {
 
     componentDidMount() {
         console.log("\n +++++++ == Dragger: componentDidMount == +++++++");
-        console.log("this.state:", this.state);
+        // console.log("this.state:", this.state);
         document.removeEventListener('mouseup', this.onMouseUp);
     }
 
-    componentWillReceiveProps() {
+    componentWillReceiveProps(props) {
         console.log("\n +++++++ == Dragger: componentWillReceiveProps == +++++++");
-        let newState = store.getState();
-        let dragStates = newState.dragStates[newState.dragStates.length - 1];
-        let newId = newState.draggerId[newState.draggerId.length - 1];
-        if (newId == "dragger1") {
-            console.log("+++++ time to update +++++");
-            console.log("dragStates:", dragStates);
-            console.log("dragStates.dragXYWH:", dragStates.dragXYWH);
-            this.setState({
-                draggerId: newState.draggerId[newState.draggerId.length - 1],         // cell data
-                startCellId: newState.startCellId[newState.startCellId.length - 1],
-                targetCellId: newState.targetCellId[newState.targetCellId.length - 1],
 
-                gridXYWH: dragStates.gridXYWH,
-                dragXYWH: dragStates.dragXYWH,
-                mouseXY: dragStates.mouseXY,
-                relXY: dragStates.relXY,
-
-                cellDataObj: newState.cellDataObj[newState.cellDataObj.length - 1],
-                cellIdsArray: newState.cellIdsArray[newState.cellIdsArray.length - 1],
-            })
-        }
+        // this.setState({
+        //     draggerId: props.draggerId[props.draggerId.length - 1],         // cell data
+        //     startCellId: props.startCellId[props.startCellId.length - 1],
+        //     targetCellId: props.targetCellId[props.targetCellId.length - 1],
+        //
+        //     dragStates: props.dragStates[props.dragStates.length - 1],       // position data
+        //     cellDataObj: props.cellDataObj[props.cellDataObj.length - 1],
+        //     cellIdsArray: props.cellIdsArray[props.cellIdsArray.length - 1],
+        //
+        //     gridXYWH: props.dragStates[props.dragStates.length - 1].gridXYWH,
+        //     dragXYWH: props.dragStates[props.dragStates.length - 1].dragXYWH,
+        //     mouseXY: props.dragStates[props.dragStates.length - 1].mouseXY,
+        //     relXY: props.dragStates[props.dragStates.length - 1].relXY
+        // })
     }
 
     componentDidUpdate(prevProps, prevState) {
         console.log("\n +++++++ == Dragger: componentDidUpdate == +++++++");
-        console.log("this.state:", this.state);
+        // console.log("this.state:", this.state);
+        // console.log("prevState:", prevState);
+
+        // if (this.state.startCellId != prevState.startCellId) {
+        //     store.dispatch(setStartId(this.state.startCellId));
+        //     store.dispatch(setTargetId(this.state.targetCellId));
+        //     store.dispatch(addCellDataObj(this.state.cellDataObj));
+        //     console.log("store.getState():", store.getState());
+        // }
+
         if (this.state.dragging && !prevState.dragging) {
             document.addEventListener('mousemove', this.onMouseMove);
             document.addEventListener('mouseup', this.onMouseUp);
@@ -100,12 +108,18 @@ class DraggerRedux extends React.Component {
 
     locateDragger(targetCellId) {
         console.log("\n == Dragger:locateDragger ==");
+
         let targetCellData = this.state.cellDataObj[targetCellId];
         let dragX = targetCellData.x;   // + col * pxOffsetX
         let dragY = targetCellData.y;   // + row * pxOffsetY
         let title = this.state.cellDataObj[targetCellId].sessionData
             ? this.state.cellDataObj[targetCellId].sessionData.session_title
             : null
+
+        // == update new startCellId/targetCellId to previous targetCellId
+        // store.dispatch(setStartId(targetCellId));
+        // store.dispatch(setTargetId(targetCellId));
+        // store.dispatch(addDragStates(targetCellId));
 
         this.setState({
             dragXYWH: {
@@ -174,8 +188,6 @@ class DraggerRedux extends React.Component {
         // == move dragger with mouse (corrected for dragger and grid offsets)
         let dragX = e.pageX - this.state.relXY.x;
         let dragY = e.pageY + this.state.relXY.y - this.state.gridXYWH.y;
-        let dragW = this.state.dragXYWH.w;
-        let dragH = this.state.dragXYWH.h;
         let minL = this.state.gridXYWH.x - this.state.gridXYWH.x + 2;
         let minT = this.state.gridXYWH.y - this.state.gridXYWH.y + 2;
         let maxR = (this.state.gridXYWH.x + this.state.gridXYWH.w - this.state.dragXYWH.w) - this.state.gridXYWH.x - 2;
@@ -188,8 +200,8 @@ class DraggerRedux extends React.Component {
                 dragXYWH: {
                     x: dragX,
                     y: dragY,
-                    w: dragW,
-                    h: dragH
+                    w: this.state.dragXYWH.w,
+                    h: this.state.dragXYWH.h
                 },
                 mouseXY: {
                     x: e.pageX,
@@ -211,7 +223,7 @@ class DraggerRedux extends React.Component {
 
     // ======= ======= ======= target detection ======= ======= =======
     detectCellHover(dragX, dragY) {
-        console.log("\n== Dragger:detectCellHover ==");
+        // console.log("\n== Dragger:detectCellHover ==");
 
         // == scan all target cells for collision
         for (var i = 0; i < this.state.cellIdsArray.length; i++) {
@@ -277,98 +289,10 @@ class DraggerRedux extends React.Component {
         const targetRow = targetCellId.split("_")[0];
         const targetCol = targetCellId.split("_")[1];
 
-        // ======= get list of time cells in target room =======
-        function getRoomTimes() {
-            console.log("== Dragger:getRoomTimes ==");
-            let roomCount = store.getState().rooms[0].length;
-            let timeCount = store.getState().times[0].length;
-            console.log("roomCount:", roomCount);
-
-            let rowArray = [];
-            for (var r = 1; r <= roomCount; r++) {
-                let hiRow = (timeCount * (r - 1)) + r + 1;
-                let loRow = (timeCount * r) + r;
-                if ((hiRow <= parseInt(targetRow)) && (targetRow <= loRow)) {
-                    for (var i = hiRow; i <= loRow; i++) {
-                        rowArray.push(i);
-                    }
-                    return rowArray;
-                }
-            }
-        }
-        const roomTimesArray = getRoomTimes();
-
-        // ======= get rows above and below target row =======
-        let aboveCenterRows = roomTimesArray.filter(row => row <= targetRow);
-        let belowCenterRows = roomTimesArray.filter(row => row >= targetRow);
-        console.log("cellDataObj[targetCellId]:", cellDataObj[targetCellId]);
-
-        // ======= determine entry point on target cell (above or below center) =======
-        const dragY = e.pageY - dragger.state.relXY.y - dragger.state.gridXYWH.y;
-        const cellCenterY = cellDataObj[targetCellId].y + (cellDataObj[targetCellId].h/2);
-        let sessionCellsArray;
-        const cellAddr = function(row, targetCol) {
-            return row + "_" + targetCol;
-        };
-        const cellData = function(cellAddr) {
-            return cellDataObj[cellAddr];
-        };
-        dragY > cellCenterY
-            ? sessionCellsArray = aboveCenterRows.map(row => cellData(cellAddr(row, targetCol))).reverse()
-            : sessionCellsArray = belowCenterRows.map(row => cellData(cellAddr(row, targetCol)));
-
-        // ======= include only cells required for data shift; get nearest empty row =======
-        const removeNullCells = function(cell) {
-            if (cell) {
-                return cell;
-            }
-        };
-        let nearestEmptyRow = null;
-        const shiftAddrsArray = sessionCellsArray.map((cell, c) => {
-            if (cell.addr === startCellData.addr) {
-                console.log("+++ START CELL +++");
-            }
-            if (nearestEmptyRow === null) {
-                if (cell.cellType === "emptyCell") {
-                    nearestEmptyRow = cell;
-                    return cell.addr;
-                } else if (cell.cellType === "sessionCell") {
-                    return cell.addr;
-                }
-            }
-        }).filter(removeNullCells).reverse();
-        console.log("shiftAddrsArray:", shiftAddrsArray);
-        console.log("nearestEmptyRow:", nearestEmptyRow);
-
-        // ======= ======= ======= SWAP or SHIFT ======= ======= =======
-        // ======= ======= ======= SWAP or SHIFT ======= ======= =======
-        // ======= ======= ======= SWAP or SHIFT ======= ======= =======
-
-        // ======= check for no empty cells
-        shiftAddrsArray.length === sessionCellsArray.length
+        // ======= check if target cell is empty
+        targetCellData.cellType === "emptyCell"
             ? swapStartTarget()
-            : shiftCellData();
-
-        // ======= shift cell data up or down =======
-        function shiftCellData() {
-            console.log("\n\n== shiftCellData ==");
-
-            // == map source data to shifted cell
-            shiftAddrsArray.map((addr, c) => {
-                if (c < (shiftAddrsArray.length - 1)) {
-                    let sourceDataAddr = shiftAddrsArray[c+1];
-                    let sourceData = cellDataObj[sourceDataAddr];
-                    let shiftData = cellDataObj[addr];
-                    shiftData.cellType = sourceData.cellType;
-                    shiftData.className = sourceData.className;
-                    shiftData.sessionData = sourceData.sessionData;
-                }
-            });
-            console.log("cellDataObj:", cellDataObj);
-            swapStartTarget();
-            updateStartTargetComps("start");
-            updateStartTargetComps("target");
-        }
+            : console.log("+++ SESSIONCELL +++");;
 
         // ======= swap start and target cell data =======
         function swapStartTarget() {
@@ -379,48 +303,31 @@ class DraggerRedux extends React.Component {
             targetCellData.cellType = startCellData.cellType;
             targetCellData.className = startCellData.className;
             targetCellData.sessionData = startCellData.sessionData;
-            if (nearestEmptyRow) {
-                startCellData.cellType = "emptyCell";
-                startCellData.className = "cell emptyCell";
-                startCellData.sessionData = null;
-            } else {
-                startCellData.cellType = tempCellType;
-                startCellData.className = tempClassName;
-                startCellData.sessionData = tempSessionData;
-            }
+            startCellData.cellType = tempCellType;
+            startCellData.className = tempClassName;
+            startCellData.sessionData = tempSessionData;
             console.log("cellDataObj:", cellDataObj);
-            updateStartTargetComps("start");
-            updateStartTargetComps("target");
+            updateStartTargetComps(startCellData);
+            updateStartTargetComps(targetCellData);
+            updateDraggerComp();
+            store.dispatch(addCellDataObj(dragger.state.cellDataObj));
         };
 
         // ======= update component to revised data =======
-        function updateStartTargetComps(whichComp) {
-            console.log("== updateStartComponent ==");
+        function updateStartTargetComps(cellData) {
+            console.log("== updateStartTargetComps ==");
 
-            let tempSessionData, title, cellComponent, cellData, bgColor;
-            if (whichComp === "start") {
-                tempSessionData = startCellData.sessionData;
-                cellComponent = startCellData.cellComp;
-                cellData = startCellData;
-                bgColor = startCellData.cellType === "sessionCell"
-                    ? "white"
-                    : "#b1b9by";
-            } else if (whichComp === "target"){
-                tempSessionData = targetCellData.sessionData;
-                cellComponent = targetCellData.cellComp;
-                cellData = targetCellData;
-                bgColor = targetCellData.cellType === "sessionCell"
-                    ? "white"
-                    : "#b1b9by";
-            }
-            if (nearestEmptyRow) {
-                title = null;
+            let title;
+            let tempSessionData = cellData.sessionData;
+            let cellComponent = cellData.cellComp;
+            let bgColor = cellData.cellType === "sessionCell"
+                ? "white"
+                : "#b1b9by";
+            if (cellData.session_title) {
+                title = cellData.session_title;
             } else {
-                title = tempSessionData.session_title;
+                title = null;
             }
-            console.log("cellComponent:", cellComponent);
-            console.log("cellData:", cellData);
-
             cellComponent.setState({
                 highlighted: false,
                 color: bgColor,
@@ -430,40 +337,17 @@ class DraggerRedux extends React.Component {
             })
         }
 
-        // ======= update shifted components to revised data =======
-        function updateShiftComponents() {
-            console.log("== updateShiftComponents ==");
-            shiftAddrsArray.map((addr, c) => {
-                let cell = cellDataObj[addr];
-                if (cell.addr === startCellId) {
-                    if (nearestEmptyRow) {
-                        cell = nearestEmptyRow;
-                    }
-                }
-                let cellComponent = cell.cellComp;
-                let bgColor = cell.cellType === "sessionCell"
-                    ? "white"
-                    : "#b1b9by";
-
-                cellComponent.setState({
-                    highlighted: false,
-                    color: bgColor,
-                    className: cell.className,
-                    sessionData: cell.sessionData,
-                    text: cell.sessionData.session_title
-                })
-            });
-        }
-
         // ======= update dragger component data =======
-        function updateDraggerComponent() {
-            console.log("== updateDraggerComponent ==");
+        function updateDraggerComp() {
+            console.log("== updateDraggerComp ==");
+            console.log("targetCellData:", targetCellData);
             let cellX = targetCellData.x;
             let cellY = targetCellData.y;
             let cellW = targetCellData.w;
             let cellH = targetCellData.h;
             dragger.setState({
                 startCellId: targetCellId,
+                startCellData: targetCellData,
                 cellDataObj: cellDataObj,
                 dragging: false,
                 dragXYWH: {
@@ -476,10 +360,212 @@ class DraggerRedux extends React.Component {
             });
         }
 
-        // ======= shift data, update components =======
-        updateShiftComponents();
-        updateDraggerComponent();
-        console.log("cellDataObj:", cellDataObj);
+
+        // // ======= get list of time cells in target room =======
+        // function getRoomTimes() {
+        //     console.log("== Dragger:getRoomTimes ==");
+        //     let roomCount = store.getState().rooms[0].length;
+        //     let timeCount = store.getState().times[0].length;
+        //
+        //     let rowArray = [];
+        //     for (var r = 1; r <= roomCount; r++) {
+        //         let hiRow = (timeCount * (r - 1)) + r + 1;
+        //         let loRow = (timeCount * r) + r;
+        //         if ((hiRow <= parseInt(targetRow)) && (targetRow <= loRow)) {
+        //             for (var i = hiRow; i <= loRow; i++) {
+        //                 rowArray.push(i);
+        //             }
+        //             return rowArray;
+        //         }
+        //     }
+        // }
+        // const roomTimesArray = getRoomTimes();
+        //
+        // // ======= get rows above and below target row =======
+        // let aboveCenterRows = roomTimesArray.filter(row => row <= targetRow);
+        // let belowCenterRows = roomTimesArray.filter(row => row >= targetRow);
+        // console.log("aboveCenterRows:", aboveCenterRows);
+        // console.log("belowCenterRows:", belowCenterRows);
+        //
+        // // ======= determine entry point on target cell (above or below center) =======
+        // const dragY = e.pageY - dragger.state.relXY.y - dragger.state.gridXYWH.y;
+        // const cellCenterY = cellDataObj[targetCellId].y + (cellDataObj[targetCellId].h/2);
+        // let sessionCellsArray;
+        // const cellAddr = function(row, targetCol) {
+        //     return row + "_" + targetCol;
+        // };
+        // const cellData = function(cellAddr) {
+        //     return cellDataObj[cellAddr];
+        // };
+        // dragY > cellCenterY
+        //     ? sessionCellsArray = aboveCenterRows.map(row => cellData(cellAddr(row, targetCol))).reverse()
+        //     : sessionCellsArray = belowCenterRows.map(row => cellData(cellAddr(row, targetCol)));
+        //
+        // // ======= include only cells required for data shift =======
+        // const removeNullCells = function(cell) {
+        //     if (cell) {
+        //         return cell;
+        //     }
+        // };
+        //
+        // // ======= get nearest empty row =======
+        // let nearestEmptyRow = null;
+        // const shiftAddrsArray = sessionCellsArray.map((cell, c) => {
+        //     if (cell.addr === startCellData.addr) {
+        //         console.log("+++ START CELL +++");
+        //     }
+        //     if (nearestEmptyRow === null) {
+        //         if (cell.cellType === "emptyCell") {
+        //             nearestEmptyRow = cell;
+        //             return cell.addr;
+        //         } else if (cell.cellType === "sessionCell") {
+        //             return cell.addr;
+        //         }
+        //     }
+        // }).filter(removeNullCells).reverse();
+        // console.log("shiftAddrsArray:", shiftAddrsArray);
+        // console.log("nearestEmptyRow:", nearestEmptyRow);
+        //
+        // // ======= ======= ======= SWAP or SHIFT ======= ======= =======
+        // // ======= ======= ======= SWAP or SHIFT ======= ======= =======
+        // // ======= ======= ======= SWAP or SHIFT ======= ======= =======
+        //
+        // // ======= check for no empty cells
+        // shiftAddrsArray.length === sessionCellsArray.length
+        //     ? swapStartTarget()
+        //     : shiftCellData();
+        //
+        // // ======= shift cell data up or down =======
+        // function shiftCellData() {
+        //     console.log("\n\n== shiftCellData ==");
+        //
+        //     // == map source data to shifted cell
+        //     shiftAddrsArray.map((addr, c) => {
+        //         if (c < (shiftAddrsArray.length - 1)) {
+        //             let sourceDataAddr = shiftAddrsArray[c+1];
+        //             let sourceData = cellDataObj[sourceDataAddr];
+        //             let shiftData = cellDataObj[addr];
+        //             shiftData.cellType = sourceData.cellType;
+        //             shiftData.className = sourceData.className;
+        //             shiftData.sessionData = sourceData.sessionData;
+        //         }
+        //     });
+        //     console.log("cellDataObj:", cellDataObj);
+        //     swapStartTarget();
+        //     updateStartTargetComps("start");
+        //     updateStartTargetComps("target");
+        // }
+
+        // // ======= swap start and target cell data =======
+        // function swapStartTarget() {
+        //     console.log("\n\n== swapStartTarget ==");
+        //     let tempCellType = targetCellData.cellType;
+        //     let tempClassName = targetCellData.className;
+        //     let tempSessionData = targetCellData.sessionData;
+        //     targetCellData.cellType = startCellData.cellType;
+        //     targetCellData.className = startCellData.className;
+        //     targetCellData.sessionData = startCellData.sessionData;
+        //     if (nearestEmptyRow) {
+        //         startCellData.cellType = "emptyCell";
+        //         startCellData.className = "cell emptyCell";
+        //         startCellData.sessionData = null;
+        //     } else {
+        //         startCellData.cellType = tempCellType;
+        //         startCellData.className = tempClassName;
+        //         startCellData.sessionData = tempSessionData;
+        //     }
+        //     console.log("cellDataObj:", cellDataObj);
+        //     // updateStartTargetComps("start");
+        //     // updateStartTargetComps("target");
+        // };
+        //
+        // // ======= update component to revised data =======
+        // function updateStartTargetComps(startORtarget) {
+        //     console.log("== updateStartTargetComps ==");
+        //
+        //     let tempSessionData, title, cellComponent, cellData, bgColor;
+        //     if (startORtarget === "start") {
+        //         tempSessionData = startCellData.sessionData;
+        //         cellComponent = startCellData.cellComp;
+        //         cellData = startCellData;
+        //         bgColor = startCellData.cellType === "sessionCell"
+        //             ? "white"
+        //             : "#b1b9by";
+        //     } else if (startORtarget === "target"){
+        //         tempSessionData = targetCellData.sessionData;
+        //         cellComponent = targetCellData.cellComp;
+        //         cellData = targetCellData;
+        //         bgColor = targetCellData.cellType === "sessionCell"
+        //             ? "white"
+        //             : "#b1b9by";
+        //     }
+        //     if (nearestEmptyRow) {
+        //         title = null;
+        //     } else {
+        //         title = tempSessionData.session_title;
+        //     }
+        //     // console.log("cellComponent:", cellComponent);
+        //     // console.log("cellData:", cellData);
+        //
+        //     cellComponent.setState({
+        //         highlighted: false,
+        //         color: bgColor,
+        //         className: cellData.className,
+        //         sessionData: cellData.sessionData,
+        //         text: title
+        //     })
+        // }
+        //
+        // // ======= update shifted components to revised data =======
+        // function updateShiftComps() {
+        //     console.log("== updateShiftComps ==");
+        //     shiftAddrsArray.map((addr, c) => {
+        //         let cell = cellDataObj[addr];
+        //         if (cell.addr === startCellId) {
+        //             if (nearestEmptyRow) {
+        //                 cell = nearestEmptyRow;
+        //             }
+        //         }
+        //         let cellComponent = cell.cellComp;
+        //         let bgColor = cell.cellType === "sessionCell"
+        //             ? "white"
+        //             : "#b1b9by";
+        //
+        //         cellComponent.setState({
+        //             highlighted: false,
+        //             color: bgColor,
+        //             className: cell.className,
+        //             sessionData: cell.sessionData,
+        //             text: cell.sessionData.session_title
+        //         })
+        //     });
+        // }
+        //
+        // // ======= update dragger component data =======
+        // function updateDraggerComp() {
+        //     console.log("== updateDraggerComp ==");
+        //     let cellX = targetCellData.x;
+        //     let cellY = targetCellData.y;
+        //     let cellW = targetCellData.w;
+        //     let cellH = targetCellData.h;
+        //     dragger.setState({
+        //         startCellId: targetCellId,
+        //         cellDataObj: cellDataObj,
+        //         dragging: false,
+        //         dragXYWH: {
+        //             x: cellX + 6,
+        //             y: cellY + 3,
+        //             w: cellW,
+        //             h: cellH
+        //         },
+        //         text: targetCellData.sessionData.session_title
+        //     });
+        // }
+        //
+        // // ======= shift data, update components =======
+        // updateShiftComps();
+        // updateDraggerComp();
+        // console.log("cellDataObj:", cellDataObj);
     }
 
     // ======= ======= ======= RENDER ======= ======= =======
@@ -488,7 +574,7 @@ class DraggerRedux extends React.Component {
 
     render() {
         console.log("\n == Dragger:render ==");
-        // console.log("this.state:", this.state);
+        console.log("this.state.dragXYWH:", this.state.dragXYWH);
 
         // == initialize text and id
         let text, cellType, dragStyles, dragXYWH;
@@ -504,7 +590,7 @@ class DraggerRedux extends React.Component {
             dragXYWH = this.state.dragXYWH;
             dragStyles = {
                 position: 'absolute',
-                display: 'block',       // none
+                display: 'block',
                 left: dragXYWH.x + 'px',
                 top: dragXYWH.y + 'px',
                 width: dragXYWH.w + 'px',
@@ -514,6 +600,7 @@ class DraggerRedux extends React.Component {
             text = null;
             dragStyles = null;
         }
+        console.log("dragStyles:", dragStyles);
 
         return(
             <div
@@ -526,13 +613,13 @@ class DraggerRedux extends React.Component {
     }
 }
 
-function showState() {
-    console.log("\n == Dragger: showState ==");
-    const state = store.getState();
-    console.log("state:", state);
-}
-store.subscribe(showState);
+// function showState() {
+//     console.log("\n == Dragger: showState ==");
+//     const state = store.getState();
+//     console.log("state:", state);
+// }
+// store.subscribe(showState);
 
-const Dragger = connect(mapStateToProps, null, null, { withRef: true })(DraggerRedux);
-export default Dragger;
-// export default DraggerRedux;
+// const Dragger = connect(mapStateToProps, null, null, { withRef: true })(DraggerRedux);
+// export default Dragger;
+export default DraggerRedux;
