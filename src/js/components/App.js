@@ -2,7 +2,7 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import autoBind from "react-autobind";
-import Grid from "./Grid";
+import Dragger from "./Dragger";
 
 // ======= App =======
 class App extends React.Component {
@@ -12,10 +12,10 @@ class App extends React.Component {
         super(props);
         autoBind(this);
         this.state = {
-            dates: props.dates,
+            dates: props.dates,         // grid data
             times: props.times,
             rooms: props.rooms,
-            sessions: props.sessions
+            sessions: props.sessions,
         }
     }
 
@@ -31,11 +31,28 @@ class App extends React.Component {
                 <div id="yield" className="section" data-state="default">
                     <div>
                         <h2 className="dataTitle">Calendar 4</h2>
-                        <Grid
+                        <Dragger
                             dates={this.state.dates}
                             times={this.state.times}
                             rooms={this.state.rooms}
                             sessions={this.state.sessions}
+
+                            draggerId={"dragger1"}      // active data
+                            startCellId={"2_1"}
+                            targetCellId={"2_1"}
+
+                            cellDataObj={{}}            // cell data
+                            cellIdsArray={[]}
+
+                            gridXYWH={{}}               // position data
+                            dragXYWH={{}}
+                            mouseXY={{}}
+                            relXY={{}}
+
+                            text={null}                 // display data
+                            dragging={false}
+                            scrolling={false}
+                            scrollStart={0}
                         />
                     </div>
                 </div>
@@ -43,12 +60,5 @@ class App extends React.Component {
         )
     }
 }
-
-// function showState() {
-//     console.log("\n == App: showState ==");
-//     const state = store.getState();
-//     console.log("state:", state);
-// }
-// store.subscribe(showState);
 
 export default App;

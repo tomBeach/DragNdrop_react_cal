@@ -1,16 +1,30 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+// ======= src/js/components/Dragger.js =======
+import React from "react";
+import ReactDOM from "react-dom"
+import autoBind from "react-autobind";
 
-// ======= ======= ======= DRAGGER ======= ======= =======
-// ======= ======= ======= DRAGGER ======= ======= =======
-// ======= ======= ======= DRAGGER ======= ======= =======
+import Day from "./Day";
+import Date from "./Date";
+import RoomTime from "./RoomTime";
+import SessionCell from "./SessionCell";
 
+// ======= ======= ======= component ======= ======= =======
+// ======= ======= ======= component ======= ======= =======
+// ======= ======= ======= component ======= ======= =======
+
+// ======= Dragger =======
 class Dragger extends React.Component {
     constructor(props) {
-        console.log("\n +++++++ == Dragger: constructor == +++++++");
-        super(props);
+        console.log("\n == Dragger: constructor ==");
         console.log("props:", props);
+        super(props);
+        autoBind(this);
         this.state = {
+            dates: props.dates,
+            times: props.times,
+            rooms: props.rooms,
+            sessions: props.sessions,
+
             draggerId: props.draggerId,         // cell data
             startCellId: props.startCellId,
             targetCellId: props.targetCellId,
@@ -23,583 +37,448 @@ class Dragger extends React.Component {
             mouseXY: props.mouseXY,
             relXY: props.relXY,
 
-            text: null,
-            dragging: false,
-            scrolling: false,
-            scrollStart: 0
-        };
-        this.detectCellHover = this.detectCellHover.bind(this);
-        this.locateDragger = this.locateDragger.bind(this);
-        this.onMouseDown = this.onMouseDown.bind(this);
-        this.onMouseMove = this.onMouseMove.bind(this);
-        this.onMouseUp = this.onMouseUp.bind(this);
+            text: props.text,
+            dragging: props.dragging,
+            scrolling: props.scrolling,
+            scrollStart: props.scrollStart
+        }
+        this.cellDataObj = {};          // storage object for element xywh and session data
+        this.cellIdsArray = [];         // array of cell ids used for hover detection while dragging
+        this.cellDaysArray = [];        // multidimensional array of days => cells
+        this.dateHeaders = null;
+        this.roomTimes = null;
+        this.gridCells = null;
+        this.dragger = null;
     }
 
-    componentDidMount() {
-        console.log("\n +++++++ == Dragger: componentDidMount == +++++++");
-        // console.log("this.state:", this.state);
-        document.removeEventListener('mouseup', this.onMouseUp);
+    componentWillMount() {
+        console.log("\n == Dragger: componentWillMount ==");
+        // if (this.gridCells === null) {
+        //     let dates = this.state.dates;
+        //     let rooms = this.state.rooms;
+        //     let times = this.state.times;
+        //     let sessions = this.state.sessions;
+        //     let dateHeaders, roomTimes, gridCells, dragger;
+        //     this.dateHeaders = this.makeDateHeaders(dates);
+        //     this.roomTimes = this.makeRoomTimes(rooms, times);
+        //     this.gridCells = this.makeGridCells(dates, rooms, times, sessions);
+        //     this.dragger = this.makeDragger();
+        // }
     }
 
-    componentWillReceiveProps(props) {
-        console.log("\n +++++++ == Dragger: componentWillReceiveProps == +++++++");
-        console.log("props:", props);
-
-        function isEmptyObject(obj) {
-            console.log("\n == isEmptyObject ==");
-            for (var key in obj) {
-                return false;
-            }
-                return true;
-        }
-        let initStatus = isEmptyObject(this.state.cellIdsArray);
-        console.log("initStatus:", initStatus);
-
-        if (this.state.cellIdsArray.length === 0) {
-            this.setState({
-                // startCellId: props.startCellId,
-                // targetCellId: props.targetCellId,
-
-                cellDataObj: props.cellDataObj,
-                cellIdsArray: props.cellIdsArray,
-
-                gridXYWH: props.gridXYWH,
-                dragXYWH: props.dragXYWH,
-                mouseXY: props.mouseXY,
-                relXY: props.relXY,
-
-                text: props.text
-            })
-        }
+    componentDidMount(props) {
+        console.log("\n == Dragger: componentDidMount ==");
+        this.updateCellData();
     }
 
     componentDidUpdate(prevProps, prevState) {
-        console.log("\n +++++++ == Dragger: componentDidUpdate == +++++++");
-        // console.log("this.state:", this.state);
-        // console.log("prevState:", prevState);
-
-        if (this.state.dragging && !prevState.dragging) {
-            document.addEventListener('mousemove', this.onMouseMove);
-            document.addEventListener('mouseup', this.onMouseUp);
-        } else if (!this.state.dragging && prevState.dragging) {
-            document.removeEventListener('mousemove', this.onMouseMove);
-            document.removeEventListener('mouseup', this.onMouseUp);
-        }
+        console.log("\n == Dragger: componentDidUpdate ==");
+        console.log("this.state:", this.state);
     }
 
-    // ======= ======= ======= JUMP ======= ======= =======
-    // ======= ======= ======= JUMP ======= ======= =======
-    // ======= ======= ======= JUMP ======= ======= =======
+    // ======= ======= ======= cellData ======= ======= =======
+    // ======= ======= ======= cellData ======= ======= =======
+    // ======= ======= ======= cellData ======= ======= =======
+
+    updateCellData() {
+        console.log("\n");
+        console.log(" +++++++ == Dragger: updateCellData == +++++++ ");
+        console.log(" +++++++ == Dragger: updateCellData == +++++++ ");
+        console.log(" +++++++ == Dragger: updateCellData == +++++++ ");
+        console.log("\n");
+        console.log("this.refs:", this.refs);
+
+        // == get cell location data from mounted cell components
+        // let dayCells = ReactDOM.findDOMNode(this.refs.day_0);
+        // let timeCell = document.getElementById("roomLabel_0");
+        // let anchorCell = ReactDOM.findDOMNode(this.refs["2_1"]);
+        // let dayR = dayCells.getBoundingClientRect();
+        // let timeR = timeCell.getBoundingClientRect();
+        // let anchorR = anchorCell.getBoundingClientRect();
+        // let sessionsGrid = ReactDOM.findDOMNode(this.refs.sessions);
+        // let sessionsR = sessionsGrid.getBoundingClientRect();
+        //
+        // // == get array of cell components for each day
+        // let dayColumns = this.refs.sessions.childNodes;
+        // let cellCounter = 0;
+        //
+        // // == loop through each day (start on 2 to skip roomTimes and dragger elements)
+        // for (var d = 2; d < dayColumns.length; d++) {
+        //     let nextDayCells = dayColumns[d].childNodes;
+        //
+        //     // == loop through each cell per day
+        //     for (var c = 0; c < nextDayCells.length; c++) {
+        //         let cell = nextDayCells[c];
+        //         let cellId = nextDayCells[c].id;        // DOM element id (same as cellDataObj cellId)
+        //
+        //         // == build cellIdsArray used for cell hover detection
+        //         this.cellIdsArray.push(cellId);
+        //
+        //         // == get size/position data; add component refs to cellDataObj
+        //         if (cell.className.includes('cell')) {
+        //             cellCounter++;
+        //             let cellR = nextDayCells[c].getBoundingClientRect();
+        //             this.cellDataObj[cellId].x = cellR.left - anchorR.left + timeR.width;
+        //             this.cellDataObj[cellId].y = cellR.top - anchorR.top + timeR.height;
+        //             this.cellDataObj[cellId].w = cellR.width;
+        //             this.cellDataObj[cellId].h = cellR.height;
+        //             this.cellDataObj[cellId].className = cell.className;
+        //             this.cellDataObj[cellId].cellComp = this.refs[cellId];
+        //         }
+        //     }
+        // }
+        //
+        // // == define allowable dragging rectangle from element sizes
+        // let gridL = sessionsR.left + timeR.width;           // limit to left drag
+        // let gridT = sessionsR.top + timeR.height;           // limit to top drag
+        // let gridW = sessionsR.width - timeR.width + 10;     // limit to right drag when added to gridL
+        // let gridH = sessionsR.height - timeR.height - 5;    // limit to bottom drag when added to gridH
+        //
+        // let gridXYWH = { x:gridL, y:gridT, w:gridW, h:gridH };
+        // let dragXYWH = { x:timeR.width + 5, y:anchorR.height + 3, w:anchorR.width, h:anchorR.height };
+        // let mouseXY = { x:0, y:0 };
+        // let relXY = { x:0, y:0 };
+        //
+        // this.setState({
+        //     gridXYWH: gridXYWH,
+        //     dragXYWH: dragXYWH,
+        //     mouseXY: mouseXY,
+        //     relXY: relXY
+        // })
+        //
+        // // == check for scroll behavior
+        // document.getElementById("sessions").addEventListener('scroll', this.detectGridScroll);
+    }
 
     locateDragger(targetCellId) {
-        console.log("\n == Dragger:locateDragger ==");
-
-        let targetCellData = this.state.cellDataObj[targetCellId];
-        console.log("targetCellData:", targetCellData);
-        let dragX = targetCellData.x;   // + col * pxOffsetX
-        let dragY = targetCellData.y;   // + row * pxOffsetY
-        let title = this.state.cellDataObj[targetCellId].sessionData
-            ? this.state.cellDataObj[targetCellId].sessionData.session_title
-            : null
-
-        this.setState({
-            dragXYWH: {
-                x: dragX + 6,
-                y: dragY + 3,
-                w: targetCellData.w,
-                h: targetCellData.h
-            },
-            text: title,
-            startCellId: targetCellId,
-            targetCellId: targetCellId
-        })
+        console.log(" == Dragger::locateDragger ==");
+        let dragger = this.refs['dragger1'];
+        dragger.locateDragger(targetCellId);
     }
 
-    // ======= ======= ======= DRAG ======= ======= =======
-    // ======= ======= ======= DRAG ======= ======= =======
-    // ======= ======= ======= DRAG ======= ======= =======
+    // ======= ======= ======= dates ======= ======= =======
+    // ======= ======= ======= dates ======= ======= =======
+    // ======= ======= ======= dates ======= ======= =======
 
-    scrollGridWindow() {
-        console.log("\n == Dragger:scrollGridWindow ==");
+    makeDateHeaders(dates) {
+        console.log("== Dragger: makeDateHeaders ==");
+        let dateHeadersArray = dates.map((date, d) => {
+            return(
+                <Date
+                    id={"date_" + d}
+                    key={"date_" + d}
+                    text={date}
+                />
+            )
+        });
+        return dateHeadersArray;
     }
 
-    // ======= onMouseDown =======
-    onMouseDown(e) {
-        console.log("\n\n== Dragger:onMouseDown ==");
+    // ======= ======= ======= times ======= ======= =======
+    // ======= ======= ======= times ======= ======= =======
+    // ======= ======= ======= times ======= ======= =======
+
+    makeRoomTimes(rooms, times) {
+        console.log("== Dragger: makeRoomTimes ==");
+
+        let roomTimesArray = rooms.map((roomname, r) => {
+            return (
+                <div
+                    key={"roomBox_" + r}>
+                    <RoomTime
+                        id={"roomLabel_" + r}
+                        key={"roomLabel_" + r}
+                        text={roomname}
+                        className={"roomCell"}
+                    />
+                    {this.makeTimeslots(r, times)}
+                </div>
+            )
+        });
+        return roomTimesArray;
+    }
+
+    makeTimeslots(r, times) {
+        console.log("== Dragger: makeTimeslots ==");
+
+        let timeslotsArray = times.map((timeslot, t) => {
+            var timeslot = this.convertTimes(timeslot);
+            var timeslotKey = r.toString() + t.toString();
+            return (
+                <RoomTime
+                    id={"time_" + r + t}
+                    key={timeslotKey}
+                    text={timeslot}
+                    className={"timeCell"}
+                />
+            )
+        });
+        return timeslotsArray;
+    }
+
+    // == set location of clicked session component (handleClick method)
+    convertTimes(time) {
+        console.log("== Dragger: convertTimes ==");
+            var ampm = "am";
+            var hour = parseInt(time.split(":")[0]);
+            var min = time.split(":")[1];
+            if (hour > 12) {
+                hour = hour - 12
+                ampm = "pm"
+            }
+            return hour + ":" + min + ampm;
+    }
+
+    // ======= ======= ======= Dragger ======= ======= ======= ======= ======= ======= Dragger ======= ======= =======
+    // ======= ======= ======= Dragger ======= ======= ======= ======= ======= ======= Dragger ======= ======= =======
+    // ======= ======= ======= Dragger ======= ======= ======= ======= ======= ======= Dragger ======= ======= =======
+
+    makeGridCells(dates, rooms, times, sessions) {
+        console.log("\n == Dragger: makeGridCells ==");
+
+        // == make cells for currently scheduling sessions
+        // this.makeSessionCells(times, sessions);
+
+        // == add roomCells (spacers) and emptyCells then add to cellDataObj
+        this.makeDayColumns(dates, rooms, times);
+
+        // == get cell component objects for high end storage
+        let cellComponents = this.makeCellComponents();
+        console.log("this.cellDataObj:", this.cellDataObj);
+
+        return cellComponents;
+    }
+
+    // ======= create Dragger cell for each scheduled session
+    makeSessionCells(times, sessions) {
+        console.log(" == Dragger: makeSessionCells ==");
+        let timesCount = times.length + 1;      // number of daily timeslots (plus 1 for room label blank)
+
+        // == initialize/create cell data object for each session
+        let sessionDataArray = sessions.map((session, s) => {
+            let nextRoom = parseInt(session.room_id);
+
+            // == extract day and time values from session startTime object
+            let nextCol = parseInt(session.session_start.substring(8,10)) - 1;
+            let nextRow = parseInt(session.session_start.substring(11,13)) - 7 + ((nextRoom-1) * timesCount);
+            let cellId = nextRow + "_" + nextCol;
+            this.cellDataObj[cellId] = { id:null, addr:cellId, cellType:"sessionCell", sessionData:session }
+        });
+    }
+
+    // ======= create data objects for: each day => each room per day => each timeslot per room per day
+    makeDayColumns(dates, rooms, times) {
+        console.log(" == Dragger: makeDayColumns ==");
+        let cellCount = 0;
+
+        // == loop through days (dates)
+        let dayDataArray = dates.map((date, d) => {
+            let nextCol = d + 1;
+            this.cellDaysArray[d] = [];
+
+            // == loop through rooms
+            let roomDataArray = rooms.map((room, r) => {
+                cellCount++;
+                let nextRow = 1 + (r * 9);
+                let roomId = nextRow + "_" + nextCol;
+                this.cellDaysArray[d].push(roomId);
+                this.cellDataObj[roomId] = { id:cellCount, addr:roomId, cellType:"roomCell" };
+
+                // == loop through timeslots
+                let emptyDataArray = times.map((time, t) => {
+                    cellCount++;
+                    let nextRow = (t + 2) + (r * 9);
+                    let nextCellId = nextRow + "_" + nextCol;
+                    this.cellDaysArray[d].push(nextCellId);
+
+                    // == avoid existing cells for previously-scheduled sessions
+                    this.cellDataObj[nextCellId] = { id:cellCount, addr:nextCellId, cellType:"emptyCell", sessionData:null };
+                });
+            });
+        });
+    }
+
+    // ======= create react components for each cell location (via days/rooms/times counts)
+    makeCellComponents() {
+        console.log(" == Dragger: makeCellComponents ==");
+        var text, color, className, sessionData, title;
+
+        // ReactDOM.render(
+        //     <App ref="app1" />,
+        //     el
+        // );
+        // ReactDOM.render(
+        //   <App ref={inst => {
+        //     app1 = inst;
+        //   }} />,
+        //   el
+        // );
+
+        let dragger = this;
+
+        // == loop through days (nested arrays within this.cellDaysArray)
+        let dayComponentsArray = this.cellDaysArray.map((dayCells, d) => {
+
+            let app2 = d;
+
+            // == loop through timeslot/blank row cells of each nested day array
+            let cellComponentsArray = dayCells.map((cellId, c) => {
+
+                let app1 = cellId;
+
+                // == get cell data pertaining to each cell address (e.g. "2_1")
+                let cellData = this.cellDataObj[cellId];
+                if (cellData.sessionData) {
+                    title = cellData.sessionData.session_title
+                } else {
+                    title = null
+                }
+
+                // == specify style params for cell types
+                if (cellData.cellType === "sessionCell") {
+                    sessionData = cellData.sessionData;
+                    className = "sessionCell";
+                    color = "white";
+                    text = title;
+                } else if (cellData.cellType === "roomCell") {
+                    sessionData = null;
+                    className = "roomCell";
+                    color = "a1aaa8";
+                    text = "";
+                } else {
+                    sessionData = null;
+                    className = "emptyCell";
+                    color = "#b1b9b7";
+                    text = "";
+                }
+                return (
+                    <SessionCell
+                        id={cellId}
+                        key={"cell_" + d + c}
+                        ref={cellId}
+                        // ref={inst => {
+                        //     console.log("+++++++++++++++++++:", inst);
+                        //     app1 = inst;
+                        // }}
+                        text={text}
+                        className={"cell " + className}
+                        sessionData={sessionData}
+                        locateDragger={this.locateDragger}
+                        />
+                    );
+                });
+
+            // == create column header cells for each day
+            return(
+                <Day
+                    id={"day_" + d}
+                    key={"day_" + d}
+                    ref={"day_" + d}
+                    // ref={inst => {
+                    //     app2 = inst;
+                    // }}
+                    cells={cellComponentsArray}
+                />
+            )
+        });
+        return dayComponentsArray;
+    }
+
+    // ======= ======= ======= dragger ======= ======= =======
+    // ======= ======= ======= dragger ======= ======= =======
+    // ======= ======= ======= dragger ======= ======= =======
+
+    makeDragger() {
+        console.log("\n +++++++ == Dragger: makeDragger == +++++++ ");
         console.log("this.state:", this.state);
 
-        let startCellId = this.state.startCellId;
-        let targetCellId = this.state.targetCellId;
-        let cellDataObj = this.state.cellDataObj;
-        let cellIdsArray = this.state.cellIdsArray;
-
-        // == determine dragger location on DOM
-        const dragger = ReactDOM.findDOMNode(this);
-        let dragR = dragger.getBoundingClientRect();
-        let tempStartData = cellDataObj[startCellId];
-        let title = tempStartData.sessionData
-            ? tempStartData.sessionData.session_title
-            : null
-        let scrollStart = $('#sessions').scrollTop();
-
-        // == load location and start cell data onto dragger
-        this.setState({
-            text: title,
-            startCellData: tempStartData,
-            mouseXY: {
-                x: e.pageX,
-                y: e.pageY
-            },
-            relXY: {
-                x: e.pageX - dragR.left,
-                y: e.pageY - dragR.top
-            },
-            dragging: true,
-            scrollStart: scrollStart
-        })
-        e.stopPropagation();
-        e.preventDefault();
-    }
-
-    // ======= onMouseMove =======
-    onMouseMove(e) {
-        // console.log("\n == Dragger:onMouseMove ==");
-        if (!this.state.dragging) return
-
-        // == move dragger with mouse (corrected for dragger and grid offsets)
-        let dragX = e.pageX - this.state.relXY.x;
-        let dragY = e.pageY + this.state.relXY.y - this.state.gridXYWH.y;
-        let minL = this.state.gridXYWH.x - this.state.gridXYWH.x + 2;
-        let minT = this.state.gridXYWH.y - this.state.gridXYWH.y + 2;
-        let maxR = (this.state.gridXYWH.x + this.state.gridXYWH.w - this.state.dragXYWH.w) - this.state.gridXYWH.x - 2;
-        let maxB = (this.state.gridXYWH.y + this.state.gridXYWH.h - this.state.dragXYWH.h) - this.state.gridXYWH.y - 2 - 20;
-
-        // == limit dragging to active grid rectangle
-        if ((dragX > minL) && (dragX < maxR) && (dragY > minT) && (dragY < maxB)) {
-            this.setState({
-                dragging: true,
-                dragXYWH: {
-                    x: dragX,
-                    y: dragY,
-                    w: this.state.dragXYWH.w,
-                    h: this.state.dragXYWH.h
-                },
-                mouseXY: {
-                    x: e.pageX,
-                    y: e.pageY
-                }
-            })
-
-            // == check for dragger collision with grid cells
-            e.stopPropagation();
-            e.preventDefault();
-            this.detectCellHover(dragX, dragY);
-
-        } else if (dragY < minT) {
-            this.scrollGridWindow(this.state.scrollStart, "down", dragY);
-        } else if (dragY > maxB) {
-            this.scrollGridWindow(this.state.scrollStart, "up", dragY);
-        }
-    }
-
-    // ======= ======= ======= target detection ======= ======= =======
-    detectCellHover(dragX, dragY) {
-        // console.log("\n== Dragger:detectCellHover ==");
-
-        // == scan all target cells for collision
-        for (var i = 0; i < this.state.cellIdsArray.length; i++) {
-            let targetCellId = this.state.cellIdsArray[i];          // identify next cell to check
-            let targetData = this.state.cellDataObj[targetCellId];  // access to cell position data
-            let cellType = targetData.cellType;                     // for avoiding roomCells
-            let tempTargetCell = targetData.cellComp;               // for clearing highlights
-
-            // == clear all cell highlights (until new cell collision detected)
-            tempTargetCell.setState({
-                highlighted: false
-            })
-
-            // == continuously detect dragger collision with cells
-            if ((dragX > targetData.x) && (dragX < (targetData.x + targetData.w)) && (dragY > targetData.y) && (dragY < (targetData.y + targetData.h))) {
-                console.log("+++++++ hit +++++++");
-                if ((targetCellId !== this.state.startCellId) && (cellType !== "roomCell")) {
-
-                    // == load and highlight target cell; trigger detailed data display
-                    this.setState({
-                        targetCellId: targetCellId      // store new target cell id on dragger
-                    })
-                    tempTargetCell.setState({
-                        highlighted: true               // highlight hover cell
-                    })
-                    break;
-                }
-            }
-        }
-    }
-
-    // ======= ======= ======= end drag ======= ======= =======
-    onMouseUp(e) {
-        console.log("\n == Dragger:onMouseUp ==");
-        this.setState({
-            dragging: false
-        })
-        this.dropDragger(e);
-        e.stopPropagation();
-        e.preventDefault();
-    }
-
-    dropDragger(e) {
-        console.log("\n == Dragger:dropDragger ==");
-
-        // ======= ======= ======= INIT ======= ======= =======
-        // ======= ======= ======= INIT ======= ======= =======
-        // ======= ======= ======= INIT ======= ======= =======
-
-        // ======= dragger scope variable =======
-        const dragger = this;
-
-        // ======= START and TARGET cell data =======
-        const cellDataObj = this.state.cellDataObj;
-        const startCellId = this.state.startCellId;
-        const targetCellId = this.state.targetCellId;
-        const startCellData = cellDataObj[startCellId];
-        const targetCellData = cellDataObj[targetCellId];
-
-        // ======= get target row and column from targetCellId string =======
-        const startRow = startCellId.split("_")[0];
-        const startCol = startCellId.split("_")[1];
-        const targetRow = targetCellId.split("_")[0];
-        const targetCol = targetCellId.split("_")[1];
-
-        // ======= check if target cell is empty
-        targetCellData.cellType === "emptyCell"
-            ? swapStartTarget()
-            : console.log("+++ SESSIONCELL +++");;
-
-        // ======= swap start and target cell data =======
-        function swapStartTarget() {
-            console.log("\n\n== swapStartTarget ==");
-            let tempCellType = targetCellData.cellType;
-            let tempClassName = targetCellData.className;
-            let tempSessionData = targetCellData.sessionData;
-            targetCellData.cellType = startCellData.cellType;
-            targetCellData.className = startCellData.className;
-            targetCellData.sessionData = startCellData.sessionData;
-            startCellData.cellType = tempCellType;
-            startCellData.className = tempClassName;
-            startCellData.sessionData = tempSessionData;
-            console.log("cellDataObj:", cellDataObj);
-            updateStartTargetComps(startCellData);
-            updateStartTargetComps(targetCellData);
-            updateDraggerComp();
-            store.dispatch(addCellDataObj(dragger.state.cellDataObj));
-        };
-
-        // ======= update component to revised data =======
-        function updateStartTargetComps(cellData) {
-            console.log("== updateStartTargetComps ==");
-
-            let title;
-            let tempSessionData = cellData.sessionData;
-            let cellComponent = cellData.cellComp;
-            let bgColor = cellData.cellType === "sessionCell"
-                ? "white"
-                : "#b1b9by";
-            if (cellData.session_title) {
-                title = cellData.session_title;
-            } else {
-                title = null;
-            }
-            cellComponent.setState({
-                highlighted: false,
-                color: bgColor,
-                className: cellData.className,
-                sessionData: cellData.sessionData,
-                text: title
-            })
-        }
-
-        // ======= update dragger component data =======
-        function updateDraggerComp() {
-            console.log("== updateDraggerComp ==");
-            console.log("targetCellData:", targetCellData);
-            let cellX = targetCellData.x;
-            let cellY = targetCellData.y;
-            let cellW = targetCellData.w;
-            let cellH = targetCellData.h;
-            dragger.setState({
-                startCellId: targetCellId,
-                startCellData: targetCellData,
-                cellDataObj: cellDataObj,
-                dragging: false,
-                dragXYWH: {
-                    x: cellX + 6,
-                    y: cellY + 3,
-                    w: cellW,
-                    h: cellH
-                },
-                text: targetCellData.sessionData.session_title
-            });
-        }
-
-
-        // // ======= get list of time cells in target room =======
-        // function getRoomTimes() {
-        //     console.log("== Dragger:getRoomTimes ==");
-        //     let roomCount = store.getState().rooms[0].length;
-        //     let timeCount = store.getState().times[0].length;
-        //
-        //     let rowArray = [];
-        //     for (var r = 1; r <= roomCount; r++) {
-        //         let hiRow = (timeCount * (r - 1)) + r + 1;
-        //         let loRow = (timeCount * r) + r;
-        //         if ((hiRow <= parseInt(targetRow)) && (targetRow <= loRow)) {
-        //             for (var i = hiRow; i <= loRow; i++) {
-        //                 rowArray.push(i);
-        //             }
-        //             return rowArray;
-        //         }
-        //     }
-        // }
-        // const roomTimesArray = getRoomTimes();
-        //
-        // // ======= get rows above and below target row =======
-        // let aboveCenterRows = roomTimesArray.filter(row => row <= targetRow);
-        // let belowCenterRows = roomTimesArray.filter(row => row >= targetRow);
-        // console.log("aboveCenterRows:", aboveCenterRows);
-        // console.log("belowCenterRows:", belowCenterRows);
-        //
-        // // ======= determine entry point on target cell (above or below center) =======
-        // const dragY = e.pageY - dragger.state.relXY.y - dragger.state.gridXYWH.y;
-        // const cellCenterY = cellDataObj[targetCellId].y + (cellDataObj[targetCellId].h/2);
-        // let sessionCellsArray;
-        // const cellAddr = function(row, targetCol) {
-        //     return row + "_" + targetCol;
-        // };
-        // const cellData = function(cellAddr) {
-        //     return cellDataObj[cellAddr];
-        // };
-        // dragY > cellCenterY
-        //     ? sessionCellsArray = aboveCenterRows.map(row => cellData(cellAddr(row, targetCol))).reverse()
-        //     : sessionCellsArray = belowCenterRows.map(row => cellData(cellAddr(row, targetCol)));
-        //
-        // // ======= include only cells required for data shift =======
-        // const removeNullCells = function(cell) {
-        //     if (cell) {
-        //         return cell;
-        //     }
-        // };
-        //
-        // // ======= get nearest empty row =======
-        // let nearestEmptyRow = null;
-        // const shiftAddrsArray = sessionCellsArray.map((cell, c) => {
-        //     if (cell.addr === startCellData.addr) {
-        //         console.log("+++ START CELL +++");
-        //     }
-        //     if (nearestEmptyRow === null) {
-        //         if (cell.cellType === "emptyCell") {
-        //             nearestEmptyRow = cell;
-        //             return cell.addr;
-        //         } else if (cell.cellType === "sessionCell") {
-        //             return cell.addr;
-        //         }
-        //     }
-        // }).filter(removeNullCells).reverse();
-        // console.log("shiftAddrsArray:", shiftAddrsArray);
-        // console.log("nearestEmptyRow:", nearestEmptyRow);
-        //
-        // // ======= ======= ======= SWAP or SHIFT ======= ======= =======
-        // // ======= ======= ======= SWAP or SHIFT ======= ======= =======
-        // // ======= ======= ======= SWAP or SHIFT ======= ======= =======
-        //
-        // // ======= check for no empty cells
-        // shiftAddrsArray.length === sessionCellsArray.length
-        //     ? swapStartTarget()
-        //     : shiftCellData();
-        //
-        // // ======= shift cell data up or down =======
-        // function shiftCellData() {
-        //     console.log("\n\n== shiftCellData ==");
-        //
-        //     // == map source data to shifted cell
-        //     shiftAddrsArray.map((addr, c) => {
-        //         if (c < (shiftAddrsArray.length - 1)) {
-        //             let sourceDataAddr = shiftAddrsArray[c+1];
-        //             let sourceData = cellDataObj[sourceDataAddr];
-        //             let shiftData = cellDataObj[addr];
-        //             shiftData.cellType = sourceData.cellType;
-        //             shiftData.className = sourceData.className;
-        //             shiftData.sessionData = sourceData.sessionData;
-        //         }
-        //     });
-        //     console.log("cellDataObj:", cellDataObj);
-        //     swapStartTarget();
-        //     updateStartTargetComps("start");
-        //     updateStartTargetComps("target");
-        // }
-
-        // // ======= swap start and target cell data =======
-        // function swapStartTarget() {
-        //     console.log("\n\n== swapStartTarget ==");
-        //     let tempCellType = targetCellData.cellType;
-        //     let tempClassName = targetCellData.className;
-        //     let tempSessionData = targetCellData.sessionData;
-        //     targetCellData.cellType = startCellData.cellType;
-        //     targetCellData.className = startCellData.className;
-        //     targetCellData.sessionData = startCellData.sessionData;
-        //     if (nearestEmptyRow) {
-        //         startCellData.cellType = "emptyCell";
-        //         startCellData.className = "cell emptyCell";
-        //         startCellData.sessionData = null;
-        //     } else {
-        //         startCellData.cellType = tempCellType;
-        //         startCellData.className = tempClassName;
-        //         startCellData.sessionData = tempSessionData;
-        //     }
-        //     console.log("cellDataObj:", cellDataObj);
-        //     // updateStartTargetComps("start");
-        //     // updateStartTargetComps("target");
-        // };
-        //
-        // // ======= update component to revised data =======
-        // function updateStartTargetComps(startORtarget) {
-        //     console.log("== updateStartTargetComps ==");
-        //
-        //     let tempSessionData, title, cellComponent, cellData, bgColor;
-        //     if (startORtarget === "start") {
-        //         tempSessionData = startCellData.sessionData;
-        //         cellComponent = startCellData.cellComp;
-        //         cellData = startCellData;
-        //         bgColor = startCellData.cellType === "sessionCell"
-        //             ? "white"
-        //             : "#b1b9by";
-        //     } else if (startORtarget === "target"){
-        //         tempSessionData = targetCellData.sessionData;
-        //         cellComponent = targetCellData.cellComp;
-        //         cellData = targetCellData;
-        //         bgColor = targetCellData.cellType === "sessionCell"
-        //             ? "white"
-        //             : "#b1b9by";
-        //     }
-        //     if (nearestEmptyRow) {
-        //         title = null;
-        //     } else {
-        //         title = tempSessionData.session_title;
-        //     }
-        //     // console.log("cellComponent:", cellComponent);
-        //     // console.log("cellData:", cellData);
-        //
-        //     cellComponent.setState({
-        //         highlighted: false,
-        //         color: bgColor,
-        //         className: cellData.className,
-        //         sessionData: cellData.sessionData,
-        //         text: title
-        //     })
-        // }
-        //
-        // // ======= update shifted components to revised data =======
-        // function updateShiftComps() {
-        //     console.log("== updateShiftComps ==");
-        //     shiftAddrsArray.map((addr, c) => {
-        //         let cell = cellDataObj[addr];
-        //         if (cell.addr === startCellId) {
-        //             if (nearestEmptyRow) {
-        //                 cell = nearestEmptyRow;
-        //             }
-        //         }
-        //         let cellComponent = cell.cellComp;
-        //         let bgColor = cell.cellType === "sessionCell"
-        //             ? "white"
-        //             : "#b1b9by";
-        //
-        //         cellComponent.setState({
-        //             highlighted: false,
-        //             color: bgColor,
-        //             className: cell.className,
-        //             sessionData: cell.sessionData,
-        //             text: cell.sessionData.session_title
-        //         })
-        //     });
-        // }
-        //
-        // // ======= update dragger component data =======
-        // function updateDraggerComp() {
-        //     console.log("== updateDraggerComp ==");
-        //     let cellX = targetCellData.x;
-        //     let cellY = targetCellData.y;
-        //     let cellW = targetCellData.w;
-        //     let cellH = targetCellData.h;
-        //     dragger.setState({
-        //         startCellId: targetCellId,
-        //         cellDataObj: cellDataObj,
-        //         dragging: false,
-        //         dragXYWH: {
-        //             x: cellX + 6,
-        //             y: cellY + 3,
-        //             w: cellW,
-        //             h: cellH
-        //         },
-        //         text: targetCellData.sessionData.session_title
-        //     });
-        // }
-        //
-        // // ======= shift data, update components =======
-        // updateShiftComps();
-        // updateDraggerComp();
-        // console.log("cellDataObj:", cellDataObj);
-    }
-
-    // ======= ======= ======= RENDER ======= ======= =======
-    // ======= ======= ======= RENDER ======= ======= =======
-    // ======= ======= ======= RENDER ======= ======= =======
-
-    render() {
-        console.log("\n == Dragger:render ==");
-        console.log("this.state.dragXYWH:", this.state.dragXYWH);
-
-        function isEmptyObject(obj) {
-            console.log("\n == isEmptyObject ==");
-            for (var key in obj) {
-                return false;
-            }
-                return true;
-        }
-
-        let initStatus = isEmptyObject(this.state.cellDataObj);
-        console.log("initStatus:", initStatus);
-
-        // == initialize text and id
-        let text, cellType, dragStyles, dragXYWH;
-        let id = this.state.draggerId;
-        let startCellId = this.state.startCellId;
-        if (!initStatus) {
-            cellType = this.state.cellDataObj[startCellId].cellType;
-            if (cellType === "sessionCell") {
-                text = this.state.cellDataObj[startCellId].sessionData.session_title;
-            } else {
-                text = null;
-            }
-            dragXYWH = this.state.dragXYWH;
+        let dragStyles;
+        if (this.state.cellIdsArray.length > 0) {
             dragStyles = {
                 position: 'absolute',
                 display: 'block',
-                left: dragXYWH.x + 'px',
-                top: dragXYWH.y + 'px',
-                width: dragXYWH.w + 'px',
-                height: dragXYWH.h + 'px'
+                left: this.state.dragXYWH.x + 'px',
+                top: this.state.dragXYWH.y + 'px',
+                width: this.state.dragXYWH.w + 'px',
+                height: this.state.dragXYWH.h + 'px'
             }
         } else {
-            text = null;
-            dragStyles = null;
+            dragStyles = {
+                position: 'absolute',
+                display: 'none',
+                left: '0',
+                top: '0',
+                width: '0',
+                height: '0'
+            }
         }
-        console.log("dragStyles:", dragStyles);
-
         return(
             <div
-                id={id}
+                id={this.state.draggerId}
                 style={dragStyles}
                 onMouseDown={(e) => this.onMouseDown(e)}>
-                <p>{text}</p>
+                <p>{this.state.text}</p>
+            </div>
+        )
+    }
+
+    // ======= ======= ======= render ======= ======= ======= ======= ======= ======= render ======= ======= =======
+    // ======= ======= ======= render ======= ======= ======= ======= ======= ======= render ======= ======= =======
+    // ======= ======= ======= render ======= ======= ======= ======= ======= ======= render ======= ======= =======
+
+    render() {
+        console.log("\n == Dragger: render ==");
+        console.log("this.dateHeaders:", this.dateHeaders);
+        console.log("this.roomTimes:", this.roomTimes);
+        console.log("this.gridCells:", this.gridCells);
+        console.log("this.dragger:", this.dragger);
+
+        let dateHeaders, roomTimes, gridCells, dragger;
+        if (!this.dateHeaders) {
+            console.log("+++++++ !this.dateHeaders +++++++");
+            let dates = this.state.dates;
+            let rooms = this.state.rooms;
+            let times = this.state.times;
+            let sessions = this.state.sessions;
+
+            let dateHeaders, roomTimes, gridCells, dragger;
+            dateHeaders = this.makeDateHeaders(dates);
+            roomTimes = this.makeRoomTimes(rooms, times);
+            gridCells = this.makeGridCells(dates, rooms, times, sessions);
+            dragger = this.makeDragger();
+
+            this.dateHeaders = dateHeaders;
+            this.roomTimes = roomTimes;
+            this.gridCells = gridCells;
+            this.dragger = dragger;
+        } else {
+            console.log("+++++++ dateHeaders MADE +++++++");
+            dateHeaders = this.dateHeaders;
+            roomTimes = this.roomTimes;
+            gridCells = this.gridCells;
+            dragger = this.dragger;
+        }
+        return (
+            <div
+                id={"Dragger"}
+                ref={"Dragger"}>
+                <div
+                    id={"dates"}
+                    ref={"dates"}>
+                    <div id="cornerCell"></div>
+                    {this.dateHeaders}
+                </div>
+                <div
+                    id={"sessions"}
+                    ref={"sessions"}>
+                    <div
+                        id={"rooms"}
+                        ref={"rooms"}>
+                        {this.roomTimes}
+                    </div>
+                    {this.dragger}
+                    {this.gridCells}
+                </div>
             </div>
         )
     }

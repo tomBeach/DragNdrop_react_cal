@@ -1,3 +1,50 @@
+// == check if cellDataObj has been created
+function isEmptyObject(object) {
+    console.log("\n == isEmptyObject ==");
+    for (var key in object) {
+        return false;
+    }
+        return true;
+}
+let initStatus = isEmptyObject(this.state.cellDataObj);
+console.log("initStatus:", initStatus);
+
+// == initialize text and id
+let text, cellType, dragStyles, dragXYWH;
+let id = this.state.draggerId;
+let startCellId = this.state.startCellId;
+if (!initStatus) {
+    cellType = this.state.cellDataObj[startCellId].cellType;
+    if (cellType === "sessionCell") {
+        text = this.state.cellDataObj[startCellId].sessionData.session_title;
+    } else {
+        text = null;
+    }
+    dragXYWH = this.state.dragXYWH;
+    dragStyles = {
+        position: 'absolute',
+        display: 'block',
+        left: dragXYWH.x + 'px',
+        top: dragXYWH.y + 'px',
+        width: dragXYWH.w + 'px',
+        height: dragXYWH.h + 'px'
+    }
+} else {
+    text = null;
+    dragStyles = null;
+}
+console.log("dragStyles:", dragStyles);
+
+return (
+    <div
+        id={id}
+        style={dragStyles}
+        onMouseDown={(e) => this.onMouseDown(e)}>
+        <p>{text}</p>
+    </div>
+)
+
+
 // const rootReducer = (state = initialState, action) => {
 //     console.log("== rootReducer ==");
 //     switch (action.type) {
