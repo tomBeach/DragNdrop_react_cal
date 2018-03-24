@@ -60,12 +60,19 @@ class Dragger extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        console.log("\n == Dragger: componentDidUpdate ==");
+        console.log("\n +++++++ == Dragger: componentDidUpdate == +++++++");
+        if (this.state.dragging && !prevState.dragging) {
+            document.addEventListener('mousemove', this.onMouseMove);
+            document.addEventListener('mouseup', this.onMouseUp);
+        } else if (!this.state.dragging && prevState.dragging) {
+            document.removeEventListener('mousemove', this.onMouseMove);
+            document.removeEventListener('mouseup', this.onMouseUp);
+        }
     }
 
-    // ======= ======= ======= cellData ======= ======= =======
-    // ======= ======= ======= cellData ======= ======= =======
-    // ======= ======= ======= cellData ======= ======= =======
+    // ======= ======= ======= cellData ======= ======= ======= ======= ======= ======= cellData ======= ======= =======
+    // ======= ======= ======= cellData ======= ======= ======= ======= ======= ======= cellData ======= ======= =======
+    // ======= ======= ======= cellData ======= ======= ======= ======= ======= ======= cellData ======= ======= =======
 
     updateCellData() {
         console.log("\n");
@@ -183,8 +190,132 @@ class Dragger extends React.Component {
             text: title,
             startCellId: targetCellId,
             targetCellId: targetCellId
-        })
+        });
     }
+
+    // ======= ======= ======= dragging ======= ======= ======= ======= ======= ======= dragging ======= ======= =======
+    // ======= ======= ======= dragging ======= ======= ======= ======= ======= ======= dragging ======= ======= =======
+    // ======= ======= ======= dragging ======= ======= ======= ======= ======= ======= dragging ======= ======= =======
+
+    // ======= onMouseDown =======
+    onMouseDown(e) {
+        console.log("\n\n== Dragger:onMouseDown ==");
+        console.log("this.state:", this.state);
+
+        let startCellId = this.state.startCellId;
+        let targetCellId = this.state.targetCellId;
+        let cellDataObj = this.cellDataObj;
+        let cellIdsArray = this.cellIdsArray;
+
+        // == determine dragger location on DOM
+        const dragger = ReactDOM.findDOMNode(this);
+        let dragR = dragger.getBoundingClientRect();
+        let tempStartData = cellDataObj[startCellId];
+        let title = tempStartData.sessionData
+            ? tempStartData.sessionData.session_title
+            : null
+        let scrollStart = $('#sessions').scrollTop();
+
+        // == load location and start cell data onto dragger
+        this.setState({
+            text: title,
+            startCellData: tempStartData,
+            mouseXY: {
+                x: e.pageX,
+                y: e.pageY
+            },
+            relXY: {
+                x: e.pageX - dragR.left,
+                y: e.pageY - dragR.top
+            },
+            dragging: true,
+            scrollStart: scrollStart
+        })
+        e.stopPropagation();
+        e.preventDefault();
+    }
+
+    // ======= onMouseMove =======
+    onMouseMove(e) {
+        console.log("\n == Dragger:onMouseMove ==");
+        if (!this.state.dragging) return
+
+        // == move dragger with mouse (corrected for dragger and grid offsets)
+        let dragX = e.pageX - this.state.relXY.x;
+        let dragY = e.pageY + this.state.relXY.y - this.state.gridXYWH.y;
+        let minL = this.state.gridXYWH.x - this.state.gridXYWH.x + 2;
+        let minT = this.state.gridXYWH.y - this.state.gridXYWH.y + 2;
+        let maxR = (this.state.gridXYWH.x + this.state.gridXYWH.w - this.state.dragXYWH.w) - this.state.gridXYWH.x - 2;
+        let maxB = (this.state.gridXYWH.y + this.state.gridXYWH.h - this.state.dragXYWH.h) - this.state.gridXYWH.y - 2 - 20;
+
+        // == limit dragging to active grid rectangle
+        if ((dragX > minL) && (dragX < maxR) && (dragY > minT) && (dragY < maxB)) {
+            console.log("+++ ON GRID +++");
+
+            this.setState({
+                dragging: true,
+                dragXYWH: {
+                    x: dragX,
+                    y: dragY,
+                    w: this.state.dragXYWH.w,
+                    h: this.state.dragXYWH.h
+                },
+                mouseXY: {
+                    x: e.pageX,
+                    y: e.pageY
+                }
+            })
+
+            // == check for dragger collision with grid cells
+            e.stopPropagation();
+            e.preventDefault();
+            this.detectCellHover(dragX, dragY);
+
+        } else if (dragY < minT) {
+            this.scrollGridWindow(this.state.scrollStart, "down", dragY);
+        } else if (dragY > maxB) {
+            this.scrollGridWindow(this.state.scrollStart, "up", dragY);
+        }
+    }
+
+    // ======= ======= ======= target detection ======= ======= =======
+    detectCellHover(dragX, dragY) {
+        console.log("\n== Dragger:detectCellHover ==");
+
+        // == scan all target cells for collision
+        for (var i = 0; i < this.cellIdsArray.length; i++) {
+            let targetCellId = this.cellIdsArray[i];          // identify next cell to check
+            let targetData = this.cellDataObj[targetCellId];  // access to cell position data
+            let cellType = targetData.cellType;                     // for avoiding roomCells
+            let tempTargetCell = targetData.cellComp;               // for clearing highlights
+
+            // == clear all cell highlights (until new cell collision detected)
+            tempTargetCell.setState({
+                highlighted: false
+            })
+
+            // == continuously detect dragger collision with cells
+            if ((dragX > targetData.x) && (dragX < (targetData.x + targetData.w)) && (dragY > targetData.y) && (dragY < (targetData.y + targetData.h))) {
+                console.log("+++++++ hit +++++++");
+                if ((targetCellId !== this.state.startCellId) && (cellType !== "roomCell")) {
+
+                    // == load and highlight target cell; trigger detailed data display
+                    this.setState({
+                        targetCellId: targetCellId      // store new target cell id on dragger
+                    })
+                    tempTargetCell.setState({
+                        highlighted: true               // highlight hover cell
+                    })
+                    break;
+                }
+            }
+        }
+    }
+
+    // ======= ======= ======= components ======= ======= ======= ======= ======= ======= components ======= ======= =======
+    // ======= ======= ======= components ======= ======= ======= ======= ======= ======= components ======= ======= =======
+    // ======= ======= ======= components ======= ======= ======= ======= ======= ======= components ======= ======= =======
+
 
     // ======= ======= ======= dates ======= ======= =======
     // ======= ======= ======= dates ======= ======= =======
@@ -259,9 +390,9 @@ class Dragger extends React.Component {
             return hour + ":" + min + ampm;
     }
 
-    // ======= ======= ======= Dragger ======= ======= ======= ======= ======= ======= Dragger ======= ======= =======
-    // ======= ======= ======= Dragger ======= ======= ======= ======= ======= ======= Dragger ======= ======= =======
-    // ======= ======= ======= Dragger ======= ======= ======= ======= ======= ======= Dragger ======= ======= =======
+    // ======= ======= ======= cells ======= ======= =======
+    // ======= ======= ======= cells ======= ======= =======
+    // ======= ======= ======= cells ======= ======= =======
 
     makeGridCells(dates, rooms, times, sessions) {
         console.log("\n == Dragger: makeGridCells ==");
@@ -313,23 +444,8 @@ class Dragger extends React.Component {
         console.log(" == Dragger: makeCellComponents ==");
         var text, color, className, sessionData, title;
 
-        // ReactDOM.render(
-        //     <App ref="app1" />,
-        //     el
-        // );
-        // ReactDOM.render(
-        //   <App ref={inst => {
-        //     app1 = inst;
-        //   }} />,
-        //   el
-        // );
-
-        let dragger = this;
-
         // == loop through days (nested arrays within this.cellDaysArray)
         let dayComponentsArray = this.cellDaysArray.map((dayCells, d) => {
-
-            let app2 = d;
 
             // == loop through timeslot/blank row cells of each nested day array
             let cellComponentsArray = dayCells.map((cellId, c) => {
@@ -366,10 +482,6 @@ class Dragger extends React.Component {
                         id={cellId}
                         key={"cell_" + d + c}
                         ref={cellId}
-                        // ref={inst => {
-                        //     console.log("+++++++++++++++++++:", inst);
-                        //     app1 = inst;
-                        // }}
                         text={text}
                         className={"cell " + className}
                         sessionData={sessionData}
@@ -384,9 +496,6 @@ class Dragger extends React.Component {
                     id={"day_" + d}
                     key={"day_" + d}
                     ref={"day_" + d}
-                    // ref={inst => {
-                    //     app2 = inst;
-                    // }}
                     cells={cellComponentsArray}
                 />
             )
@@ -394,9 +503,9 @@ class Dragger extends React.Component {
         return dayComponentsArray;
     }
 
-    // ======= ======= ======= dragger ======= ======= =======
-    // ======= ======= ======= dragger ======= ======= =======
-    // ======= ======= ======= dragger ======= ======= =======
+    // ======= ======= ======= render ======= ======= ======= ======= ======= ======= render ======= ======= =======
+    // ======= ======= ======= render ======= ======= ======= ======= ======= ======= render ======= ======= =======
+    // ======= ======= ======= render ======= ======= ======= ======= ======= ======= render ======= ======= =======
 
     makeDragger() {
         console.log("\n +++++++ == Dragger: makeDragger == +++++++ ");
@@ -433,16 +542,12 @@ class Dragger extends React.Component {
         )
     }
 
-    // ======= ======= ======= render ======= ======= ======= ======= ======= ======= render ======= ======= =======
-    // ======= ======= ======= render ======= ======= ======= ======= ======= ======= render ======= ======= =======
-    // ======= ======= ======= render ======= ======= ======= ======= ======= ======= render ======= ======= =======
-
     render() {
         console.log("\n == Dragger: render ==");
-        console.log("this.dateHeaders:", this.dateHeaders);
-        console.log("this.roomTimes:", this.roomTimes);
-        console.log("this.gridCells:", this.gridCells);
-        console.log("this.dragger:", this.dragger);
+        // console.log("this.dateHeaders:", this.dateHeaders);
+        // console.log("this.roomTimes:", this.roomTimes);
+        // console.log("this.gridCells:", this.gridCells);
+        // console.log("this.dragger:", this.dragger);
 
         let dateHeaders, roomTimes, gridCells, dragger;
         if (!this.dateHeaders) {
@@ -456,17 +561,22 @@ class Dragger extends React.Component {
             dateHeaders = this.makeDateHeaders(dates);
             roomTimes = this.makeRoomTimes(rooms, times);
             gridCells = this.makeGridCells(dates, rooms, times, sessions);
+            dragger = this.makeDragger();
 
             this.dateHeaders = dateHeaders;
             this.roomTimes = roomTimes;
             this.gridCells = gridCells;
+            this.dragger = dragger;
         } else {
             console.log("+++++++ grid components MADE +++++++");
             dateHeaders = this.dateHeaders;
             roomTimes = this.roomTimes;
             gridCells = this.gridCells;
+            dragger = this.dragger;
         }
-        dragger = this.makeDragger();
+        if (this.state.dragging) {
+            console.log("+++++++ DRAGGING +++++++");
+        }
         return (
             <div
                 id={"Dragger"}
@@ -485,7 +595,7 @@ class Dragger extends React.Component {
                         ref={"rooms"}>
                         {this.roomTimes}
                     </div>
-                    {dragger}
+                    {this.dragger}
                     {this.gridCells}
                 </div>
             </div>
