@@ -25,22 +25,19 @@ class Dragger extends React.Component {
             rooms: props.rooms,
             sessions: props.sessions,
 
-            draggerId: props.draggerId,         // cell data
-            startCellId: props.startCellId,
-            targetCellId: props.targetCellId,
+            draggerId: "dragger1",      // active data
+            startCellId: "2_1",
+            targetCellId: "2_1",
 
-            cellDataObj: props.cellDataObj,
-            cellIdsArray: props.cellIdsArray,
+            gridXYWH: {},               // position data
+            dragXYWH: {},
+            mouseXY: {},
+            relXY: {},
 
-            gridXYWH: props.gridXYWH,
-            dragXYWH: props.dragXYWH,
-            mouseXY: props.mouseXY,
-            relXY: props.relXY,
-
-            text: props.text,
-            dragging: props.dragging,
-            scrolling: props.scrolling,
-            scrollStart: props.scrollStart
+            text: null,                 // display data
+            dragging: false,
+            scrolling: false,
+            scrollStart: 0
         }
         this.cellDataObj = {};          // storage object for element xywh and session data
         this.cellIdsArray = [];         // array of cell ids used for hover detection while dragging
@@ -53,27 +50,17 @@ class Dragger extends React.Component {
 
     componentWillMount() {
         console.log("\n == Dragger: componentWillMount ==");
-        // if (this.gridCells === null) {
-        //     let dates = this.state.dates;
-        //     let rooms = this.state.rooms;
-        //     let times = this.state.times;
-        //     let sessions = this.state.sessions;
-        //     let dateHeaders, roomTimes, gridCells, dragger;
-        //     this.dateHeaders = this.makeDateHeaders(dates);
-        //     this.roomTimes = this.makeRoomTimes(rooms, times);
-        //     this.gridCells = this.makeGridCells(dates, rooms, times, sessions);
-        //     this.dragger = this.makeDragger();
-        // }
     }
 
     componentDidMount(props) {
         console.log("\n == Dragger: componentDidMount ==");
         this.updateCellData();
+        this.addSessionData();
+        this.locateDragger(this.state.startCellId);
     }
 
     componentDidUpdate(prevProps, prevState) {
         console.log("\n == Dragger: componentDidUpdate ==");
-        console.log("this.state:", this.state);
     }
 
     // ======= ======= ======= cellData ======= ======= =======
@@ -86,74 +73,117 @@ class Dragger extends React.Component {
         console.log(" +++++++ == Dragger: updateCellData == +++++++ ");
         console.log(" +++++++ == Dragger: updateCellData == +++++++ ");
         console.log("\n");
-        console.log("this.refs:", this.refs);
+        // console.log("this.refs:", this.refs);
 
         // == get cell location data from mounted cell components
-        // let dayCells = ReactDOM.findDOMNode(this.refs.day_0);
-        // let timeCell = document.getElementById("roomLabel_0");
-        // let anchorCell = ReactDOM.findDOMNode(this.refs["2_1"]);
-        // let dayR = dayCells.getBoundingClientRect();
-        // let timeR = timeCell.getBoundingClientRect();
-        // let anchorR = anchorCell.getBoundingClientRect();
-        // let sessionsGrid = ReactDOM.findDOMNode(this.refs.sessions);
-        // let sessionsR = sessionsGrid.getBoundingClientRect();
-        //
-        // // == get array of cell components for each day
-        // let dayColumns = this.refs.sessions.childNodes;
-        // let cellCounter = 0;
-        //
-        // // == loop through each day (start on 2 to skip roomTimes and dragger elements)
-        // for (var d = 2; d < dayColumns.length; d++) {
-        //     let nextDayCells = dayColumns[d].childNodes;
-        //
-        //     // == loop through each cell per day
-        //     for (var c = 0; c < nextDayCells.length; c++) {
-        //         let cell = nextDayCells[c];
-        //         let cellId = nextDayCells[c].id;        // DOM element id (same as cellDataObj cellId)
-        //
-        //         // == build cellIdsArray used for cell hover detection
-        //         this.cellIdsArray.push(cellId);
-        //
-        //         // == get size/position data; add component refs to cellDataObj
-        //         if (cell.className.includes('cell')) {
-        //             cellCounter++;
-        //             let cellR = nextDayCells[c].getBoundingClientRect();
-        //             this.cellDataObj[cellId].x = cellR.left - anchorR.left + timeR.width;
-        //             this.cellDataObj[cellId].y = cellR.top - anchorR.top + timeR.height;
-        //             this.cellDataObj[cellId].w = cellR.width;
-        //             this.cellDataObj[cellId].h = cellR.height;
-        //             this.cellDataObj[cellId].className = cell.className;
-        //             this.cellDataObj[cellId].cellComp = this.refs[cellId];
-        //         }
-        //     }
-        // }
-        //
-        // // == define allowable dragging rectangle from element sizes
-        // let gridL = sessionsR.left + timeR.width;           // limit to left drag
-        // let gridT = sessionsR.top + timeR.height;           // limit to top drag
-        // let gridW = sessionsR.width - timeR.width + 10;     // limit to right drag when added to gridL
-        // let gridH = sessionsR.height - timeR.height - 5;    // limit to bottom drag when added to gridH
-        //
-        // let gridXYWH = { x:gridL, y:gridT, w:gridW, h:gridH };
-        // let dragXYWH = { x:timeR.width + 5, y:anchorR.height + 3, w:anchorR.width, h:anchorR.height };
-        // let mouseXY = { x:0, y:0 };
-        // let relXY = { x:0, y:0 };
-        //
-        // this.setState({
-        //     gridXYWH: gridXYWH,
-        //     dragXYWH: dragXYWH,
-        //     mouseXY: mouseXY,
-        //     relXY: relXY
-        // })
-        //
-        // // == check for scroll behavior
-        // document.getElementById("sessions").addEventListener('scroll', this.detectGridScroll);
+        let dayCells = ReactDOM.findDOMNode(this.refs.day_0);
+        let timeCell = document.getElementById("roomLabel_0");
+        let anchorCell = ReactDOM.findDOMNode(this.refs["2_1"]);
+        let dayR = dayCells.getBoundingClientRect();
+        let timeR = timeCell.getBoundingClientRect();
+        let anchorR = anchorCell.getBoundingClientRect();
+        let sessionsGrid = ReactDOM.findDOMNode(this.refs.sessions);
+        let sessionsR = sessionsGrid.getBoundingClientRect();
+
+        // == get array of cell components for each day
+        let dayColumns = this.refs.sessions.childNodes;
+        let cellCounter = 0;
+
+        // == loop through each day (start on 2 to skip roomTimes and dragger elements)
+        for (var d = 2; d < dayColumns.length; d++) {
+            let nextDayCells = dayColumns[d].childNodes;
+
+            // == loop through each cell per day
+            for (var c = 0; c < nextDayCells.length; c++) {
+                let cell = nextDayCells[c];
+                let cellId = nextDayCells[c].id;        // DOM element id (same as cellDataObj cellId)
+
+                // == build cellIdsArray used for cell hover detection
+                this.cellIdsArray.push(cellId);
+
+                // == get size/position data; add component refs to cellDataObj
+                if (cell.className.includes('cell')) {
+                    cellCounter++;
+                    let cellR = nextDayCells[c].getBoundingClientRect();
+                    this.cellDataObj[cellId].x = cellR.left - anchorR.left + timeR.width;
+                    this.cellDataObj[cellId].y = cellR.top - anchorR.top + timeR.height;
+                    this.cellDataObj[cellId].w = cellR.width;
+                    this.cellDataObj[cellId].h = cellR.height;
+                    this.cellDataObj[cellId].className = cell.className;
+                    this.cellDataObj[cellId].cellComp = this.refs[cellId];
+                }
+            }
+        }
+
+        // == define allowable dragging rectangle from element sizes
+        let gridL = sessionsR.left + timeR.width;           // limit to left drag
+        let gridT = sessionsR.top + timeR.height;           // limit to top drag
+        let gridW = sessionsR.width - timeR.width + 10;     // limit to right drag when added to gridL
+        let gridH = sessionsR.height - timeR.height - 5;    // limit to bottom drag when added to gridH
+
+        let gridXYWH = { x:gridL, y:gridT, w:gridW, h:gridH };
+        let dragXYWH = { x:timeR.width + 5, y:anchorR.height + 3, w:anchorR.width, h:anchorR.height };
+        let mouseXY = { x:0, y:0 };
+        let relXY = { x:0, y:0 };
+
+        this.setState({
+            gridXYWH: gridXYWH,
+            dragXYWH: dragXYWH,
+            mouseXY: mouseXY,
+            relXY: relXY
+        })
+
+        // == check for scroll behavior
+        document.getElementById("sessions").addEventListener('scroll', this.detectGridScroll);
+    }
+
+    addSessionData() {
+        console.log("\n == Dragger: addSessionData ==");
+
+        // ======= create Dragger cell for each scheduled session
+        let timesCount = this.state.times.length + 1;      // number of daily timeslots (plus 1 for room label blank)
+
+        // == initialize/create cell data object for each session
+        let sessionDataArray = this.state.sessions.map((session, s) => {
+            let nextRoom = parseInt(session.room_id);
+
+            // == extract day and time values from session startTime object
+            let nextCol = parseInt(session.session_start.substring(8,10)) - 1;
+            let nextRow = parseInt(session.session_start.substring(11,13)) - 7 + ((nextRoom-1) * timesCount);
+            let cellId = nextRow + "_" + nextCol;
+            this.cellDataObj[cellId].cellType = "sessionCell";
+            this.cellDataObj[cellId].sessionData = session;
+            this.cellDataObj[cellId].className = "cell sessionCell";
+            this.cellDataObj[cellId].cellComp.setState({
+                text: session.session_title,
+                className: "cell sessionCell",
+                sessionData: session
+            })
+        });
+        console.log("this.cellDataObj:", this.cellDataObj);
     }
 
     locateDragger(targetCellId) {
         console.log(" == Dragger::locateDragger ==");
-        let dragger = this.refs['dragger1'];
-        dragger.locateDragger(targetCellId);
+        let targetCellData = this.cellDataObj[targetCellId];
+        console.log("targetCellData:", targetCellData);
+        let dragX = targetCellData.x;   // + col * pxOffsetX
+        let dragY = targetCellData.y;   // + row * pxOffsetY
+        let title = this.cellDataObj[targetCellId].sessionData
+            ? this.cellDataObj[targetCellId].sessionData.session_title
+            : null
+
+        this.setState({
+            dragXYWH: {
+                x: dragX + 5,
+                y: dragY + 3,
+                w: targetCellData.w,
+                h: targetCellData.h
+            },
+            text: title,
+            startCellId: targetCellId,
+            targetCellId: targetCellId
+        })
     }
 
     // ======= ======= ======= dates ======= ======= =======
@@ -236,9 +266,6 @@ class Dragger extends React.Component {
     makeGridCells(dates, rooms, times, sessions) {
         console.log("\n == Dragger: makeGridCells ==");
 
-        // == make cells for currently scheduling sessions
-        // this.makeSessionCells(times, sessions);
-
         // == add roomCells (spacers) and emptyCells then add to cellDataObj
         this.makeDayColumns(dates, rooms, times);
 
@@ -247,23 +274,6 @@ class Dragger extends React.Component {
         console.log("this.cellDataObj:", this.cellDataObj);
 
         return cellComponents;
-    }
-
-    // ======= create Dragger cell for each scheduled session
-    makeSessionCells(times, sessions) {
-        console.log(" == Dragger: makeSessionCells ==");
-        let timesCount = times.length + 1;      // number of daily timeslots (plus 1 for room label blank)
-
-        // == initialize/create cell data object for each session
-        let sessionDataArray = sessions.map((session, s) => {
-            let nextRoom = parseInt(session.room_id);
-
-            // == extract day and time values from session startTime object
-            let nextCol = parseInt(session.session_start.substring(8,10)) - 1;
-            let nextRow = parseInt(session.session_start.substring(11,13)) - 7 + ((nextRoom-1) * timesCount);
-            let cellId = nextRow + "_" + nextCol;
-            this.cellDataObj[cellId] = { id:null, addr:cellId, cellType:"sessionCell", sessionData:session }
-        });
     }
 
     // ======= create data objects for: each day => each room per day => each timeslot per room per day
@@ -391,9 +401,10 @@ class Dragger extends React.Component {
     makeDragger() {
         console.log("\n +++++++ == Dragger: makeDragger == +++++++ ");
         console.log("this.state:", this.state);
+        console.log("this.cellDataObj:", this.cellDataObj);
 
         let dragStyles;
-        if (this.state.cellIdsArray.length > 0) {
+        if (this.cellIdsArray.length > 0) {
             dragStyles = {
                 position: 'absolute',
                 display: 'block',
@@ -435,7 +446,7 @@ class Dragger extends React.Component {
 
         let dateHeaders, roomTimes, gridCells, dragger;
         if (!this.dateHeaders) {
-            console.log("+++++++ !this.dateHeaders +++++++");
+            console.log("+++++++ NO grid components +++++++");
             let dates = this.state.dates;
             let rooms = this.state.rooms;
             let times = this.state.times;
@@ -445,19 +456,17 @@ class Dragger extends React.Component {
             dateHeaders = this.makeDateHeaders(dates);
             roomTimes = this.makeRoomTimes(rooms, times);
             gridCells = this.makeGridCells(dates, rooms, times, sessions);
-            dragger = this.makeDragger();
 
             this.dateHeaders = dateHeaders;
             this.roomTimes = roomTimes;
             this.gridCells = gridCells;
-            this.dragger = dragger;
         } else {
-            console.log("+++++++ dateHeaders MADE +++++++");
+            console.log("+++++++ grid components MADE +++++++");
             dateHeaders = this.dateHeaders;
             roomTimes = this.roomTimes;
             gridCells = this.gridCells;
-            dragger = this.dragger;
         }
+        dragger = this.makeDragger();
         return (
             <div
                 id={"Dragger"}
@@ -476,7 +485,7 @@ class Dragger extends React.Component {
                         ref={"rooms"}>
                         {this.roomTimes}
                     </div>
-                    {this.dragger}
+                    {dragger}
                     {this.gridCells}
                 </div>
             </div>

@@ -36,23 +36,6 @@ class App extends React.Component {
                             times={this.state.times}
                             rooms={this.state.rooms}
                             sessions={this.state.sessions}
-
-                            draggerId={"dragger1"}      // active data
-                            startCellId={"2_1"}
-                            targetCellId={"2_1"}
-
-                            cellDataObj={{}}            // cell data
-                            cellIdsArray={[]}
-
-                            gridXYWH={{}}               // position data
-                            dragXYWH={{}}
-                            mouseXY={{}}
-                            relXY={{}}
-
-                            text={null}                 // display data
-                            dragging={false}
-                            scrolling={false}
-                            scrollStart={0}
                         />
                     </div>
                 </div>
