@@ -44,20 +44,33 @@ class Dragger extends React.Component {
     componentWillReceiveProps(props) {
         console.log("\n +++++++ == Dragger: componentWillReceiveProps == +++++++");
         console.log("props:", props);
-        this.setState({
-            // startCellId: props.startCellId,
-            // targetCellId: props.targetCellId,
 
-            cellDataObj: props.cellDataObj,
-            cellIdsArray: props.cellIdsArray,
+        function isEmptyObject(obj) {
+            console.log("\n == isEmptyObject ==");
+            for (var key in obj) {
+                return false;
+            }
+                return true;
+        }
+        let initStatus = isEmptyObject(this.state.cellIdsArray);
+        console.log("initStatus:", initStatus);
 
-            gridXYWH: props.gridXYWH,
-            dragXYWH: props.dragXYWH,
-            mouseXY: props.mouseXY,
-            relXY: props.relXY,
+        if (this.state.cellIdsArray.length === 0) {
+            this.setState({
+                // startCellId: props.startCellId,
+                // targetCellId: props.targetCellId,
 
-            text: props.text
-        })
+                cellDataObj: props.cellDataObj,
+                cellIdsArray: props.cellIdsArray,
+
+                gridXYWH: props.gridXYWH,
+                dragXYWH: props.dragXYWH,
+                mouseXY: props.mouseXY,
+                relXY: props.relXY,
+
+                text: props.text
+            })
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {

@@ -66,11 +66,11 @@ class Grid extends React.Component {
     shouldComponentUpdate() {
         console.log("\n == Grid: shouldComponentUpdate ==");
         this.updateCellData();      // adds position data
-        // if (this.cellIdsArray.length > 0) {
-        //     console.log("+++ NO UPDATE +++");
-        //     this.makeDragger();
-        //     return false;
-        // }
+        if (this.cellIdsArray.length > 0) {
+            console.log("+++ NO UPDATE +++");
+            this.makeDragger();
+            return false;
+        }
         return true;
     }
 
@@ -417,54 +417,53 @@ class Grid extends React.Component {
     render() {
         console.log("\n == Grid: render ==");
 
-        // function isEmptyObject(obj) {
-        //     console.log("\n == isEmptyObject ==");
-        //     for (var key in obj) {
-        //         return false;
-        //     }
-        //         return true;
-        // }
-        //
-        // let initStatus = isEmptyObject(this.cellDataObj);
-        // console.log("initStatus:", initStatus);
-        //
-        // if (initStatus) {
-        //
-        // }
-        let dates = this.state.dates;
-        let rooms = this.state.rooms;
-        let times = this.state.times;
-        let sessions = this.state.sessions;
+        function isEmptyObject(obj) {
+            console.log("\n == isEmptyObject ==");
+            for (var key in obj) {
+                return false;
+            }
+                return true;
+        }
 
-        let dateHeaders, roomTimes, gridCells, dragger;
-        dateHeaders = this.makeDateHeaders(dates);
-        roomTimes = this.makeRoomTimes(rooms, times);
-        gridCells = this.makeGridCells(dates, rooms, times, sessions);
-        dragger = this.makeDragger();
+        let initStatus = isEmptyObject(this.cellDataObj);
+        console.log("initStatus:", initStatus);
 
-        return (
-            <div
-                id={"grid"}
-                ref={"grid"}>
+        if (initStatus) {
+            let dates = this.state.dates;
+            let rooms = this.state.rooms;
+            let times = this.state.times;
+            let sessions = this.state.sessions;
+
+            let dateHeaders, roomTimes, gridCells, dragger;
+            dateHeaders = this.makeDateHeaders(dates);
+            roomTimes = this.makeRoomTimes(rooms, times);
+            gridCells = this.makeGridCells(dates, rooms, times, sessions);
+            dragger = this.makeDragger();
+
+            return (
                 <div
-                    id={"dates"}
-                    ref={"dates"}>
-                    <div id="cornerCell"></div>
-                    {dateHeaders}
-                </div>
-                <div
-                    id={"sessions"}
-                    ref={"sessions"}>
+                    id={"grid"}
+                    ref={"grid"}>
                     <div
-                        id={"rooms"}
-                        ref={"rooms"}>
-                        {roomTimes}
+                        id={"dates"}
+                        ref={"dates"}>
+                        <div id="cornerCell"></div>
+                        {dateHeaders}
                     </div>
-                    {dragger}
-                    {gridCells}
+                    <div
+                        id={"sessions"}
+                        ref={"sessions"}>
+                        <div
+                            id={"rooms"}
+                            ref={"rooms"}>
+                            {roomTimes}
+                        </div>
+                        {dragger}
+                        {gridCells}
+                    </div>
                 </div>
-            </div>
-        )
+            )
+        }
     }
 }
 

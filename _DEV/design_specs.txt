@@ -1,3 +1,113 @@
+// ======= Application data structures ========
+// ======= Application data structures ========
+// ======= Application data structures ========
+
+// ======= grid data =======
+    const times = [];
+    const dates = [];
+    const rooms = [];
+    const sessions = [];
+    const data = [times, dates, rooms, sessions];
+
+// ======= session data =======
+    {
+        room_id:_
+        room_name:_
+        session_id:_,
+        session_title:_,
+        session_start:_,
+        session_seqs:_
+    }
+
+// ======= sequence data =======
+    {
+        seq:_,
+        abs_id:_
+        abs_title:_
+    }
+
+// ======= cellData =======
+    {
+        R_C: {
+            id:_,           // behavior
+            addr:_,
+            cellComp:_,
+            x:_,            // position data
+            y:_,
+            w:_,
+            h:_,
+            cellType:_,     // swap data
+            className:_,
+            sessionData:_
+        }
+    }
+
+// ======= cellDataObj =======
+    {
+        R_C: { id:_, addr:_, cellComp:_, x:_, y:_, w:_, h:_, cellType:_, className:_, sessionData:_ },
+        R_C: { cellData },
+        R_C: { ... }
+        ...
+    }
+
+// ======= moveData =======
+    {
+        cellType:_,
+        className:_,
+        sessionData:_
+    }
+
+// ======= swapCells =======
+    {
+        startCellId: "R_C"
+        targetCellId: "R_C"
+    }
+
+
+// ======= Application Algorithms ========
+// ======= Application Algorithms ========
+// ======= Application Algorithms ========
+
+
+====== makeGridComps() =======
+    dataIn: { dates:_ rooms:_ times:_ }
+    dataOut: { roomCells:_ emptyCells:_ sessionCells:_ }
+
+
+====== buildCellDataObj() =======
+    dataIn: cellIdsArray        //  [ "2_1", "2_2", "2_3" ... ]
+            cellData            //  id:_, addr:_, cellComp:_,
+                                    cellType:_, className:_, sessionData:_,
+                                    x:, y:_, w:_, h:_
+
+====== swapStartTarget() =======
+    dataIn: startCellId         // R_C
+            targetCellId        // R_C
+            moveData_start      // cellType:_, className:_, sessionData:_
+            moveData_target     // cellType:_, className:_, sessionData:_
+
+====== getEmptyHi() =======
+    loop target to top (stop on first empty)
+
+====== getEmptyLo() =======
+    loop target to bottom (stop on first empty)
+
+====== shiftCellData() =======
+    dataIn: upORdown            // if up => getEmptyHi(), if down => getEmptyLo(),
+            targetCellId        // 2_1
+            emptyHi             // getEmptyHi() => none
+            emptyLo             // getEmptyLo() => 2_6
+            shiftCellsArray     //  up: []
+                                    down: [2-1, 3-1, 4-1, 5-1]
+            shiftData           // cellType:_, className:_, sessionData:_   // (source: nextCell)
+    process: hiData => loData
+    dataOut: moveData => shiftCellsArray cells
+
+====== updateCellComponents() =======
+    styles
+    text
+
+
 // ======= database data structures ========
 sessionData = {
     session_id:1,
@@ -58,27 +168,48 @@ sessionData = {
     times: [],
     rooms: [],
     sessions: [],
-    roomtimes: [],
     gridCells: [
         {
             1_1: {
-                addr:"1_1",
-                cellType:"sessionCell",
-                x:100,
-                y:100,
-                w:100,
-                h:22,
-                sessionData: {
-                    id: 1,
-                    seq: 1,
-                    title: "Session Title"
-                }
+            id:_,           // behavior
+                addr:_,
+                cellComp:_,
+                cellType:_,     // swap data
+                className:_,
+                sessionData:_,
+                x:_,            // position data
+                y:_,
+                w:_,
+                h:_
             }
         },
         { ... }
     ]
 }
 
+// ======= gridCellData =======
+{
+    id:_,
+    addr:"1_1",
+    cellComp: { SessionCell: {} },
+    cellType:"sessionCell",
+    className:"cell sessionCell",
+    sessionData: {
+        id: 1,
+        seq: 1,
+        title: "Session Title"
+    },
+    x:100,
+    y:100,
+    w:100,
+    h:22
+}
+
+
+
+
+
+// ======= dragStates =======
 dragStates = {
     dragXYWH: {x: 92.828125, y: 25, w: 189.015625, h: 22},
     gridXYWH: {x: 86.828125, y: 120, w: 791.46875, h: 480},

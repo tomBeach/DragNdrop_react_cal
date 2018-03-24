@@ -35,7 +35,7 @@ const sessions = [
         sequences: [ { seq: 1, abs: 11, title: "abs_title_22" },  { seq: 2, abs: 22, title: "abs_title_23" }, { seq: 3, abs: 33, title: "abs_title_24" } ]
     }
 ];
-const data = [times, dates, rooms, sessions];
+
 
 ReactDOM.render(
     <App
