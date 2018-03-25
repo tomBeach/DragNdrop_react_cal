@@ -214,9 +214,9 @@ class Dragger extends React.Component {
         e.preventDefault();
     }
 
-    // ======= ======= ======= UPDATE ======= ======= =======
-    // ======= ======= ======= UPDATE ======= ======= =======
-    // ======= ======= ======= UPDATE ======= ======= =======
+    // ======= ======= ======= UPDATE DATA and COMPONENTS ======= ======= =======
+    // ======= ======= ======= UPDATE DATA and COMPONENTS ======= ======= =======
+    // ======= ======= ======= UPDATE DATA and COMPONENTS ======= ======= =======
 
     dropDragger(e) {
         console.log("\n == Dragger:dropDragger ==");
@@ -234,7 +234,7 @@ class Dragger extends React.Component {
         const startCellData = cellDataObj[startCellId];
         const targetCellData = cellDataObj[targetCellId];
 
-        // ======= get target row and column from targetCellId string =======
+        // ======= get start/target ROWS and COLUMNS (from cellId strings) =======
         const startRow = startCellId.split("_")[0];
         const startCol = startCellId.split("_")[1];
         const targetRow = targetCellId.split("_")[0];
@@ -250,7 +250,7 @@ class Dragger extends React.Component {
             ? swapCellData()
             : shiftCellData();
 
-        // ======= swapCellData =======
+        // ======= target empty: swap start and target data =======
         function swapCellData() {
             console.log("\n == Dragger:swapCellData ==");
             let moveCellType = startCellData.cellType;
@@ -262,16 +262,15 @@ class Dragger extends React.Component {
             targetCellData.cellType = moveCellType;
             targetCellData.className = moveClassName;
             targetCellData.sessionData = moveSessionData;
-            console.log("cellDataObj:", cellDataObj);
+            // console.log("cellDataObj:", cellDataObj);
             updateStartTargetComps(startCellData);
             updateStartTargetComps(targetCellData);
             updateDraggerComp();
         }
 
-        // ======= update component to revised data =======
+        // ======= update cell component (start or target) to revised data =======
         function updateStartTargetComps(cellData) {
             console.log("\n == updateStartTargetComps ==");
-            console.log("cellData.addr:", cellData.addr);
 
             let title;
             let tempSessionData = cellData.sessionData;
@@ -279,15 +278,15 @@ class Dragger extends React.Component {
             let bgColor = cellData.cellType === "sessionCell"
                 ? "white"
                 : "#b1b9by";
-            console.log("cellData.cellType:", cellData.cellType);
-            console.log("bgColor:", bgColor);
+
+            // == get session title if session cell
             if (cellData.sessionData) {
                 title = cellData.sessionData.session_title;
             } else {
                 title = null;
             }
-            console.log("title:", title);
-            console.log("cellData.className:", cellData.className);
+
+            // == set new component state
             cellComponent.setState({
                 highlighted: false,
                 color: bgColor,
@@ -297,10 +296,10 @@ class Dragger extends React.Component {
             })
         }
 
-        // ======= update dragger component data =======
+        // ======= update dragger component to revised data =======
         function updateDraggerComp() {
             console.log("\n == updateDraggerComp ==");
-            console.log("targetCellData:", targetCellData);
+
             let cellX = targetCellData.x;
             let cellY = targetCellData.y;
             let cellW = targetCellData.w;
@@ -320,163 +319,172 @@ class Dragger extends React.Component {
             });
         }
 
-        // ======= shiftCellData =======
+        // ======= target occupied: shift cell data up or down =======
         function shiftCellData() {
             console.log("\n == Dragger:shiftCellData ==");
             console.log("dragger:", dragger);
 
-            // ======= get list of time cells in target room =======
-            function getRoomTimes() {
-                console.log("\n == Dragger:getRoomTimes ==");
-
-                let roomCount = dragger.state.rooms.length;
-                let timeCount = dragger.state.times.length;
-
-                let rowArray = [];
-                for (var r = 1; r <= roomCount; r++) {
-                    let hiRow = (timeCount * (r - 1)) + r + 1;
-                    let loRow = (timeCount * r) + r;
-                    if ((hiRow <= parseInt(targetRow)) && (targetRow <= loRow)) {
-                        for (var i = hiRow; i <= loRow; i++) {
-                            rowArray.push(i);
-                        }
-                        return rowArray;
-                    }
-                }
-            }
-            const roomTimesArray = getRoomTimes();
-
-            // ======= get rows above and below target row =======
-            let aboveCenterRows = roomTimesArray.filter(row => row <= targetRow);
-            let belowCenterRows = roomTimesArray.filter(row => row >= targetRow);
-
-            // ======= determine entry point on target cell (above or below center) =======
-            let sessionCellsArray;
-            const dragY = e.pageY + dragger.state.relXY.y - dragger.state.gridXYWH.y;
-            const cellCenterY = cellDataObj[targetCellId].y + (cellDataObj[targetCellId].h/2);
-            const cellAddr = function(row, targetCol) {
-                return row + "_" + targetCol;
-            };
-            const cellData = function(cellAddr) {
-                return cellDataObj[cellAddr];
-            };
-            dragY > cellCenterY
-                ? hiORlo = "lo"
-                : hiORlo = "hi";
-            dragY > cellCenterY
-                ? sessionCellsArray = aboveCenterRows.map(row => cellData(cellAddr(row, targetCol))).reverse()
-                : sessionCellsArray = belowCenterRows.map(row => cellData(cellAddr(row, targetCol)));
-
-            // ======= include only cells required for data shift =======
-            const removeNullCells = function(cell) {
-                if (cell) {
-                    return cell;
-                }
-            };
-
-            // ======= get nearest empty row =======
-            let nearestEmptyRow = null;
-            let shiftAddrsArray;
-            function getNearestEmptyRow(sessionCellsArray) {
-                console.log("\n == Dragger:getNearestEmptyRow ==");
-                console.log("sessionCellsArray:", sessionCellsArray);
-
-                shiftAddrsArray = sessionCellsArray.map((cell, c) => {
-                    if (cell.addr === startCellData.addr) {
-                        console.log("+++ START CELL +++");
-                    }
-                    if (nearestEmptyRow === null) {
-                        if (cell.cellType === "emptyCell") {
-                            nearestEmptyRow = cell;
-                            return cell.addr;
-                        } else if (cell.cellType === "sessionCell") {
-                            return cell.addr;
-                        }
-                    }
-                }).filter(removeNullCells).reverse();
-                return shiftAddrsArray;
-            }
-            shiftAddrsArray = getNearestEmptyRow(sessionCellsArray);
-            console.log("shiftAddrsArray1:", shiftAddrsArray);
-
-            console.log("nearestEmptyRow:", nearestEmptyRow);
-            console.log("hiORlo:", hiORlo);
-            if ((!nearestEmptyRow) && (hiORlo === "lo")) {
-                sessionCellsArray = belowCenterRows.map(row => cellData(cellAddr(row, targetCol)));
-                shiftAddrsArray = getNearestEmptyRow(sessionCellsArray);
-            } else if ((!nearestEmptyRow) && (hiORlo === "hi")) {
-                sessionCellsArray = aboveCenterRows.map(row => cellData(cellAddr(row, targetCol)));
-                shiftAddrsArray = getNearestEmptyRow(sessionCellsArray);
+            if ((targetCellData.cellType != "emptyCell") && (sameColumn)) {
+                swapCellData();
+                
             } else {
-                console.log("+++++++++ SAME COLUMN? +++++++");
-            }
-            console.log("shiftAddrsArray2:", shiftAddrsArray);
+                // ======= get list of time cells in target room =======
+                function getRoomTimes() {
+                    console.log("\n == Dragger:getRoomTimes ==");
 
-            // console.log("sameColumn:", sameColumn);
-            // console.log("roomTimesArray:", roomTimesArray);
-            // console.log("aboveCenterRows:", aboveCenterRows);
-            // console.log("belowCenterRows:", belowCenterRows);
+                    let roomCount = dragger.state.rooms.length;
+                    let timeCount = dragger.state.times.length;
 
-            // ======= shift cell data up or down =======
-            function updateShiftData() {
-                console.log("\n == updateShiftData ==");
-
-                // == map source data to shifted cell
-                shiftAddrsArray.map((addr, c) => {
-                    console.log("addr:", c, addr);
-                    if (c < (shiftAddrsArray.length - 1)) {
-                        let sourceDataAddr = shiftAddrsArray[c+1];
-                        let sourceData = cellDataObj[sourceDataAddr];
-                        let shiftData = cellDataObj[addr];
-                        shiftData.cellType = sourceData.cellType;
-                        shiftData.className = sourceData.className;
-                        shiftData.sessionData = sourceData.sessionData;
-                    }
-                });
-                let shiftData = cellDataObj[shiftAddrsArray[shiftAddrsArray.length-1]];
-                shiftData.cellType = "emptyCell";
-                shiftData.className = "cell emptyCell";
-                shiftData.sessionData = null;
-                console.log("shiftData:", shiftData);
-                console.log("cellDataObj:", cellDataObj);
-            }
-
-            // ======= update shifted components to revised data =======
-            function updateShiftComps() {
-                console.log("== updateShiftComps ==");
-
-                shiftAddrsArray.map((addr, c) => {
-                    let text;
-                    let cell = cellDataObj[addr];
-                    if (cell.addr === startCellId) {
-                        if (nearestEmptyRow) {
-                            cell = nearestEmptyRow;
+                    let rowArray = [];
+                    for (var r = 1; r <= roomCount; r++) {
+                        let hiRow = (timeCount * (r - 1)) + r + 1;
+                        let loRow = (timeCount * r) + r;
+                        if ((hiRow <= parseInt(targetRow)) && (targetRow <= loRow)) {
+                            for (var i = hiRow; i <= loRow; i++) {
+                                rowArray.push(i);
+                            }
+                            return rowArray;
                         }
                     }
-                    let cellComponent = cell.cellComp;
-                    if (cell.sessionData) {
-                        text = cell.sessionData.session_title;
-                    } else {
-                        text = null;
+                }
+                const roomTimesArray = getRoomTimes();
+
+                // ======= get rows above and below target row =======
+                let aboveCenterRows = roomTimesArray.filter(row => row <= targetRow);
+                let belowCenterRows = roomTimesArray.filter(row => row >= targetRow);
+
+                // ======= determine entry point on target cell (above or below center) =======
+                let sessionCellsArray;
+                const dragY = e.pageY + dragger.state.relXY.y - dragger.state.gridXYWH.y;
+                const cellCenterY = cellDataObj[targetCellId].y + (cellDataObj[targetCellId].h/2);
+                const cellAddr = function(row, targetCol) {
+                    return row + "_" + targetCol;
+                };
+                const cellData = function(cellAddr) {
+                    return cellDataObj[cellAddr];
+                };
+                dragY > cellCenterY
+                    ? hiORlo = "lo"         // lo entry point: push cells up
+                    : hiORlo = "hi";        // hi entry point: push cells down
+                dragY > cellCenterY
+                    ? sessionCellsArray = aboveCenterRows.map(row => cellData(cellAddr(row, targetCol))).reverse()
+                    : sessionCellsArray = belowCenterRows.map(row => cellData(cellAddr(row, targetCol)));
+
+                // ======= filter for occupied (non-null) cells only =======
+                const removeNullCells = function(cell) {
+                    if (cell) {
+                        return cell;
                     }
-                    let bgColor = cell.cellType === "sessionCell"
-                        ? "white"
-                        : "#b1b9by";
-                    cellComponent.setState({
-                        highlighted: false,
-                        color: bgColor,
-                        className: cell.className,
-                        sessionData: cell.sessionData,
-                        text: text
-                    })
-                });
+                };
+
+                // ======= if empty row available get list of shifting cells =======
+                let nearestEmptyRow = null;         // will be starting point for cell data shift
+                let shiftAddrsArray;                // list of cells with shifting data
+                function getNearestEmptyRow(sessionCellsArray) {
+                    console.log("\n == Dragger:getNearestEmptyRow ==");
+                    console.log("sessionCellsArray:", sessionCellsArray);
+
+                    shiftAddrsArray = sessionCellsArray.map((cell, c) => {
+                        if (cell.addr === startCellData.addr) {
+                            console.log("+++ START CELL +++");
+                        }
+                        if (nearestEmptyRow === null) {
+                            if (cell.cellType === "emptyCell") {
+                                nearestEmptyRow = cell;
+                                return cell.addr;
+                            } else if (cell.cellType === "sessionCell") {
+                                return cell.addr;
+                            }
+                        }
+                    }).filter(removeNullCells).reverse();
+                    return shiftAddrsArray;
+                }
+                shiftAddrsArray = getNearestEmptyRow(sessionCellsArray);
+                console.log("shiftAddrsArray1:", shiftAddrsArray);
+                console.log("nearestEmptyRow:", nearestEmptyRow);
+                console.log("hiORlo:", hiORlo);
+
+                // == if no empty row check alternative direction
+                if ((!nearestEmptyRow) && (hiORlo === "lo")) {
+                    sessionCellsArray = belowCenterRows.map(row => cellData(cellAddr(row, targetCol)));
+                    shiftAddrsArray = getNearestEmptyRow(sessionCellsArray);
+                } else if ((!nearestEmptyRow) && (hiORlo === "hi")) {
+                    sessionCellsArray = aboveCenterRows.map(row => cellData(cellAddr(row, targetCol)));
+                    shiftAddrsArray = getNearestEmptyRow(sessionCellsArray);
+
+                // == no empty row in elther direction (all room cells occupied)
+                } else if (!nearestEmptyRow) {
+                    console.log("+++++++++ SAME COLUMN? +++++++");
+                    swapCellData();     // no empty cells in target room; swap start/target data
+                }
+                console.log("shiftAddrsArray2:", shiftAddrsArray);
+
+                // console.log("sameColumn:", sameColumn);
+                // console.log("roomTimesArray:", roomTimesArray);
+                // console.log("aboveCenterRows:", aboveCenterRows);
+                // console.log("belowCenterRows:", belowCenterRows);
+
+                // ======= shift cell data up or down =======
+                function moveShiftData() {
+                    console.log("\n == moveShiftData ==");
+
+                    // == map source data (1 cell above or below) to shifted cell
+                    shiftAddrsArray.map((addr, c) => {
+                        console.log("addr:", c, addr);
+                        if (c < (shiftAddrsArray.length - 1)) {
+                            let sourceDataAddr = shiftAddrsArray[c+1];
+                            let sourceData = cellDataObj[sourceDataAddr];
+                            let shiftData = cellDataObj[addr];
+                            shiftData.cellType = sourceData.cellType;
+                            shiftData.className = sourceData.className;
+                            shiftData.sessionData = sourceData.sessionData;
+                        }
+                    });
+
+                    // == set final cell data to empty status (prepares for swapCellData() function)
+                    let shiftData = cellDataObj[shiftAddrsArray[shiftAddrsArray.length-1]];
+                    shiftData.cellType = "emptyCell";
+                    shiftData.className = "cell emptyCell";
+                    shiftData.sessionData = null;
+                    console.log("shiftData:", shiftData);
+                    console.log("cellDataObj:", cellDataObj);
+                }
+
+                // ======= update shifted components to revised data =======
+                function updateShiftComps() {
+                    console.log("== updateShiftComps ==");
+
+                    shiftAddrsArray.map((addr, c) => {
+                        let text;
+                        let cell = cellDataObj[addr];
+                        if (cell.addr === startCellId) {
+                            if (nearestEmptyRow) {
+                                cell = nearestEmptyRow;
+                            }
+                        }
+                        let cellComponent = cell.cellComp;
+                        if (cell.sessionData) {
+                            text = cell.sessionData.session_title;
+                        } else {
+                            text = null;
+                        }
+                        let bgColor = cell.cellType === "sessionCell"
+                            ? "white"
+                            : "#b1b9by";
+                        cellComponent.setState({
+                            highlighted: false,
+                            color: bgColor,
+                            className: cell.className,
+                            sessionData: cell.sessionData,
+                            text: text
+                        })
+                    });
+                }
+                moveShiftData();        // move cell data up or up or down
+                updateShiftComps();     // update components to match data
+                swapCellData();         // swap start and target cell data
             }
-            updateShiftData();
-            updateShiftComps();
-            swapCellData();
         }
-
-
 
         // // ======= swap start and target cell data =======
         // function swapStartTarget() {
