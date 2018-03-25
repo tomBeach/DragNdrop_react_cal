@@ -376,28 +376,46 @@ class Dragger extends React.Component {
 
             // ======= get nearest empty row =======
             let nearestEmptyRow = null;
-            const shiftAddrsArray = sessionCellsArray.map((cell, c) => {
-                if (cell.addr === startCellData.addr) {
-                    console.log("+++ START CELL +++");
-                }
-                if (nearestEmptyRow === null) {
-                    if (cell.cellType === "emptyCell") {
-                        nearestEmptyRow = cell;
-                        return cell.addr;
-                    } else if (cell.cellType === "sessionCell") {
-                        return cell.addr;
-                    }
-                }
-            }).filter(removeNullCells).reverse();
+            let shiftAddrsArray;
+            function getNearestEmptyRow(sessionCellsArray) {
+                console.log("\n == Dragger:getNearestEmptyRow ==");
+                console.log("sessionCellsArray:", sessionCellsArray);
 
-            // console.log("hiORlo:", hiORlo);
+                shiftAddrsArray = sessionCellsArray.map((cell, c) => {
+                    if (cell.addr === startCellData.addr) {
+                        console.log("+++ START CELL +++");
+                    }
+                    if (nearestEmptyRow === null) {
+                        if (cell.cellType === "emptyCell") {
+                            nearestEmptyRow = cell;
+                            return cell.addr;
+                        } else if (cell.cellType === "sessionCell") {
+                            return cell.addr;
+                        }
+                    }
+                }).filter(removeNullCells).reverse();
+                return shiftAddrsArray;
+            }
+            shiftAddrsArray = getNearestEmptyRow(sessionCellsArray);
+            console.log("shiftAddrsArray1:", shiftAddrsArray);
+
+            console.log("nearestEmptyRow:", nearestEmptyRow);
+            console.log("hiORlo:", hiORlo);
+            if ((!nearestEmptyRow) && (hiORlo === "lo")) {
+                sessionCellsArray = belowCenterRows.map(row => cellData(cellAddr(row, targetCol)));
+                shiftAddrsArray = getNearestEmptyRow(sessionCellsArray);
+            } else if ((!nearestEmptyRow) && (hiORlo === "hi")) {
+                sessionCellsArray = aboveCenterRows.map(row => cellData(cellAddr(row, targetCol)));
+                shiftAddrsArray = getNearestEmptyRow(sessionCellsArray);
+            } else {
+                console.log("+++++++++ SAME COLUMN? +++++++");
+            }
+            console.log("shiftAddrsArray2:", shiftAddrsArray);
+
             // console.log("sameColumn:", sameColumn);
             // console.log("roomTimesArray:", roomTimesArray);
             // console.log("aboveCenterRows:", aboveCenterRows);
             // console.log("belowCenterRows:", belowCenterRows);
-            // console.log("sessionCellsArray:", sessionCellsArray);
-            console.log("shiftAddrsArray:", shiftAddrsArray);
-            console.log("nearestEmptyRow:", nearestEmptyRow);
 
             // ======= shift cell data up or down =======
             function updateShiftData() {
