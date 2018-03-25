@@ -14,11 +14,29 @@ class SessionCell extends React.Component {
         this.state = {
             id: props.id,
             text: props.text,
+            color: props.bgColor,
             className: props.className,
             sessionData: props.sessionData,
             highlighted: false
         }
         this.locateDragger = this.locateDragger.bind(this);
+    }
+
+    componentWillUpdate(nextProps, nextState) {
+        // console.log("\n +++++++ == SessionCell: componentWillUpdate == +++++++");
+        // console.log("nextProps:", nextProps);
+        // console.log("nextState:", nextState);
+    }
+
+    componentWillReceiveProps() {
+        // console.log("\n +++++++ == SessionCell: componentWillReceiveProps == +++++++");
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        // console.log("\n +++++++ == SessionCell: componentDidUpdate == +++++++");
+        // console.log("prevProps:", prevProps);
+        // console.log("prevState:", prevState);
+        // console.log("this.state:", this.state);
     }
 
     // ======= ======= ======= cell methods ======= ======= =======
@@ -81,23 +99,27 @@ class SessionCell extends React.Component {
     // ======= ======= ======= RENDER ======= ======= =======
     render() {
         // console.log("\n == SessionCell:render ==");
+        // console.log("this.state.color:", this.state.color);
         let bgColor = this.state.highlighted
             ? "thistle"
             : this.state.color;
+        // console.log("bgColor:", bgColor);
+        let text = this.state.text;
+        let styles = {
+            class: this.state.className,
+            backgroundColor: bgColor
+        }
 
         return (
             <div
                 id={this.state.id}
                 ref={this.saveRef}
                 className={this.state.className}
-                style={{
-                    class: this.state.className,
-                    backgroundColor: bgColor
-                }}
+                style={{styles}}
                 onClick={(e) => this.locateDragger(e)}
                 onMouseEnter={(e) => this.toggleHilite(e)}
                 onMouseLeave={(e) => this.toggleHilite(e)}>
-                {this.state.text}
+                {text}
             </div>
         );
     }

@@ -144,6 +144,7 @@ class Grid extends React.Component {
             this.cellDataObj[cellId].className = "cell sessionCell";
             this.cellDataObj[cellId].cellComp.setState({
                 text: session.session_title,
+                color: "white",
                 className: "cell sessionCell",
                 sessionData: session
             })
@@ -333,6 +334,7 @@ class Grid extends React.Component {
                         key={"cell_" + d + c}
                         ref={cellId}
                         text={text}
+                        bgColor={color}
                         className={"cell " + className}
                         sessionData={sessionData}
                         locateDragger={this.locateDragger}
@@ -363,6 +365,8 @@ class Grid extends React.Component {
         return(
             <Dragger
                 ref={"dragger1"}
+                rooms={this.state.rooms}
+                times={this.state.times}
                 startCellId={this.state.startCellId}
                 targetCellId={this.state.targetCellId}
                 gridXYWH={this.state.gridXYWH}
