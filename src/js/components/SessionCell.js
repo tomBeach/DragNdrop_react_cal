@@ -22,23 +22,6 @@ class SessionCell extends React.Component {
         this.locateDragger = this.locateDragger.bind(this);
     }
 
-    componentWillUpdate(nextProps, nextState) {
-        // console.log("\n +++++++ == SessionCell: componentWillUpdate == +++++++");
-        // console.log("nextProps:", nextProps);
-        // console.log("nextState:", nextState);
-    }
-
-    componentWillReceiveProps() {
-        // console.log("\n +++++++ == SessionCell: componentWillReceiveProps == +++++++");
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        // console.log("\n +++++++ == SessionCell: componentDidUpdate == +++++++");
-        // console.log("prevProps:", prevProps);
-        // console.log("prevState:", prevState);
-        // console.log("this.state:", this.state);
-    }
-
     // ======= ======= ======= cell methods ======= ======= =======
     // ======= ======= ======= cell methods ======= ======= =======
     // ======= ======= ======= cell methods ======= ======= =======
@@ -79,7 +62,7 @@ class SessionCell extends React.Component {
     toggleHilite(e) {
         // console.log("\n == toggleHilite ==");
         e.preventDefault();
-        if (this.state.className == "cell sessionCell") {
+        if (this.state.className === "cell sessionCell") {
             this.setState({highlighted: !this.state.highlighted});
             if (!this.state.highlighted) {
                 this.showSessionDetails("show", this.state.sessionData);
@@ -99,16 +82,16 @@ class SessionCell extends React.Component {
     // ======= ======= ======= RENDER ======= ======= =======
     render() {
         // console.log("\n == SessionCell:render ==");
-        // console.log("this.state.color:", this.state.color);
-        let bgColor = this.state.highlighted
-            ? "thistle"
-            : this.state.color;
-        // console.log("bgColor:", bgColor);
-        let text = this.state.text;
-        let styles = {
-            class: this.state.className,
-            backgroundColor: bgColor
+        let stylesHilite = {
+            backgroundColor: "thistle"
         }
+        let stylesNormal = {
+            backgroundColor: this.state.color
+        }
+        let styles = this.state.highlighted
+            ? stylesHilite
+            : stylesNormal;
+        // console.log("styles:", styles);
 
         return (
             <div
@@ -119,7 +102,7 @@ class SessionCell extends React.Component {
                 onClick={(e) => this.locateDragger(e)}
                 onMouseEnter={(e) => this.toggleHilite(e)}
                 onMouseLeave={(e) => this.toggleHilite(e)}>
-                {text}
+                {this.state.text}
             </div>
         );
     }

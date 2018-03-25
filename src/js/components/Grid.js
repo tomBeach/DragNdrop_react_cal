@@ -108,7 +108,7 @@ class Grid extends React.Component {
         // == define allowable dragging rectangle from element sizes
         let gridL = sessionsR.left + timeR.width;           // limit to left drag
         let gridT = sessionsR.top + timeR.height;           // limit to top drag
-        let gridW = sessionsR.width - timeR.width + 10;     // limit to right drag when added to gridL
+        let gridW = sessionsR.width - timeR.width + 8;     // limit to right drag when added to gridL
         let gridH = sessionsR.height - timeR.height - 5;    // limit to bottom drag when added to gridH
 
         let gridXYWH = { x:gridL, y:gridT, w:gridW, h:gridH };
