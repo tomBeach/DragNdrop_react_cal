@@ -2,7 +2,7 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import autoBind from "react-autobind";
-import Dragger from "./Dragger";
+import Grid from "./Grid";
 
 // ======= App =======
 class App extends React.Component {
@@ -23,7 +23,6 @@ class App extends React.Component {
         console.log("\n == App: componentDidMount ==");
     }
 
-
     render() {
         console.log("\n == App: render ==");
         return (
@@ -31,7 +30,7 @@ class App extends React.Component {
                 <div id="yield" className="section" data-state="default">
                     <div>
                         <h2 className="dataTitle">Calendar 4</h2>
-                        <Dragger
+                        <Grid
                             dates={this.state.dates}
                             times={this.state.times}
                             rooms={this.state.rooms}
