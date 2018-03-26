@@ -1,3 +1,55 @@
+// ======= get rows above and below target row =======
+function getShiftCells(hiORlo, roomTimesArray) {
+    console.log("\n == getShiftCells ==");
+    console.log("hiORlo:", hiORlo);
+    const cellAddr = function(row, targetCol) {
+        return row + "_" + targetCol;
+    };
+    const cellData = function(cellAddr) {
+        return cellDataObj[cellAddr];
+    };
+    const searchRoomCells = roomTimesArray.filter(row => row <= targetRow);
+    console.log("searchRoomCells:", searchRoomCells);
+    if (hiORlo === "hi") {
+        return searchRoomCells.map(row => cellData(cellAddr(row, targetCol))).reverse()
+    } else {
+        return searchRoomCells.map(row => cellData(cellAddr(row, targetCol)));
+    }
+}
+
+function getNearestEmptyRow(shiftCellsArray, nearestEmptyRow) {
+    console.log("\n == getNearestEmptyRow ==");
+
+    // ======= filter for occupied (non-null) cells only =======
+    const removeNullCells = function(cell) {
+        if (cell) {
+            return cell;
+        }
+    };
+    shiftAddrsArray = shiftCellsArray.map((cell, c) => {
+        if (nearestEmptyRow === null) {
+            if (cell.cellType === "emptyCell") {
+                nearestEmptyRow = cell;
+                return cell.addr;
+            } else if (cell.cellType === "sessionCell") {
+                return cell.addr;
+            }
+        }
+    }).filter(removeNullCells).reverse();
+    return [shiftAddrsArray, nearestEmptyRow];
+}
+
+let aboveCenterCells = getShiftCells("hi", roomTimesArray);
+console.log("aboveCenterCells:", aboveCenterCells);
+let belowCenterCells = getShiftCells("lo", roomTimesArray);
+console.log("belowCenterCells:", belowCenterCells);
+
+let initShiftUp = getNearestEmptyRow(aboveCenterCells, nearestEmptyAbove);
+console.log("initShiftUp:", initShiftUp);
+let initShiftDown = getNearestEmptyRow(belowCenterCells, nearestEmptyBelow);
+console.log("initShiftDown:", initShiftDown);
+
+
 // == check if cellDataObj has been created
 function isEmptyObject(object) {
     console.log("\n == isEmptyObject ==");
