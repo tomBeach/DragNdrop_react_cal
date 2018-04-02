@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom';
 
 class Dragger extends React.Component {
     constructor(props) {
-        console.log("\n +++++++ == Dragger: constructor == +++++++");
+        console.log("\n == Dragger: constructor ==");
         super(props);
         console.log("props:", props);
         this.state = {
