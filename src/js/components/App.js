@@ -27,9 +27,13 @@ class App extends React.Component {
         console.log("\n == App: render ==");
         return (
             <div id="contentBox">
-                <div id="yield" className="section" data-state="default">
+                <div id="yield" data-state="default">
                     <div>
-                        <h2 className="dataTitle">Calendar 4</h2>
+                        <div id="calendarMenu">
+                            <h2 className="dataTitle">Calendar 4</h2>
+                            <button id="undoBtn" type="button" name="button">undo</button>
+                            <button id="redoBtn" type="button" name="button">redo</button>
+                        </div>
                         <Grid
                             dates={this.state.dates}
                             times={this.state.times}

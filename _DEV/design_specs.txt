@@ -1,3 +1,51 @@
+// ======= functional programming ========
+// ======= functional programming ========
+// ======= functional programming ========
+
+
+function/input              output
+getRoomTimes
+    roomCount               roomTimesArray
+    timesCount
+
+getSearchRowsArray(hiORlo)
+    hiORlo                  rowsAboveTarget
+    targetRow               rowsBelowTarget
+    roomTimesArray
+
+getSearchCellsArray(aboveORbelow)
+    rowsAboveTarget         cellsAboveTarget
+    rowsBelowTarget         cellsBelowTarget
+    targetCol
+
+getNearestEmptyCell(aboveORbelow)
+    cellsAboveTarget        nearestEmptyAbove
+    cellsBelowTarget        nearestEmptyBelow
+
+searchSwapShift
+    nearestEmptyAbove       shiftToEmpty (shift selected direction or alternative direction)
+    nearestEmptyBelow       swapStartTarget
+
+
+
+
+filter
+• syntax
+    family.filter(function (person) {
+        return person.age > 18;
+    });
+
+• syntax *(ES6)
+    family.filter(person => person.age > 18);
+
+• purpose
+    creates an array filled with all array elements that pass a test (provided as a function)
+    array.filter(argument) => return:(function statement output)
+
+• example
+    const aboveCenterRows = roomTimesArray.filter(row => row <= targetRow);
+
+
 // ======= Application data structures ========
 // ======= Application data structures ========
 // ======= Application data structures ========

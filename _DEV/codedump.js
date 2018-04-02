@@ -1,4 +1,138 @@
 // ======= get rows above and below target row =======
+function getAboveORbelow(hiORlo, roomTimesArray) {
+    console.log("\n == getAboveORbelow ==");
+    const aboveCenterRows = roomTimesArray.filter(row => row <= targetRow);
+    const belowCenterRows = roomTimesArray.filter(row => row >= targetRow);
+    console.log("aboveCenterRows:", aboveCenterRows);
+    console.log("belowCenterRows:", belowCenterRows);
+    const cellData = function(cellAddr) {
+        return cellDataObj[cellAddr];
+    };
+    const cellAddr = function(row, targetCol) {     // create row_col (addr) from row items and targetCol
+        return row + "_" + targetCol;
+    };
+    hiORlo === "lo"
+        ? aboveORbelowArray = aboveCenterRows.map(row => cellData(cellAddr(row, targetCol))).reverse()
+        : aboveORbelowArray = belowCenterRows.map(row => cellData(cellAddr(row, targetCol)));
+    return aboveORbelowArray;
+}
+
+function getNearestEmptyRow() {
+    console.log("\n == getNearestEmptyRow ==");
+
+    // ======= filter for occupied (non-null) cells only =======
+    const removeNullCells = function(cell) {
+        if (cell) {
+            return cell;
+        }
+    };
+    shiftAddrsArray = aboveORbelowArray.map((cell, c) => {
+        if (nearestEmptyRow === null) {
+            if (cell.cellType === "emptyCell") {
+                nearestEmptyRow = cell;
+                return cell.addr;
+            } else if (cell.cellType === "sessionCell") {
+                return cell.addr;
+            }
+        }
+    }).filter(removeNullCells).reverse();
+    return shiftAddrsArray;
+}
+roomTimesArray = getRoomTimes();
+aboveORbelowArray = getAboveORbelow(hiORlo, roomTimesArray);
+shiftAddrsArray = getNearestEmptyRow();
+
+console.log("hiORlo:", hiORlo);
+console.log("roomTimesArray:", roomTimesArray);
+console.log("aboveORbelowArray:", aboveORbelowArray);
+console.log("shiftAddrsArray:", shiftAddrsArray);
+console.log("nearestEmptyRow:", nearestEmptyRow);
+
+// == if no empty row check alternative direction
+if ((!nearestEmptyRow) && (hiORlo === "lo")) {
+    console.log("+++++++++ SWITCH TO BELOW +++++++");
+    hiORlo = "hi"
+    shiftAddrsArray = getNearestEmptyRow(hiORlo, roomTimesArray);
+} else if ((!nearestEmptyRow) && (hiORlo === "hi")) {
+    console.log("+++++++++ SWITCH TO ABOVE +++++++");
+    hiORlo = "lo"
+    shiftAddrsArray = getNearestEmptyRow(hiORlo, roomTimesArray);
+
+// == no empty row in elther direction (all room cells occupied)
+} else if (!nearestEmptyRow) {
+    console.log("+++++++++ SAME COLUMN? +++++++");
+    swapCellData();     // no empty cells in target room; swap start/target data
+}
+console.log("shiftAddrsArray2:", shiftAddrsArray);
+
+// console.log("sameColumn:", sameColumn);
+// console.log("roomTimesArray:", roomTimesArray);
+// console.log("aboveCenterRows:", aboveCenterRows);
+// console.log("belowCenterRows:", belowCenterRows);
+
+// ======= shift cell data up or down =======
+function moveShiftData() {
+    console.log("\n == moveShiftData ==");
+
+    // == map source data (1 cell above or below) to shifted cell
+    shiftAddrsArray.map((addr, c) => {
+        if (c < (shiftAddrsArray.length - 1)) {
+            let sourceDataAddr = shiftAddrsArray[c+1];
+            let sourceData = cellDataObj[sourceDataAddr];
+            let shiftData = cellDataObj[addr];
+            shiftData.cellType = sourceData.cellType;
+            shiftData.className = sourceData.className;
+            shiftData.sessionData = sourceData.sessionData;
+            console.log("shiftAddrsArray:", addr, ":  ", shiftData.sessionData.session_title);
+        }
+    });
+
+    // == set final cell data to empty status (prepares for swapCellData() function)
+    let shiftData = cellDataObj[shiftAddrsArray[shiftAddrsArray.length-1]];
+    shiftData.cellType = "emptyCell";
+    shiftData.className = "cell emptyCell";
+    shiftData.sessionData = null;
+    console.log("cellDataObj:", cellDataObj);
+}
+
+// ======= update shifted components to revised data =======
+function updateShiftComps() {
+    console.log("== updateShiftComps ==");
+
+    shiftAddrsArray.map((addr, c) => {
+        let text;
+        let cell = cellDataObj[addr];
+        if (cell.addr === startCellId) {
+            if (nearestEmptyRow) {
+                cell = nearestEmptyRow;
+            }
+        }
+        let cellComponent = cell.cellComp;
+        if (cell.sessionData) {
+            text = cell.sessionData.session_title;
+        } else {
+            text = null;
+        }
+        let bgColor = cell.cellType === "sessionCell"
+            ? "white"
+            : "#b1b9by";
+        cellComponent.setState({
+            highlighted: false,
+            color: bgColor,
+            className: cell.className,
+            sessionData: cell.sessionData,
+            text: text
+        })
+    });
+}
+moveShiftData();        // move cell data up or up or down
+updateShiftComps();     // update components to match data
+swapCellData();         // swap start and target cell data
+}
+}
+
+
+// ======= get rows above and below target row =======
 function getShiftCells(hiORlo, roomTimesArray) {
     console.log("\n == getShiftCells ==");
     console.log("hiORlo:", hiORlo);

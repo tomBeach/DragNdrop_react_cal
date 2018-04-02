@@ -109,10 +109,14 @@ class Grid extends React.Component {
         let gridL = sessionsR.left + timeR.width;           // limit to left drag
         let gridT = sessionsR.top + timeR.height;           // limit to top drag
         let gridW = sessionsR.width - timeR.width + 8;     // limit to right drag when added to gridL
-        let gridH = sessionsR.height - timeR.height - 5;    // limit to bottom drag when added to gridH
+        let gridH = sessionsR.height - 5;    // limit to bottom drag when added to gridH
+        console.log("sessionsR:", sessionsR);
+        console.log("timeR.width:", timeR.width);
+        console.log("gridW:", gridW);
+        console.log("gridH:", gridH);
 
         let gridXYWH = { x:gridL, y:gridT, w:gridW, h:gridH };
-        let dragXYWH = { x:timeR.width + 5, y:anchorR.height + 3, w:anchorR.width, h:anchorR.height };
+        let dragXYWH = { x:timeR.width + 4, y:anchorR.height + 2, w:anchorR.width, h:anchorR.height };
         let mouseXY = { x:0, y:0 };
         let relXY = { x:0, y:0 };
 

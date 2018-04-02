@@ -36,6 +36,10 @@ i {
 /* ======= ======= ======= SECTIONS ======= ======= ======= */
 /* ======= ======= ======= SECTIONS ======= ======= ======= */
 
+#yield {
+    height: 700px;
+    background-color: $dataBox;
+}
 /* ======= sections ======= */
 #sidebar, #menuBox, #contentBox {
     margin: 0;
