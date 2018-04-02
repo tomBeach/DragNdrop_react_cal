@@ -1,18 +1,11 @@
-# minimal-react-webpack
-> A minimal React Webpack configuration
+## Drag-n-drop calendar test
 
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](LICENSE)
+After some experimentation, I decided against using Redux for this version. I already had a state management system that tracked data via a simple javascript object.  It prevented behind-the-scenes Redux methods that metastasised into more disturbances than controlled logic.  
 
-## Development
+#### Functions yet-to-be added:
 
-```bash
-npm i && npm start
-```
+• push up/push down indicator -- dragging an event to an occupied time cell can push the existing events up or down, depending on screen position of the "dragger" object.  This is not clear to the user; a small arrow indicator that pops up when entering a new cell should be helpful.
 
-## Meta
+• save-and-upload -- store calendar modifications to backend Rails-managed database (once linked with existing master project)
 
-Valentino Gagliardi - [valentinog.com](https://www.valentinog.com) - valentino@valentinog.com
-
-## License
-
-This project is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+• undo/redo functionality -- allow for time-travel functionality
