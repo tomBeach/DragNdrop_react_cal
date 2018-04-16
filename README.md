@@ -1,6 +1,8 @@
 ## Drag-n-drop calendar test
 
-After some experimentation, I decided against using Redux for this version. I already had a state management system that tracked data via a simple javascript object.  It prevented behind-the-scenes Redux methods that metastasised into more disturbances than controlled logic.  
+This is a test app for drag-n-drop functionailty -- a proof-of-concept demo for the ForestSAT abstract submission tool developed for NASA/UMD.  Instructions and user feedback when dragging are missing at this point.  (For example, session events must be selected by clicking, then dragged with a second click-n-drag.  Also, dragged events can be positioned "above" or "below" targeted timeslots, depending on the entry point at the target cell.  This is not obvious without the feedback tooltip.   
+
+Also, after some experimentation I decided against using Redux for this version. I already had a state management system that tracked data via a simple javascript object.  It prevented behind-the-scenes Redux methods that metastasized into more disturbances than controlled logic.  
 
 #### Functions yet-to-be added:
 
