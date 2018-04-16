@@ -30,7 +30,7 @@ class App extends React.Component {
                 <div id="yield" data-state="default">
                     <div>
                         <div id="calendarMenu">
-                            <h2 className="dataTitle">Calendar 4</h2>
+                            <h2 className="dataTitle">Calendar Test</h2>
                             <button id="undoBtn" type="button" name="button">undo</button>
                             <button id="redoBtn" type="button" name="button">redo</button>
                         </div>

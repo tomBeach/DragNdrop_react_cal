@@ -8,7 +8,8 @@ require('../../sass/styles.scss');
 
 const times = ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00"];
 const dates = ["2018-10-02", "2018-10-03", "2018-10-04", "2018-10-05"];
-const rooms = ["R100", "R200", "R300", "North Hall"];
+const rooms = ["R100", "R200"];
+// const rooms = ["R100", "R200", "R300", "North Hall"];
 const sessions = [
     { session_id: 1, room_id: 1, session_title: "session_title_1", session_start: "2018-10-02 09:00:00", room_name: "R100",
         sequences: [ { seq: 1, abs: 11, title: "abs_title_1" },  { seq: 2, abs: 22, title: "abs_title_2" }, { seq: 3, abs: 33, title: "abs_title_3" } ]
