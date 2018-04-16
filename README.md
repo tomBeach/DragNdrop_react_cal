@@ -1,6 +1,6 @@
 ## Drag-n-drop calendar test
 
-This is a test app for an events calendar drag-n-drop functionailty.  It is a proof-of-concept demo for the ForestSAT abstract submission tool developed for NASA/UMD.  
+This is a test app for an events calendar drag-n-drop functionailty.  It is a proof-of-concept demo for the ForestSAT abstract submission tool developed for NASA/UMD.  An online version is located here: https://dndcalendar.herokuapp.com/
 
 Instructions and user feedback when dragging are missing at this point.  For example, session events must be selected by clicking, then dragged with a second click-n-drag.  Also, dragged events can be positioned "above" or "below" targeted timeslots, depending on the entry point at the target cell.  This is not obvious without the feedback tooltip.   
 
